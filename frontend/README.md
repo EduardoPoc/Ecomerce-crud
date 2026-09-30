@@ -18,6 +18,7 @@ frontend/
 │       ├── main.css        # Tailwind e configuração visual
 │       └── tokens.css      # Valores da paleta
 ├── package.json            # Comandos e dependências
+├── package-lock.json       # Versões resolvidas das dependências
 └── vite.config.js          # Plugin do Tailwind e entradas HTML do build
 ```
 
@@ -28,6 +29,10 @@ Arquivos em `public/` são servidos pela raiz do site: `public/favicon.svg` é r
 ## Adicionar uma página
 
 Crie um HTML em `pages/`, inclua `../src/main.js` como módulo e adicione o arquivo ao objeto `input` em `vite.config.js` para que apareça no build. Faça a navegação com links entre os HTMLs. Se a página precisar de comportamento próprio, coloque o módulo em `src/pages/` e importe-o apenas nessa página.
+
+## Comunicação com a API
+
+O Axios está instalado para as futuras requisições HTTP. Quando houver integração com o backend, coloque o código de acesso à API em `src/services/` e importe os serviços nas páginas que precisarem deles. CORS deve ser configurado no servidor da API; não há backend neste repositório no momento.
 
 ## Tailwind e cores
 
