@@ -19,6 +19,7 @@ frontend/
 │       └── tokens.css      # Valores da paleta
 ├── package.json            # Comandos e dependências
 ├── package-lock.json       # Versões resolvidas das dependências
+├── .npmrc                   # Regras de instalação do npm
 └── vite.config.js          # Plugin do Tailwind e entradas HTML do build
 ```
 
@@ -56,10 +57,24 @@ O anexo de identidade contém pequenas diferenças entre a tabela de tokens e a 
 É necessário Node.js compatível com o Vite 8 (20.19+ ou 22.12+). Dentro de `frontend/`:
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
 O Vite mostra o endereço local no terminal, normalmente `http://localhost:5173/`. Para conferir o build das três páginas, use `npm run build`; para visualizar o resultado, `npm run preview`.
 
-As dependências estão declaradas no `package.json` e são instaladas com `npm install`.
+## Dependências e verificações
+
+O `package-lock.json` fixa a árvore de dependências. Use `npm ci` para instalar exatamente essa árvore; ao adicionar um pacote de propósito, use `npm install <nome-do-pacote>` e registre a alteração no `package.json` e no lockfile.
+
+O `.npmrc` impede scripts automáticos de instalação das dependências e grava versões exatas ao adicionar pacotes. Se uma dependência futura precisar de script de instalação, revise o pacote antes de permitir sua execução.
+
+O `.gitignore` da raiz já cobre `node_modules/` e `dist/` do frontend. Não é necessário outro arquivo nessa pasta.
+
+| Comando | Função |
+| --- | --- |
+| `npm run verify` | Faz o build e executa a auditoria de vulnerabilidades conhecidas |
+| `npm run deps:audit` | Executa apenas a auditoria do npm |
+| `npm run deps:signatures` | Confere assinaturas de pacotes quando disponíveis no registro |
+
+Auditoria e assinaturas consultam o registro npm e exigem acesso à rede.
