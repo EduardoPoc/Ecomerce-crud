@@ -5,26 +5,513 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Além da Estante | Carrinho</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module" src="./carrinho.js"></script>
+    <link rel="stylesheet" href="./main.css" />
   </head>
-  <body>
-    <nav aria-label="Navegação principal">
-      <a href="../../../index.html">Início</a>
-      <a href="../catalogo/index.html">Catálogo</a>
-      <a href="./index.html">Carrinho</a>
-    </nav>
-    <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-      <div class="lg:col-span-8">
-        <span><i data-lucide="handbag"></i>livros</span>
-        <h1 class="text-navy">Sua sacola</h1>
-        <p>Você tem <span>4 livros selecionados</span>para o envio</p>
-      </div>
+  <body
+    class="bg-paper text-ink font-sans min-h-screen flex flex-col justify-between"
+  >
+    <div>
+      <!-- Navegação Global -->
+      <nav
+        aria-label="Navegação principal"
+        class="px-[var(--brand-space-page)] py-4 border-b border-outline/40 flex gap-6 text-sm"
+      >
+        <a href="../../../index.html" class="hover:text-sage transition-colors"
+          >Início</a
+        >
+        <a
+          href="../catalogo/index.html"
+          class="hover:text-sage transition-colors"
+          >Catálogo</a
+        >
+        <a href="./index.html" class="font-semibold text-navy">Carrinho</a>
+      </nav>
 
-      <div class="lg:col-span-4">
-        <div>
-          <p><span>Frete Grátis com Marcador </span>Faltam R$ 64,10</p>
+      <!-- SEÇÃO 1: Topo do Carrinho -->
+      <main
+        class="grid grid-cols-1 lg:grid-cols-12 gap-8 px-[var(--brand-space-page)] pt-8 items-end"
+      >
+        <!-- Coluna Principal (Esquerda) -->
+        <div class="lg:col-span-8 flex flex-col items-start gap-2">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage/10 text-sage text-xs font-semibold tracking-wider uppercase"
+          >
+            <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+            Curadoria Selecionada
+          </span>
+          <h1
+            class="text-4xl lg:text-5xl font-serif text-navy font-bold tracking-tight mt-1"
+          >
+            Sua Sacola
+          </h1>
+          <p class="text-muted text-sm sm:text-base mt-1">
+            Você tem
+            <strong class="text-navy font-semibold"
+              >4 livros selecionados</strong
+            >
+            para envio especial.
+          </p>
+        </div>
+
+        <!-- Coluna Secundária (Direita - Widget Frete) -->
+        <div class="lg:col-span-4 flex justify-end">
+          <div
+            class="w-full bg-surface-soft/80 p-4 rounded-card flex flex-col gap-2"
+          >
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="flex items-center gap-1.5 font-medium text-navy">
+                <i data-lucide="book-open" class="w-4 h-4 text-sage"></i>
+                Frete Grátis com Marcador
+              </span>
+              <span class="text-muted">
+                Faltam <strong class="text-navy font-semibold">R$ 64,10</strong>
+              </span>
+            </div>
+            <!-- Barra de Progresso -->
+            <div
+              class="w-full h-1.5 bg-outline/40 rounded-full overflow-hidden"
+            >
+              <div class="h-full bg-sage rounded-full w-[65%]"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- SEÇÃO 2: Conteúdo Principal do Carrinho (40px de distância do topo) -->
+      <section
+        class="mt-[40px] grid grid-cols-1 lg:grid-cols-12 gap-8 px-[var(--brand-space-page)]"
+      >
+        <!-- Lista de Produtos e Cupom (8 Colunas) -->
+        <div class="lg:col-span-8 flex flex-col gap-6">
+          <!-- Item 1: Torto Arado -->
+          <article
+            class="bg-surface p-6 rounded-card shadow-card flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between"
+          >
+            <div class="flex gap-4 items-center">
+              <img
+                src="/capas/torto-arado.jpg"
+                alt="Capa Torto Arado"
+                class="w-24 h-32 object-cover rounded shadow-sm"
+              />
+              <div class="flex flex-col gap-1">
+                <span
+                  class="self-start px-2 py-0.5 bg-surface-soft text-muted text-xs font-medium rounded"
+                >
+                  Ficção Nacional
+                </span>
+                <h2 class="text-xl font-serif text-navy font-bold">
+                  Torto Arado
+                </h2>
+                <p class="text-sm text-muted">Itamar Vieira Junior</p>
+                <p class="text-xs text-muted/80 mt-1">
+                  Edição de Colecionador com Marcador Ilustrado
+                </p>
+
+                <div
+                  class="flex items-center gap-2 mt-3 bg-surface-soft w-fit px-2 py-1 rounded-control"
+                >
+                  <button
+                    class="w-6 h-6 flex items-center justify-center text-navy font-bold hover:bg-surface rounded-full"
+                  >
+                    -
+                  </button>
+                  <span class="px-2 text-sm font-semibold text-navy">1</span>
+                  <button
+                    class="w-6 h-6 flex items-center justify-center text-navy font-bold hover:bg-surface rounded-full"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col sm:items-end justify-between self-stretch sm:self-auto gap-4"
+            >
+              <span class="text-xl font-bold text-navy">R$ 54,90</span>
+              <div class="flex flex-col sm:items-end text-xs text-muted">
+                <span>Subtotal</span>
+                <span class="text-sm font-bold text-navy">R$ 54,90</span>
+              </div>
+              <button
+                class="flex items-center gap-1 text-xs text-muted hover:text-error transition-colors mt-auto"
+              >
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Remover
+              </button>
+            </div>
+          </article>
+
+          <!-- Item 2: A Hora da Estrela -->
+          <article
+            class="bg-surface p-6 rounded-card shadow-card flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between"
+          >
+            <div class="flex gap-4 items-center">
+              <img
+                src="/capas/a-hora-da-estrela.jpg"
+                alt="Capa A Hora da Estrela"
+                class="w-24 h-32 object-cover rounded shadow-sm"
+              />
+              <div class="flex flex-col gap-1">
+                <span
+                  class="self-start px-2 py-0.5 bg-surface-soft text-muted text-xs font-medium rounded"
+                >
+                  Literatura Brasileira
+                </span>
+                <h2 class="text-xl font-serif text-navy font-bold">
+                  A Hora da Estrela
+                </h2>
+                <p class="text-sm text-muted">Clarice Lispector</p>
+                <p class="text-xs text-muted/80 mt-1">
+                  Capa brochura artesanal com textura linho
+                </p>
+
+                <div
+                  class="flex items-center gap-2 mt-3 bg-surface-soft w-fit px-2 py-1 rounded-control"
+                >
+                  <button
+                    class="w-6 h-6 flex items-center justify-center text-navy font-bold hover:bg-surface rounded-full"
+                  >
+                    -
+                  </button>
+                  <span class="px-2 text-sm font-semibold text-navy">2</span>
+                  <button
+                    class="w-6 h-6 flex items-center justify-center text-navy font-bold hover:bg-surface rounded-full"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col sm:items-end justify-between self-stretch sm:self-auto gap-4"
+            >
+              <span class="text-xl font-bold text-navy">R$ 38,00</span>
+              <div class="flex flex-col sm:items-end text-xs text-muted">
+                <span>Subtotal</span>
+                <span class="text-sm font-bold text-navy">R$ 76,00</span>
+              </div>
+              <button
+                class="flex items-center gap-1 text-xs text-muted hover:text-error transition-colors mt-auto"
+              >
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Remover
+              </button>
+            </div>
+          </article>
+
+          <!-- Item 3: O Mito de Sísifo -->
+          <article
+            class="bg-surface p-6 rounded-card shadow-card flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between"
+          >
+            <div class="flex gap-4 items-center">
+              <img
+                src="/capas/o-mito-de-sisifo.jpg"
+                alt="Capa O Mito de Sísifo"
+                class="w-24 h-32 object-cover rounded shadow-sm"
+              />
+              <div class="flex flex-col gap-1">
+                <span
+                  class="self-start px-2 py-0.5 bg-surface-soft text-muted text-xs font-medium rounded"
+                >
+                  Filosofia
+                </span>
+                <h2 class="text-xl font-serif text-navy font-bold">
+                  O Mito de Sísifo
+                </h2>
+                <p class="text-sm text-muted">Albert Camus</p>
+                <p class="text-xs text-muted/80 mt-1">
+                  Nova tradução comentada e prefaciada
+                </p>
+
+                <div
+                  class="flex items-center gap-2 mt-3 bg-surface-soft w-fit px-2 py-1 rounded-control"
+                >
+                  <button
+                    class="w-6 h-6 flex items-center justify-center text-navy font-bold hover:bg-surface rounded-full"
+                  >
+                    -
+                  </button>
+                  <span class="px-2 text-sm font-semibold text-navy">1</span>
+                  <button
+                    class="w-6 h-6 flex items-center justify-center text-navy font-bold hover:bg-surface rounded-full"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="flex flex-col sm:items-end justify-between self-stretch sm:self-auto gap-4"
+            >
+              <span class="text-xl font-bold text-navy">R$ 45,00</span>
+              <div class="flex flex-col sm:items-end text-xs text-muted">
+                <span>Subtotal</span>
+                <span class="text-sm font-bold text-navy">R$ 45,00</span>
+              </div>
+              <button
+                class="flex items-center gap-1 text-xs text-muted hover:text-error transition-colors mt-auto"
+              >
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Remover
+              </button>
+            </div>
+          </article>
+
+          <!-- Banner do Cupom -->
+          <div
+            class="bg-surface-soft/60 p-6 rounded-card flex flex-col sm:flex-row items-center justify-between gap-4"
+          >
+            <div class="flex items-center gap-3">
+              <i data-lucide="bookmark" class="w-6 h-6 text-sage"></i>
+              <div>
+                <h3 class="font-semibold text-navy text-sm">
+                  Tem um cupom de leitura?
+                </h3>
+                <p class="text-xs text-muted">
+                  Insira o código do seu clube ou autor parceiro.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <input
+                type="text"
+                placeholder="CÓDIGO"
+                class="bg-surface border border-outline px-4 py-2 rounded-control text-sm uppercase outline-none focus:border-sage w-full sm:w-36"
+              />
+              <button
+                class="bg-outline/60 hover:bg-outline text-ink text-xs font-semibold px-4 py-2.5 rounded-control transition-colors"
+              >
+                Aplicar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Painel Lateral: Resumo da Compra (4 Colunas) -->
+        <aside class="lg:col-span-4 flex flex-col gap-6">
+          <div
+            class="bg-surface p-6 rounded-card shadow-card flex flex-col gap-4"
+          >
+            <div
+              class="flex items-center justify-between border-b border-outline/50 pb-4"
+            >
+              <h2 class="text-lg font-serif font-bold text-navy">
+                Resumo da compra
+              </h2>
+              <span
+                class="px-2.5 py-0.5 bg-sage/10 text-sage text-xs font-semibold rounded-full"
+                >3 títulos</span
+              >
+            </div>
+
+            <div class="flex flex-col gap-3 text-sm">
+              <div class="flex justify-between text-muted">
+                <span>Quantidade de itens</span>
+                <span class="text-navy font-semibold">4 livros</span>
+              </div>
+              <div class="flex justify-between text-muted">
+                <span>Subtotal dos livros</span>
+                <span class="text-navy font-semibold">R$ 175,90</span>
+              </div>
+              <div class="flex justify-between text-muted">
+                <span class="flex items-center gap-1">
+                  Estimativa de frete
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                </span>
+                <span class="text-navy font-semibold">R$ 12,00</span>
+              </div>
+            </div>
+
+            <div
+              class="bg-surface-soft/80 p-3 rounded-control text-xs text-sage font-medium flex items-center gap-2"
+            >
+              <i data-lucide="package" class="w-4 h-4"></i>
+              <span>Embalagem protetora e marcadores grátis</span>
+            </div>
+
+            <div class="bg-surface-soft p-4 rounded-control my-2 text-center">
+              <span
+                class="text-xs font-bold text-muted uppercase tracking-wider block mb-1"
+                >Total do Pedido</span
+              >
+              <div class="text-3xl font-bold text-navy">R$ 187,90</div>
+              <span class="text-xs text-muted block mt-1"
+                >Em até 3x de R$ 62,63</span
+              >
+            </div>
+
+            <button
+              class="w-full bg-navy text-surface py-3.5 px-4 rounded-control font-semibold flex items-center justify-center gap-2 hover:bg-navy/90 transition-colors"
+            >
+              Continuar para pagamento
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+
+            <a
+              href="#"
+              class="text-center text-xs text-muted hover:text-navy transition-colors"
+            >
+              &larr; Continuar escolhendo livros
+            </a>
+
+            <div
+              class="border-t border-outline/50 pt-4 mt-2 flex items-start gap-2.5"
+            >
+              <i
+                data-lucide="shield-check"
+                class="w-5 h-5 text-sage shrink-0 mt-0.5"
+              ></i>
+              <div>
+                <h4 class="text-xs font-bold text-navy">
+                  Embalagem artesanal protegida para livros
+                </h4>
+                <p class="text-[11px] text-muted leading-relaxed mt-0.5">
+                  Cada exemplar é envolvido cuidadosamente para que chegue com
+                  cantos intactos e cheiro de novo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-surface-soft/60 p-4 rounded-card grid grid-cols-3 gap-2 text-center text-[11px] text-muted font-medium"
+          >
+            <div class="flex flex-col items-center gap-1">
+              <i data-lucide="lock" class="w-4 h-4 text-navy"></i>
+              <span>Compra Segura</span>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-4 h-4 text-navy"></i>
+              <span>7 dias p/ troca</span>
+            </div>
+            <div class="flex flex-col items-center gap-1">
+              <i data-lucide="award" class="w-4 h-4 text-navy"></i>
+              <span>Papel Certificado</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+
+    <!-- SEÇÃO 3: Rodapé (40px de distância do conteúdo acima) -->
+    <footer
+      class="mt-[40px] border-t border-outline/40 pt-12 pb-8 px-[var(--brand-space-page)]"
+    >
+      <!-- Grid Principal do Rodapé -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-12">
+        <!-- Coluna 1: Sobre a Marca (4 Colunas) -->
+        <div class="lg:col-span-4 flex flex-col gap-3">
+          <h3 class="font-serif text-lg font-bold text-navy">
+            Além da Estante
+          </h3>
+          <p class="text-xs text-muted leading-relaxed max-w-xs">
+            Um refúgio literário dedicado a edições primorosas, curadorias
+            atenciosas e o prazer do livro físico em mãos.
+          </p>
+        </div>
+
+        <!-- Coluna 2: Navegação (2 Colunas) -->
+        <div class="lg:col-span-2 flex flex-col gap-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-navy">
+            Navegação
+          </h4>
+          <ul class="flex flex-col gap-2 text-xs text-muted">
+            <li>
+              <a href="#" class="hover:text-navy transition-colors"
+                >Livros & Lançamentos</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:text-navy transition-colors"
+                >Coleções & Gêneros</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:text-navy transition-colors"
+                >Destaques da Equipe</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Atendimento (3 Colunas) -->
+        <div class="lg:col-span-3 flex flex-col gap-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-navy">
+            Atendimento
+          </h4>
+          <ul class="flex flex-col gap-2 text-xs text-muted">
+            <li>
+              <a href="#" class="hover:text-navy transition-colors"
+                >Meus Pedidos</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:text-navy transition-colors"
+                >Envios & Devoluções</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:text-navy transition-colors"
+                >Fale com o Livreiro</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Coluna 4: Segurança & Confiança (3 Colunas) -->
+        <div class="lg:col-span-3 flex flex-col gap-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-navy">
+            Segurança & Confiança
+          </h4>
+          <p class="text-xs text-muted leading-relaxed">
+            Transações seguras com criptografia de ponta a ponta e frete com
+            embalagem protetora especial para colecionadores.
+          </p>
+
+          <!-- Selos do Rodapé -->
+          <div class="flex items-center gap-3 mt-2">
+            <div
+              class="bg-surface-soft/80 border border-outline/30 rounded-control p-2.5 flex items-center gap-2 text-xs font-medium text-navy"
+            >
+              <i data-lucide="shield-check" class="w-4 h-4 text-sage"></i>
+              <span class="text-[11px] leading-tight">Compra<br />Segura</span>
+            </div>
+            <div
+              class="bg-surface-soft/80 border border-outline/30 rounded-control p-2.5 flex items-center gap-2 text-xs font-medium text-navy"
+            >
+              <i data-lucide="truck" class="w-4 h-4 text-sage"></i>
+              <span class="text-[11px] leading-tight"
+                >Embalagem<br />Curada</span
+              >
+            </div>
+          </div>
         </div>
       </div>
-    </main>
+
+      <!-- Linha Inferior do Rodapé -->
+      <div
+        class="border-t border-outline/40 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-muted"
+      >
+        <p>
+          &copy; 2025 Além da Estante Livraria Independente Ltda. Todos os
+          direitos reservados.
+        </p>
+        <div class="flex items-center gap-6">
+          <a href="#" class="hover:text-navy transition-colors">Privacidade</a>
+          <a href="#" class="hover:text-navy transition-colors">Termos</a>
+          <a href="#" class="hover:text-navy transition-colors"
+            >Sustentabilidade</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Script de Inicialização dos Ícones do Lucide -->
+    <script>
+      lucide.createIcons();
+    </script>
   </body>
 </html>
