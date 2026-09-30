@@ -3,11 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "css:build": "tailwindcss -i ./src/styles/tailwind.css -o ./dist/styles.css --minify",
-    "css:watch": "tailwindcss -i ./src/styles/tailwind.css -o ./dist/styles.css --watch"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.3.3",
-    "tailwindcss": "^4.3.3"
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.1"
   }
 }

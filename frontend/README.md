@@ -1,72 +1,56 @@
 # Frontend
 
-Estrutura inicial do frontend em JavaScript puro (módulos ES) e HTML para a livraria Além da Estante. A paleta já funciona com CSS nativo. O projeto também está preparado para Tailwind CSS 4 pela CLI oficial, sem framework JavaScript. As dependências estão declaradas, mas não foram instaladas.
+Base inicial da Além da Estante em HTML, JavaScript puro, Vite e Tailwind CSS 4. As páginas de início, catálogo e carrinho têm apenas a estrutura mínima; conteúdo, componentes e lógica da loja ainda serão desenvolvidos.
 
-## Árvore do projeto
+## Estrutura
 
 ```text
 frontend/
-├── README.md                 # Este guia
-├── index.html                # Página inicial
-├── package.json              # Scripts e dependências futuras do Tailwind
+├── index.html              # Página inicial
 ├── pages/
-│   ├── catalogo.html         # Página de catálogo
-│   └── carrinho.html         # Página do carrinho
+│   ├── catalogo.html       # Entrada do catálogo
+│   └── carrinho.html       # Entrada do carrinho
 ├── public/
-│   └── favicon.svg           # Arquivo estático compartilhado
-└── src/
-    ├── main.js               # Comportamento compartilhado entre páginas
-    ├── styles/
-    │   ├── tokens.css        # Cores e decisões visuais compartilhadas
-    │   ├── main.css          # Base visual usada pela página hoje
-    │   └── tailwind.css      # Entrada da compilação do Tailwind 4
+│   └── favicon.svg         # Ícone provisório copiado sem processamento
+├── src/
+│   ├── main.js             # Entrada JS compartilhada; importa o CSS
+│   └── styles/
+│       ├── main.css        # Tailwind e configuração visual
+│       └── tokens.css      # Valores da paleta
+├── package.json            # Comandos e dependências
+└── vite.config.js          # Plugin do Tailwind e entradas HTML do build
 ```
 
-Crie `src/components/`, `src/pages/`, `src/services/` e `src/utils/` quando houver código para cada responsabilidade. Acrescente imagens e outros arquivos estáticos em `public/`. O Git não registra pastas vazias; nenhum `.gitkeep` é necessário.
+Cada página tem seu próprio HTML e navega por links normais. O JavaScript pode ser adicionado conforme cada página precisar de interações; não há roteador nem framework. Crie `src/pages/`, `src/components/`, `src/services/` e `src/utils/` quando essas responsabilidades tiverem código. Não usamos `.gitkeep` para pastas vazias.
 
-## Como as partes se conectam
+Arquivos em `public/` são servidos pela raiz do site: `public/favicon.svg` é referenciado como `/favicon.svg`. O Vite os copia para a raiz de `dist/` no build.
 
-1. Cada endereço tem seu próprio HTML: `index.html` para início e arquivos em `pages/` para as outras páginas. Links comuns do navegador fazem a navegação. Não há roteador nem renderização obrigatória de toda a página pelo JavaScript.
-2. O conteúdo principal e a navegação estão no HTML e funcionam mesmo sem JavaScript. `src/main.js` cuida apenas de comportamento compartilhado, como atualizar o ano do rodapé.
-3. Quando uma página precisar de interações específicas, crie um módulo em `src/pages/` e carregue-o apenas no HTML daquela página. Partes reutilizáveis do código ficam em `src/components/`.
-4. As páginas usam `src/services/` para chamadas de API; funções genéricas ficam em `src/utils/`.
-5. `public/` guarda arquivos servidos diretamente, sem processamento. Como ainda não há bundler, os caminhos no HTML incluem `public/`, como `./public/favicon.svg` na raiz e `../public/favicon.svg` em `pages/`.
-6. `tokens.css` é a fonte das cores. `main.css` usa esses tokens no CSS nativo; `tailwind.css` os expõe a utilitários do Tailwind.
+## Tailwind e cores
 
-Use importações relativas com a extensão `.js`. Mantenha módulos de página focados na página e componentes focados em partes reutilizáveis.
+O Tailwind 4 usa configuração diretamente no CSS. `src/styles/main.css` contém `@import "tailwindcss"` e `@theme inline`, que expõe a paleta de `tokens.css` como classes `bg-paper`, `text-navy`, `bg-sage` e outras. Por isso não há `tailwind.config.js`. `vite.config.js` registra o plugin oficial `@tailwindcss/vite` e as três páginas para o build.
 
-## Cores iniciais
-
-| Token CSS | Valor | Uso sugerido |
+| Token | Cor | Uso inicial |
 | --- | --- | --- |
-| `--brand-paper` | `#fbf9f4` | Fundo de página |
-| `--brand-surface` | `#ffffff` | Cartões e campos |
-| `--brand-navy` | `#0b2a42` | Títulos, navegação e ações secundárias |
-| `--brand-ink` | `#172a3a` | Texto principal |
-| `--brand-muted` | `#647582` | Texto de apoio |
-| `--brand-sage` | `#4f7c70` | Marcadores e categorias |
-| `--brand-amber` | `#f5af19` | Destaques e ações principais |
-| `--brand-border` | `#e2e6e8` | Divisórias e bordas |
+| `--brand-paper` | `#fbf9f4` | Fundo |
+| `--brand-surface` | `#ffffff` | Superfícies |
+| `--brand-navy` | `#0b2a42` | Títulos e ações |
+| `--brand-ink` | `#172a3a` | Texto |
+| `--brand-muted` | `#647582` | Texto secundário |
+| `--brand-sage` | `#4f7c70` | Detalhes |
+| `--brand-amber` | `#f5af19` | Destaques |
+| `--brand-border` | `#e2e6e8` | Bordas |
 
-O anexo contém valores levemente diferentes na tabela de tokens e na descrição da marca. Para esta base, o fundo segue a tabela (`#fbf9f4`) e as cores de identidade seguem a descrição (`#0b2a42`, `#4f7c70`, `#f5af19`). Mude os valores apenas em `tokens.css` para manter CSS e Tailwind alinhados.
+O anexo de identidade contém pequenas diferenças entre a tabela de tokens e a descrição visual. Esta base usa o fundo da tabela e as cores principais da descrição. Ajuste os valores em `tokens.css` quando definir a identidade final. A fonte Inter está indicada com fallback do sistema; os arquivos da fonte ainda não foram adicionados.
 
-## Executar agora
+## Rodar o projeto
 
-Na pasta `frontend`, inicie um servidor estático local, por exemplo:
-
-```sh
-python3 -m http.server 8000
-```
-
-Abra `http://localhost:8000`, `http://localhost:8000/pages/catalogo.html` ou `http://localhost:8000/pages/carrinho.html`. Módulos ES devem ser servidos por HTTP. As páginas já usam as cores sem instalar nada. A fonte Inter está definida com fallback para fontes do sistema até que seus arquivos sejam adicionados.
-
-## Ativar o Tailwind quando necessário
-
-Com Node.js e npm disponíveis, execute na pasta `frontend`:
+É necessário Node.js compatível com o Vite 8 (20.19+ ou 22.12+). Dentro de `frontend/`:
 
 ```sh
 npm install
-npm run css:watch
+npm run dev
 ```
 
-Para gerar CSS de produção, use `npm run css:build`. A compilação cria `dist/styles.css` com Tailwind e os estilos de `main.css`. Quando começar a usar classes utilitárias, troque as referências a `main.css` nos três HTMLs pelo arquivo compilado: `./dist/styles.css` em `index.html` e `../dist/styles.css` nas páginas de `pages/`. O diretório `dist/` é gerado e ignorado pelo Git. Exemplos de classes disponíveis após a compilação: `bg-paper`, `text-navy`, `bg-sage`, `border-outline` e `rounded-card`.
+O Vite mostra o endereço local no terminal, normalmente `http://localhost:5173/`. Para conferir o build das três páginas, use `npm run build`; para visualizar o resultado, `npm run preview`.
+
+As dependências estão apenas declaradas no `package.json`: nenhum pacote foi instalado nesta preparação inicial.
