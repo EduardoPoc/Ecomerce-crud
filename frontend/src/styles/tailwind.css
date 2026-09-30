@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import "./main.css";
+
+/* Tokens para utilitários como bg-paper, text-navy e border-outline. */
+@theme inline {
+  --color-paper: var(--brand-paper);
+  --color-surface: var(--brand-surface);
+  --color-surface-soft: var(--brand-surface-soft);
+  --color-navy: var(--brand-navy);
+  --color-ink: var(--brand-ink);
+  --color-muted: var(--brand-muted);
+  --color-sage: var(--brand-sage);
+  --color-amber: var(--brand-amber);
+  --color-outline: var(--brand-border);
+  --color-error: var(--brand-error);
+  --font-sans: var(--brand-font);
+  --radius-control: var(--brand-radius-control);
+  --radius-card: var(--brand-radius-card);
+  --shadow-card: var(--brand-shadow-card);
+}

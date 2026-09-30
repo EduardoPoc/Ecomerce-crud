@@ -1,9 +1,38 @@
-:root {
-  font-family: system-ui, sans-serif;
-  color-scheme: light;
+@import "./tokens.css";
+
+* {
+  box-sizing: border-box;
 }
 
 body {
+  min-width: 320px;
   margin: 0;
-  padding: 2rem;
+  background: var(--brand-paper);
+  color: var(--brand-ink);
+  font-family: var(--brand-font);
+  line-height: 1.6;
+}
+
+#app {
+  width: min(100%, 1240px);
+  margin-inline: auto;
+  padding: 4rem var(--brand-space-page);
+}
+
+h1 {
+  margin: 0;
+  color: var(--brand-navy);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+p {
+  max-width: 65ch;
+  color: var(--brand-muted);
+}
+
+::selection {
+  background: var(--brand-amber);
+  color: var(--brand-navy);
 }
