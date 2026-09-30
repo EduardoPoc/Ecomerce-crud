@@ -25,6 +25,10 @@ Cada página tem seu próprio HTML e navega por links normais. O JavaScript pode
 
 Arquivos em `public/` são servidos pela raiz do site: `public/favicon.svg` é referenciado como `/favicon.svg`. O Vite os copia para a raiz de `dist/` no build.
 
+## Adicionar uma página
+
+Crie um HTML em `pages/`, inclua `../src/main.js` como módulo e adicione o arquivo ao objeto `input` em `vite.config.js` para que apareça no build. Faça a navegação com links entre os HTMLs. Se a página precisar de comportamento próprio, coloque o módulo em `src/pages/` e importe-o apenas nessa página.
+
 ## Tailwind e cores
 
 O Tailwind 4 usa configuração diretamente no CSS. `src/styles/main.css` contém `@import "tailwindcss"` e `@theme inline`, que expõe a paleta de `tokens.css` como classes `bg-paper`, `text-navy`, `bg-sage` e outras. Por isso não há `tailwind.config.js`. `vite.config.js` registra o plugin oficial `@tailwindcss/vite` e as três páginas para o build.
@@ -53,4 +57,4 @@ npm run dev
 
 O Vite mostra o endereço local no terminal, normalmente `http://localhost:5173/`. Para conferir o build das três páginas, use `npm run build`; para visualizar o resultado, `npm run preview`.
 
-As dependências estão apenas declaradas no `package.json`: nenhum pacote foi instalado nesta preparação inicial.
+As dependências estão declaradas no `package.json` e são instaladas com `npm install`.
