@@ -39,6 +39,23 @@ Crie uma subpasta em `src/pages/<nome>/` contendo seu `index.html` e seu script 
 
 O Axios está instalado para as futuras requisições HTTP. Quando houver integração com o backend, coloque o código de acesso à API em `src/services/` e importe os serviços nas páginas que precisarem deles. CORS deve ser configurado no servidor da API; não há backend neste repositório no momento.
 
+## Ícones com Lucide
+
+A biblioteca `lucide` está instalada para uso com JavaScript puro e Tailwind CSS.
+
+- **No HTML**: Utilize o elemento `<i>` (ou `<span>`) com o atributo `data-lucide="<nome-do-icone>"`:
+  ```html
+  <i data-lucide="handbag"></i>
+  <i data-lucide="shopping-cart"></i>
+  ```
+- **Inicialização automática**: Os ícones estáticos no DOM são convertidos automaticamente em SVGs no carregamento da página por meio de `src/main.js`.
+- **Renderização dinâmica**: Se injetar elementos via JavaScript após o carregamento inicial, utilize a função `initIcons()` de `src/utils/icons.js`:
+  ```javascript
+  import { initIcons } from '../../utils/icons.js';
+
+  initIcons();
+  ```
+
 ## Tailwind e cores
 
 O Tailwind 4 usa configuração diretamente no CSS. `src/styles/main.css` contém `@import "tailwindcss"` e `@theme inline`, que expõe a paleta de `tokens.css` como classes `bg-paper`, `text-navy`, `bg-sage` e outras. Por isso não há `tailwind.config.js`. `vite.config.js` registra o plugin oficial `@tailwindcss/vite` e as três páginas para o build.
