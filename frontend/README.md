@@ -7,13 +7,17 @@ Base inicial da Além da Estante em HTML, JavaScript puro, Vite e Tailwind CSS 4
 ```text
 frontend/
 ├── index.html              # Página inicial
-├── pages/
-│   ├── catalogo.html       # Entrada do catálogo
-│   └── carrinho.html       # Entrada do carrinho
 ├── public/
 │   └── favicon.svg         # Ícone provisório copiado sem processamento
 ├── src/
 │   ├── main.js             # Entrada JS compartilhada; importa o CSS
+│   ├── pages/
+│   │   ├── carrinho/
+│   │   │   ├── carrinho.js # Script da página de carrinho
+│   │   │   └── index.html  # Entrada HTML do carrinho
+│   │   └── catalogo/
+│   │       ├── catalogo.js # Script da página de catálogo
+│   │       └── index.html  # Entrada HTML do catálogo
 │   └── styles/
 │       ├── main.css        # Tailwind e configuração visual
 │       └── tokens.css      # Valores da paleta
@@ -23,13 +27,13 @@ frontend/
 └── vite.config.js          # Plugin do Tailwind e entradas HTML do build
 ```
 
-Cada página tem seu próprio HTML e navega por links normais. O JavaScript pode ser adicionado conforme cada página precisar de interações; não há roteador nem framework. Crie `src/pages/`, `src/components/`, `src/services/` e `src/utils/` quando essas responsabilidades tiverem código. Não usamos `.gitkeep` para pastas vazias.
+Cada página tem seu próprio HTML e navega por links normais. O JavaScript de cada página fica em seu respectivo diretório dentro de `src/pages/`. Crie `src/components/`, `src/services/` e `src/utils/` quando essas responsabilidades tiverem código. Não usamos `.gitkeep` para pastas vazias.
 
 Arquivos em `public/` são servidos pela raiz do site: `public/favicon.svg` é referenciado como `/favicon.svg`. O Vite os copia para a raiz de `dist/` no build.
 
 ## Adicionar uma página
 
-Crie um HTML em `pages/`, inclua `../src/main.js` como módulo e adicione o arquivo ao objeto `input` em `vite.config.js` para que apareça no build. Faça a navegação com links entre os HTMLs. Se a página precisar de comportamento próprio, coloque o módulo em `src/pages/` e importe-o apenas nessa página.
+Crie uma subpasta em `src/pages/<nome>/` contendo seu `index.html` e seu script (ex: `<nome>.js` que importa `../../main.js`) e adicione o arquivo HTML ao objeto `input` em `vite.config.js` para que apareça no build. Faça a navegação com links relativos entre os HTMLs.
 
 ## Comunicação com a API
 
