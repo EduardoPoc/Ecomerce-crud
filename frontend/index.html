@@ -3,11 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Além da Estante</title>
+    <title>Além da Estante | Início</title>
+    <link rel="icon" href="./public/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./src/styles/main.css" />
     <script type="module" src="./src/main.js"></script>
   </head>
   <body>
-    <main id="app"></main>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-brand" href="./index.html">Além da Estante</a>
+        <nav aria-label="Navegação principal">
+          <a aria-current="page" href="./index.html">Início</a>
+          <a href="./pages/catalogo.html">Catálogo</a>
+          <a href="./pages/carrinho.html">Carrinho</a>
+        </nav>
+      </div>
+    </header>
+    <main class="page-content">
+      <p class="eyebrow">LIVRARIA</p>
+      <h1>Histórias para descobrir com calma.</h1>
+      <p>Uma base simples para a experiência da Além da Estante.</p>
+      <a class="button" href="./pages/catalogo.html">Explorar catálogo</a>
+    </main>
+    <footer class="site-footer">&copy; <span data-current-year>2026</span> Além da Estante</footer>
   </body>
 </html>

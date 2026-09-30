@@ -7,25 +7,31 @@ Estrutura inicial do frontend em JavaScript puro (módulos ES) e HTML para a liv
 ```text
 frontend/
 ├── README.md                 # Este guia
-├── index.html                # Página HTML inicial
+├── index.html                # Página inicial
 ├── package.json              # Scripts e dependências futuras do Tailwind
+├── pages/
+│   ├── catalogo.html         # Página de catálogo
+│   └── carrinho.html         # Página do carrinho
+├── public/
+│   └── favicon.svg           # Arquivo estático compartilhado
 └── src/
-    ├── main.js               # Ponto de entrada da aplicação
+    ├── main.js               # Comportamento compartilhado entre páginas
     ├── styles/
     │   ├── tokens.css        # Cores e decisões visuais compartilhadas
     │   ├── main.css          # Base visual usada pela página hoje
     │   └── tailwind.css      # Entrada da compilação do Tailwind 4
 ```
 
-Crie `src/components/`, `src/pages/`, `src/services/` e `src/utils/` quando houver código para cada responsabilidade. Use `assets/icons/` e `assets/images/` para arquivos estáticos. O Git não registra pastas vazias, então a árvore acima mostra apenas os arquivos versionados; nenhum `.gitkeep` é necessário.
+Crie `src/components/`, `src/pages/`, `src/services/` e `src/utils/` quando houver código para cada responsabilidade. Acrescente imagens e outros arquivos estáticos em `public/`. O Git não registra pastas vazias; nenhum `.gitkeep` é necessário.
 
 ## Como as partes se conectam
 
-1. `index.html` carrega `src/main.js` como módulo e `src/styles/main.css` como folha de estilos.
-2. `main.js` inicia a interface dentro do elemento `#app`.
-3. Cada página pode ter seu próprio módulo em `src/pages/` e compor elementos de `src/components/`.
+1. Cada endereço tem seu próprio HTML: `index.html` para início e arquivos em `pages/` para as outras páginas. Links comuns do navegador fazem a navegação. Não há roteador nem renderização obrigatória de toda a página pelo JavaScript.
+2. O conteúdo principal e a navegação estão no HTML e funcionam mesmo sem JavaScript. `src/main.js` cuida apenas de comportamento compartilhado, como atualizar o ano do rodapé.
+3. Quando uma página precisar de interações específicas, crie um módulo em `src/pages/` e carregue-o apenas no HTML daquela página. Partes reutilizáveis do código ficam em `src/components/`.
 4. As páginas usam `src/services/` para chamadas de API; funções genéricas ficam em `src/utils/`.
-5. `tokens.css` é a fonte das cores. `main.css` usa esses tokens no CSS nativo; `tailwind.css` os expõe a utilitários do Tailwind.
+5. `public/` guarda arquivos servidos diretamente, sem processamento. Como ainda não há bundler, os caminhos no HTML incluem `public/`, como `./public/favicon.svg` na raiz e `../public/favicon.svg` em `pages/`.
+6. `tokens.css` é a fonte das cores. `main.css` usa esses tokens no CSS nativo; `tailwind.css` os expõe a utilitários do Tailwind.
 
 Use importações relativas com a extensão `.js`. Mantenha módulos de página focados na página e componentes focados em partes reutilizáveis.
 
@@ -52,7 +58,7 @@ Na pasta `frontend`, inicie um servidor estático local, por exemplo:
 python3 -m http.server 8000
 ```
 
-Abra `http://localhost:8000`. Módulos ES devem ser servidos por HTTP. A página já usa as cores sem instalar nada. A fonte Inter está definida com fallback para fontes do sistema até que seus arquivos sejam adicionados.
+Abra `http://localhost:8000`, `http://localhost:8000/pages/catalogo.html` ou `http://localhost:8000/pages/carrinho.html`. Módulos ES devem ser servidos por HTTP. As páginas já usam as cores sem instalar nada. A fonte Inter está definida com fallback para fontes do sistema até que seus arquivos sejam adicionados.
 
 ## Ativar o Tailwind quando necessário
 
@@ -63,4 +69,4 @@ npm install
 npm run css:watch
 ```
 
-Para gerar CSS de produção, use `npm run css:build`. A compilação cria `dist/styles.css` com Tailwind e os estilos de `main.css`. Quando começar a usar classes utilitárias nas páginas, troque em `index.html` a referência de `./src/styles/main.css` por `./dist/styles.css`. O diretório `dist/` é gerado e ignorado pelo Git. Exemplos de classes disponíveis após a compilação: `bg-paper`, `text-navy`, `bg-sage`, `border-outline` e `rounded-card`.
+Para gerar CSS de produção, use `npm run css:build`. A compilação cria `dist/styles.css` com Tailwind e os estilos de `main.css`. Quando começar a usar classes utilitárias, troque as referências a `main.css` nos três HTMLs pelo arquivo compilado: `./dist/styles.css` em `index.html` e `../dist/styles.css` nas páginas de `pages/`. O diretório `dist/` é gerado e ignorado pelo Git. Exemplos de classes disponíveis após a compilação: `bg-paper`, `text-navy`, `bg-sage`, `border-outline` e `rounded-card`.
