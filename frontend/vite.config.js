@@ -8,8 +8,8 @@ export default defineConfig({
     rolldownOptions: {
       input: {
         inicio: resolve(import.meta.dirname, 'index.html'),
-        catalogo: resolve(import.meta.dirname, 'pages/catalogo.html'),
-        carrinho: resolve(import.meta.dirname, 'pages/carrinho.html'),
+        catalogo: resolve(import.meta.dirname, 'src/pages/catalogo/index.html'),
+        carrinho: resolve(import.meta.dirname, 'src/pages/carrinho/index.html'),
       },
     },
   },
