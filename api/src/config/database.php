@@ -1,100 +1,74 @@
 <?php
 
-/**
- * Carrega as variáveis do arquivo .env para $_ENV.
- * Ignora linhas vazias e comentários (#).
- */
-function carregarEnv(string $caminho): void
+declare(strict_types=1);
+
+namespace Ecommerce\Api\Config;
+
+use PDO;
+use RuntimeException;
+
+/** Centraliza a conexão PDO. A conexão é aberta sob demanda e reutilizada. */
+final class Database
 {
-    if (!file_exists($caminho)) {
-        return;
-    }
+    private static ?PDO $connection = null;
+    private static bool $environmentLoaded = false;
 
-    $linhas = file($caminho, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-    foreach ($linhas as $linha) {
-        $linha = trim($linha);
-
-        if ($linha === '' || str_starts_with($linha, '#') || !str_contains($linha, '=')) {
-            continue;
+    public static function connection(): PDO
+    {
+        if (self::$connection instanceof PDO) {
+            return self::$connection;
         }
 
-        [$chave, $valor] = explode('=', $linha, 2);
-        $_ENV[trim($chave)] = trim($valor, " \t\n\r\0\x0B\"'");
-    }
-}
+        self::loadEnvironmentFile(dirname(__DIR__, 2) . '/.env');
+        $host = self::environment('DB_HOST', '127.0.0.1');
+        $port = self::environment('DB_PORT', '3306');
+        $name = self::environment('DB_NAME');
+        $user = self::environment('DB_USER');
+        $password = self::environment('DB_PASS', '');
 
-/**
- * Retorna a conexão PDO com o MySQL.
- * A mesma conexão é reaproveitada durante toda a requisição.
- *
- * Uso:
- *   $pdo = getConnection();
- *   $stmt = $pdo->prepare('SELECT * FROM produto WHERE id = ?');
- *   $stmt->execute([$id]);
- */
-function getConnection(): PDO
-{
-    static $pdo = null;
+        if ($name === '' || $user === '') {
+            throw new RuntimeException('Configure DB_NAME e DB_USER no arquivo api/.env.');
+        }
 
-    if ($pdo !== null) {
-        return $pdo;
-    }
-
-    carregarEnv(__DIR__ . '/../../.env');
-
-    $host = $_ENV['DB_HOST'] ?? 'localhost';
-    $port = $_ENV['DB_PORT'] ?? '3306';
-    $nome = $_ENV['DB_NAME'] ?? '';
-    $user = $_ENV['DB_USER'] ?? '';
-    $pass = $_ENV['DB_PASS'] ?? '';
-
-    if ($nome === '' || $user === '') {
-        registrarErro('Variáveis DB_NAME e DB_USER não definidas. Verifique o arquivo .env');
-        responderErroInterno();
-    }
-
-    $dsn = "mysql:host={$host};port={$port};dbname={$nome};charset=utf8mb4";
-
-    try {
-        $pdo = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,  // lança exceções em erros de SQL
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,        // retorna arrays associativos
-            PDO::ATTR_EMULATE_PREPARES   => false,                   // prepared statements reais
+        $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', $host, $port, $name);
+        self::$connection = new PDO($dsn, $user, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
         ]);
-    } catch (PDOException $e) {
-        registrarErro('Erro de conexão com o banco: ' . $e->getMessage());
-        responderErroInterno();
+
+        return self::$connection;
     }
 
-    return $pdo;
-}
+    private static function loadEnvironmentFile(string $path): void
+    {
+        if (self::$environmentLoaded) {
+            return;
+        }
+        self::$environmentLoaded = true;
 
-/**
- * Grava o erro real em logs/erros.log (o cliente nunca vê o detalhe).
- */
-function registrarErro(string $mensagem): void
-{
-    $pasta = __DIR__ . '/../../logs';
+        if (!is_file($path) || !is_readable($path)) {
+            return;
+        }
 
-    if (!is_dir($pasta)) {
-        @mkdir($pasta, 0755, true);
+        foreach (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $line) {
+            $line = trim($line);
+            if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
+                continue;
+            }
+            [$key, $value] = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim(trim($value), "\\\"'");
+            if ($key !== '' && getenv($key) === false) {
+                putenv($key . '=' . $value);
+                $_ENV[$key] = $value;
+            }
+        }
     }
 
-    error_log(
-        '[' . date('Y-m-d H:i:s') . '] ' . $mensagem . PHP_EOL,
-        3,
-        $pasta . '/erros.log'
-    );
-}
-
-/**
- * Responde com erro 500 genérico em JSON e encerra a execução.
- */
-function responderErroInterno(): never
-{
-    http_response_code(500);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['erro' => 'Erro interno do servidor']);
-    exit;
+    private static function environment(string $key, string $default = ''): string
+    {
+        $value = getenv($key);
+        return $value === false ? $default : trim((string) $value);
+    }
 }
