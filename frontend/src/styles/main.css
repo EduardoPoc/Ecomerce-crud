@@ -28,3 +28,8 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+
+app-header,
+app-footer {
+  display: block;
+}

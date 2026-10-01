@@ -1,4 +1,6 @@
 import './styles/main.css';
+import './components/Header.js';
+import './components/Footer.js';
 import { initIcons } from './utils/icons.js';
 
 // Inicializa os ícones Lucide nos elementos com [data-lucide]
