@@ -12,6 +12,7 @@ export default defineConfig({
         carrinho: resolve(import.meta.dirname, 'src/pages/carrinho/index.html'),
         pagamento: resolve(import.meta.dirname, 'src/pages/pagamento/index.html'),
         finalizado: resolve(import.meta.dirname, 'src/pages/finalizado/index.html'),
+        login: resolve(import.meta.dirname, 'src/pages/login/index.html'),
       },
     },
   },

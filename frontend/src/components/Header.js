@@ -28,7 +28,7 @@ export function getHeaderHTML({ cartCount = 3 } = {}) {
           <button aria-label="Buscar livros" type="button" class="p-2 text-ink hover:text-navy transition-colors">
             <i data-lucide="search" class="w-5 h-5"></i>
           </button>
-          <a href="#" aria-label="Minha conta" class="p-2 text-ink hover:text-navy transition-colors">
+          <a href="/src/pages/login/index.html" aria-label="Minha conta" class="p-2 text-ink hover:text-navy transition-colors">
             <i data-lucide="user" class="w-5 h-5"></i>
           </a>
           <a href="/src/pages/carrinho/index.html" aria-label="Sacola de compras" class="relative p-2 text-ink hover:text-navy transition-colors">
