@@ -35,6 +35,7 @@ return static function (Router $router): void {
         // ---------- Autenticação (públicas) ----------
         $api->post('/auth/login', [AuthController::class, 'login']);
         $api->post('/auth/cadastro', [AuthController::class, 'cadastro']);
+                $api->get('/auth/me', [AuthController::class, 'me'], [AuthMiddleware::class]);
 
         // ---------- Usuários (somente ADMIN) ----------
         $api->group('/usuarios', [AuthMiddleware::class, AdminMiddleware::class], function (Router $r): void {
