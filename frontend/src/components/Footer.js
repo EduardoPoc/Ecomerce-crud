@@ -21,9 +21,9 @@ export function getFooterHTML() {
           <div>
             <h4 class="text-xs font-bold text-navy tracking-wider uppercase mb-3">Navegação</h4>
             <ul class="space-y-2 text-xs text-muted">
-              <li><a href="/src/pages/catalogo/index.html" class="hover:text-navy transition-colors">Livros & Lançamentos</a></li>
-              <li><a href="/src/pages/catalogo/index.html" class="hover:text-navy transition-colors">Coleções & Gêneros</a></li>
-              <li><a href="/src/pages/catalogo/index.html" class="hover:text-navy transition-colors">Destaques da Equipe</a></li>
+              <li><a href="/catalogo/" class="hover:text-navy transition-colors">Livros & Lançamentos</a></li>
+              <li><a href="/catalogo/" class="hover:text-navy transition-colors">Coleções & Gêneros</a></li>
+              <li><a href="/catalogo/" class="hover:text-navy transition-colors">Destaques da Equipe</a></li>
             </ul>
           </div>
 

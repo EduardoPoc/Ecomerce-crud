@@ -3,18 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Além da Estante | Início</title>
+    <title>Além da Estante | Livraria & Refúgio</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <script type="module" src="./src/main.js"></script>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/main.js"></script>
   </head>
-  <body>
-    <nav aria-label="Navegação principal">
-      <a href="./index.html">Início</a>
-      <a href="./src/pages/catalogo/index.html">Catálogo</a>
-      <a href="./src/pages/carrinho/index.html">Carrinho</a>
-    </nav>
-    <main>
-      <h1 class="text-navy">Além da Estante</h1>
-    </main>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col justify-between">
+    <div>
+      <!-- Componente Global de Cabeçalho -->
+      <app-header cart-count="0"></app-header>
+
+      <!-- Conteúdo Principal de Apresentação -->
+      <main class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20 flex flex-col items-center text-center space-y-8">
+        <!-- Tag de Destaque -->
+        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sage/10 text-sage text-xs font-semibold uppercase tracking-wider">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          Curadoria Literária Independente
+        </span>
+
+        <!-- Título e Subtítulo Principal -->
+        <div class="space-y-4 max-w-3xl">
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-navy tracking-tight leading-tight">
+            Histórias que acolhem, inspiram e transformam.
+          </h1>
+          <p class="text-base sm:text-lg text-muted max-w-2xl mx-auto leading-relaxed">
+            Um refúgio literário dedicado a edições primorosas, capas artesanais e o prazer incomparável do livro físico em mãos.
+          </p>
+        </div>
+
+        <!-- Botões de Ação Direta -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+          <a
+            href="/catalogo/"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-[var(--brand-radius-control)] bg-navy text-white text-sm font-semibold hover:bg-navy/90 shadow-sm transition-all"
+          >
+            <span>Explorar Catálogo</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+          <a
+            href="/carrinho/"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-[var(--brand-radius-control)] border border-outline bg-surface text-ink text-sm font-semibold hover:bg-surface-soft transition-all"
+          >
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-muted"></i>
+            <span>Ver Sacola de Compras</span>
+          </a>
+        </div>
+
+        <!-- Destaques / Benefícios -->
+        <section aria-label="Diferenciais da livraria" class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 max-w-4xl w-full">
+          <div class="p-6 rounded-[var(--brand-radius-card)] bg-surface border border-outline/50 shadow-card text-left space-y-2">
+            <div class="w-10 h-10 rounded-full bg-sage/15 text-sage flex items-center justify-center mb-3">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <h2 class="text-sm font-bold text-navy">Curadoria Manual</h2>
+            <p class="text-xs text-muted leading-relaxed">Cada exemplar é selecionado e revisado por livreiros apaixonados.</p>
+          </div>
+
+          <div class="p-6 rounded-[var(--brand-radius-card)] bg-surface border border-outline/50 shadow-card text-left space-y-2">
+            <div class="w-10 h-10 rounded-full bg-amber/15 text-amber flex items-center justify-center mb-3">
+              <i data-lucide="package-check" class="w-5 h-5"></i>
+            </div>
+            <h2 class="text-sm font-bold text-navy">Embalagem Protetora</h2>
+            <p class="text-xs text-muted leading-relaxed">Embalagens especiais para colecionadores chegarem sem marcas ou amassados.</p>
+          </div>
+
+          <div class="p-6 rounded-[var(--brand-radius-card)] bg-surface border border-outline/50 shadow-card text-left space-y-2">
+            <div class="w-10 h-10 rounded-full bg-navy/10 text-navy flex items-center justify-center mb-3">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+            <h2 class="text-sm font-bold text-navy">Compra Segura</h2>
+            <p class="text-xs text-muted leading-relaxed">Processamento rápido com acompanhamento detalhado em todas as etapas.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Componente Global de Rodapé -->
+    <app-footer></app-footer>
   </body>
 </html>

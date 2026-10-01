@@ -5,16 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Além da Estante | Catálogo</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <script type="module" src="./catalogo.js"></script>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/catalogo/catalogo.js"></script>
   </head>
-  <body>
-    <nav aria-label="Navegação principal">
-      <a href="../../../index.html">Início</a>
-      <a href="./index.html">Catálogo</a>
-      <a href="../carrinho/index.html">Carrinho</a>
-    </nav>
-    <main>
-      <h1 class="text-navy">Catálogo</h1>
-    </main>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col justify-between">
+    <div>
+      <app-header cart-count="3"></app-header>
+
+      <main class="max-w-7xl mx-auto px-4 md:px-6 py-10 space-y-6">
+        <div class="border-b border-outline/50 pb-4">
+          <h1 class="text-3xl font-serif font-bold text-navy">Catálogo de Livros</h1>
+          <p class="text-sm text-muted mt-1">Explore nossa curadoria especial de títulos independentes e clássicos.</p>
+        </div>
+
+        <div class="p-8 bg-surface rounded-2xl border border-outline/40 text-center space-y-3">
+          <i data-lucide="book-open" class="w-10 h-10 text-sage mx-auto"></i>
+          <h2 class="text-lg font-bold text-navy">Curadoria em construção</h2>
+          <p class="text-xs text-muted max-w-md mx-auto">
+            Em breve os livros cadastrados na API serão exibidos diretamente nesta vitrine interativa.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <app-footer></app-footer>
   </body>
 </html>
