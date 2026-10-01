@@ -21,6 +21,9 @@ frontend/
 │   │   └── pagamento/
 │   │       ├── pagamento.js# Script da página de pagamento
 │   │       └── index.html  # Entrada HTML do pagamento
+│   ├── components/
+│   │   ├── Header.js       # Componente de cabeçalho (<app-header>)
+│   │   └── Footer.js       # Componente de rodapé (<app-footer>)
 │   ├── utils/
 │   │   └── icons.js        # Utilitário de ícones com Lucide
 │   └── styles/
@@ -32,7 +35,7 @@ frontend/
 └── vite.config.js          # Plugin do Tailwind e entradas HTML do build
 ```
 
-Cada página tem seu próprio HTML e navega por links normais. O JavaScript de cada página fica em seu respectivo diretório dentro de `src/pages/`. Crie `src/components/`, `src/services/` e `src/utils/` quando essas responsabilidades tiverem código. Não usamos `.gitkeep` para pastas vazias.
+Cada página tem seu próprio HTML e navega por links normais. O cabeçalho e rodapé padronizados da loja são componentes nativos reutilizáveis (`<app-header cart-count="3"></app-header>` e `<app-footer></app-footer>`), registrados globalmente pelo `src/main.js`. O JavaScript de cada página fica em seu respectivo diretório dentro de `src/pages/`. Crie `src/services/` e novos componentes em `src/components/` conforme o código evoluir. Não usamos `.gitkeep` para pastas vazias.
 
 Arquivos em `public/` são servidos pela raiz do site: `public/favicon.svg` é referenciado como `/favicon.svg`. O Vite os copia para a raiz de `dist/` no build.
 
