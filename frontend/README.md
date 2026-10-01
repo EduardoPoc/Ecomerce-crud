@@ -56,7 +56,7 @@ Crie uma subpasta em `src/pages/<nome>/` contendo seu `index.html` e seu script 
 
 ## Comunicação com a API
 
-O Axios usa o caminho relativo `/api`. No Docker, o Vite encaminha `/api` para `https://php:443` pela rede interna do Compose; assim, o navegador conversa somente com `localhost:5173` e não faz preflight CORS para a porta PHP. O proxy usa a identidade `localhost` do Caddy e aceita seu certificado local apenas no servidor de desenvolvimento do Vite. Não use essa exceção como configuração de produção.
+O Axios usa o caminho relativo `/api`. No Docker, o Vite encaminha `/api` para `http://php:80` pela rede interna do Compose; assim, o navegador conversa somente com `localhost:5173` e não faz preflight CORS para a porta PHP.
 
 - **Login:** `src/services/auth.js` chama `POST /auth/login` com `{ email, senha }`. A API procura `email` em `usuario.email` e compara a senha com `usuario.senha_hash`; o frontend nunca envia nem recebe o hash. A resposta inclui token Bearer e os campos públicos `id`, `nome`, `email`, `papel` e `criado_em`. O token fica em `sessionStorage` por padrão ou em `localStorage` quando “Lembrar de mim” está marcado; o Axios envia `Authorization: Bearer ...` nas chamadas seguintes.
 - **Catálogo:** `src/services/products.js` chama `GET /produtos`. A tela usa `id`, `categoria_nome`, `nome`, `descricao`, `preco`, `estoque`, `imagem_url` e `ativo`, conforme a resposta de `ProdutoRepository`. Produtos inativos não são exibidos e produtos sem estoque não podem ser adicionados.
@@ -68,10 +68,10 @@ Catálogo e login dependem de a API e o banco MySQL estarem ativos e configurado
 
 ## Rodar com Docker
 
-Os comandos abaixo devem ser executados na raiz do repositório, pois o Compose e o Dockerfile do frontend ficam fora desta pasta. É necessário Docker com Docker Compose. Antes da primeira inicialização, prepare o arquivo de ambiente local do PHP:
+Os comandos abaixo devem ser executados na raiz do repositório, pois o Compose e o Dockerfile do frontend ficam fora desta pasta. É necessário Docker com Docker Compose. Se `api/.env` ainda não existir, copie o exemplo de ambiente da API:
 
 ```sh
-cp docker/php/app.env.example docker/php/app.env
+cp -n api/.env.example api/.env
 ```
 
 Para iniciar o frontend e suas dependências:
@@ -86,7 +86,24 @@ Esse comando também inicia PHP e MySQL por causa das dependências declaradas n
 docker compose up --build
 ```
 
-Abra <http://localhost:5173>. No Docker, o Vite recebe `VITE_API_URL=/api` e encaminha as chamadas para `https://php:443` pela rede interna; não configure no navegador a URL direta da API para este fluxo. A API fica disponível em <http://localhost:8080/api/health> para diagnóstico. A configuração para aceitar o certificado local é exclusiva do servidor Vite de desenvolvimento.
+Na primeira criação do volume `mysql_data`, o MySQL executa `api/database/schema.sql` e depois `api/database/seed.sql`. A seed cria usuários e dados de demonstração; a senha de todos os usuários seed é `senha123` (por exemplo, `carlos@email.com`). A seed não é executada novamente ao recriar apenas o container PHP ou MySQL, pois o volume do banco persiste.
+
+Se o banco já estiver inicializado e ainda não tiver os dados da seed, importe-a uma vez, a partir da raiz:
+
+```sh
+docker compose exec -T mysql mysql -uloja -ploja loja < api/database/seed.sql
+```
+
+A seed deve ser importada em tabelas vazias; não repita a importação em um banco que já tenha esses registros. Para recriar o banco do zero e fazer o Compose executar schema e seed automaticamente, remova o volume e suba a stack novamente:
+
+```sh
+docker compose down -v
+docker compose up -d --build
+```
+
+`down -v` apaga permanentemente os dados locais do MySQL, incluindo pedidos e demais registros.
+
+Abra <http://localhost:5173>. No Docker, o Vite recebe `VITE_API_URL=/api` e encaminha as chamadas para `http://php:80` pela rede interna; não configure no navegador a URL direta da API para este fluxo. A API fica disponível em <http://localhost:8080/api/health> para diagnóstico.
 
 Para acompanhar o frontend e encerrar os serviços:
 
@@ -94,8 +111,6 @@ Para acompanhar o frontend e encerrar os serviços:
 docker compose logs -f frontend
 docker compose down
 ```
-
-Use `docker compose down -v` somente se quiser apagar também os volumes locais, incluindo os dados do MySQL.
 
 ## Ícones com Lucide
 
