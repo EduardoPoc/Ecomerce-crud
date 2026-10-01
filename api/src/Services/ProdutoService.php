@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ecommerce\Api\Services;
 
 use Ecommerce\Api\Repositories\ProdutoRepository;
+use Ecommerce\Api\Core\HttpException;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -25,13 +26,13 @@ class ProdutoService
     public function getById(int $id): array
     {
         if ($id <= 0) {
-            throw new InvalidArgumentException('ID inválido.');
+            throw new HttpException(400, 'ID inválido.');
         }
 
         $produto = $this->repository->findById($id);
 
         if ($produto === null) {
-            throw new RuntimeException('Produto não encontrado.');
+            throw new HttpException(404, 'Produto não encontrado.');
         }
 
         return $produto;
