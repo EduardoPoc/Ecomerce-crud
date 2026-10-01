@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Ecommerce\Api\Config\Database;
 use Ecommerce\Api\Controllers\AuthController;
+use Ecommerce\Api\Controllers\ProdutoController;
 use Ecommerce\Api\Controllers\UsuarioController;
 use Ecommerce\Api\Core\Request;
 use Ecommerce\Api\Core\Response;
@@ -35,7 +36,11 @@ return static function (Router $router): void {
         // ---------- Autenticação (públicas) ----------
         $api->post('/auth/login', [AuthController::class, 'login']);
         $api->post('/auth/cadastro', [AuthController::class, 'cadastro']);
-                $api->get('/auth/me', [AuthController::class, 'me'], [AuthMiddleware::class]);
+        $api->get('/auth/me', [AuthController::class, 'me'], [AuthMiddleware::class]);
+
+        // Catálogo público de livros.
+        $api->get('/produtos', [ProdutoController::class, 'index']);
+        $api->get('/produtos/{id:\\d+}', [ProdutoController::class, 'show']);
 
         // ---------- Usuários (somente ADMIN) ----------
         $api->group('/usuarios', [AuthMiddleware::class, AdminMiddleware::class], function (Router $r): void {
@@ -48,7 +53,7 @@ return static function (Router $router): void {
         });
 
         // ---------- A DEFINIR PELO TIME (o schema e o frontend já precisam disso) ----------
-        // Catálogo (público):   GET /produtos, GET /produtos/{id}, GET /categorias
+        // Catálogo (público):   GET /categorias
         // Carrinho:             GET /carrinho, POST /carrinho/itens, PATCH/DELETE /carrinho/itens/{id}
         // Pedidos (logado):     POST /pedidos, GET /pedidos, GET /pedidos/{id}
         // Endereços (logado):   GET/POST /enderecos, PUT/DELETE /enderecos/{id}

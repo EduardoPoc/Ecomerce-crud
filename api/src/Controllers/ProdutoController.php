@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Ecommerce\Api\Controllers;
 
 use Ecommerce\Api\Services\ProdutoService;
+use Ecommerce\Api\Core\HttpException;
+use Ecommerce\Api\Core\Request;
+use Ecommerce\Api\Core\Response;
 
 class ProdutoController
 {
@@ -15,14 +18,19 @@ class ProdutoController
         $this->service = new ProdutoService();
     }
 
-    public function index(): array
+    public function index(Request $request): Response
     {
-        return $this->service->getAll();
+        return Response::json($this->service->getAll());
     }
 
-    public function show(int $id): array
+    public function show(Request $request): Response
     {
-        return $this->service->getById($id);
+        $id = (int) $request->param('id');
+        if ($id <= 0) {
+            throw new HttpException(400, 'ID do produto inválido.');
+        }
+
+        return Response::json($this->service->getById($id));
     }
 
     public function store(array $data): array

@@ -27,13 +27,13 @@ final class PedidoController
     {
         $id = (int)($request->getAttribute('id') ?? 0);
         if ($id <= 0) {
-            Response::json(['error': 'ID inválido'], 400);
+            Response::json(['error' => 'ID inválido'], 400);
             return;
         }
 
         $pedido = $this->service->getById($id);
         if ($pedido === null) {
-            Response::json(['error': 'Pedido não encontrado'], 404);
+            Response::json(['error' => 'Pedido não encontrado'], 404);
             return;
         }
 
@@ -45,13 +45,13 @@ final class PedidoController
         $data = $request->getJson();
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Response::json(['error': 'Dados JSON inválidos'], 400);
+            Response::json(['error' => 'Dados JSON inválidos'], 400);
             return;
         }
 
         // Basic validation - you can expand this
         if (!isset($data['usuario_id']) || !isset($data['status'])) {
-            Response::json(['error': 'Campos obrigatórios missing: usuario_id, status'], 400);
+            Response::json(['error' => 'Campos obrigatórios missing: usuario_id, status'], 400);
             return;
         }
 
@@ -59,7 +59,7 @@ final class PedidoController
             $id = $this->service->create($data);
             Response::json(['id' => $id, 'message' => 'Pedido criado com sucesso'], 201);
         } catch (\Exception $e) {
-            Response::json(['error': 'Erro ao criar pedido: ' . $e->getMessage()], 500);
+            Response::json(['error' => 'Erro ao criar pedido: ' . $e->getMessage()], 500);
         }
     }
 
@@ -67,14 +67,14 @@ final class PedidoController
     {
         $id = (int)($request->getAttribute('id') ?? 0);
         if ($id <= 0) {
-            Response::json(['error': 'ID inválido'], 400);
+            Response::json(['error' => 'ID inválido'], 400);
             return;
         }
 
         $data = $request->getJson();
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Response::json(['error': 'Dados JSON inválidos'], 400);
+            Response::json(['error' => 'Dados JSON inválidos'], 400);
             return;
         }
 
@@ -86,10 +86,10 @@ final class PedidoController
             if ($success) {
                 Response::json(['message' => 'Pedido atualizado com sucesso']);
             } else {
-                Response::json(['error': 'Falha ao atualizar pedido'], 500);
+                Response::json(['error' => 'Falha ao atualizar pedido'], 500);
             }
         } catch (\Exception $e) {
-            Response::json(['error': 'Erro ao atualizar pedido: ' . $e->getMessage()], 500);
+            Response::json(['error' => 'Erro ao atualizar pedido: ' . $e->getMessage()], 500);
         }
     }
 
@@ -97,7 +97,7 @@ final class PedidoController
     {
         $id = (int)($request->getAttribute('id') ?? 0);
         if ($id <= 0) {
-            Response::json(['error': 'ID inválido'], 400);
+            Response::json(['error' => 'ID inválido'], 400);
             return;
         }
 
@@ -106,10 +106,10 @@ final class PedidoController
             if ($success) {
                 Response::json(['message' => 'Pedido excluído com sucesso']);
             } else {
-                Response::json(['error': 'Falha ao excluir pedido'], 500);
+                Response::json(['error' => 'Falha ao excluir pedido'], 500);
             }
         } catch (\Exception $e) {
-            Response::json(['error': 'Erro ao excluir pedido: ' . $e->getMessage()], 500);
+            Response::json(['error' => 'Erro ao excluir pedido: ' . $e->getMessage()], 500);
         }
     }
 }
