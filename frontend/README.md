@@ -1,6 +1,6 @@
 # Frontend
 
-Base inicial da Além da Estante em HTML, JavaScript puro, Vite e Tailwind CSS 4. As páginas de início, catálogo e carrinho têm apenas a estrutura mínima; conteúdo, componentes e lógica da loja ainda serão desenvolvidos.
+Frontend da Além da Estante em HTML, JavaScript puro, Vite e Tailwind CSS 4. O catálogo lê os produtos da API e a sacola é mantida localmente no navegador enquanto não há endpoints de carrinho.
 
 ## Estrutura
 
@@ -11,6 +11,11 @@ frontend/
 │   └── favicon.svg         # Ícone provisório copiado sem processamento
 ├── src/
 │   ├── main.js             # Entrada JS compartilhada; importa o CSS
+│   ├── services/
+│   │   ├── api.js          # Cliente Axios compartilhado e cabeçalho Bearer
+│   │   ├── auth.js         # Login e armazenamento da sessão
+│   │   ├── cart.js         # Itens locais da sacola (produto_id e quantidade)
+│   │   └── products.js     # Leitura e normalização dos produtos da API
 │   ├── pages/
 │   │   ├── carrinho/
 │   │   │   ├── carrinho.js # Script da página de carrinho
@@ -41,7 +46,7 @@ frontend/
 └── vite.config.js          # Plugin do Tailwind e entradas HTML do build
 ```
 
-Cada página tem seu próprio HTML e navega por links normais. O cabeçalho e rodapé padronizados da loja são componentes nativos reutilizáveis (`<app-header cart-count="3"></app-header>` e `<app-footer></app-footer>`), registrados globalmente pelo `src/main.js`. O JavaScript de cada página fica em seu respectivo diretório dentro de `src/pages/`. Crie `src/services/` e novos componentes em `src/components/` conforme o código evoluir. Não usamos `.gitkeep` para pastas vazias.
+Cada página tem seu próprio HTML e navega por links normais. O cabeçalho e rodapé padronizados da loja são componentes nativos reutilizáveis (`<app-header></app-header>` e `<app-footer></app-footer>`), registrados globalmente pelo `src/main.js`. O contador da sacola acompanha o estado local. O JavaScript de cada página fica em seu respectivo diretório dentro de `src/pages/`. Não usamos `.gitkeep` para pastas vazias.
 
 Arquivos em `public/` são servidos pela raiz do site: `public/favicon.svg` é referenciado como `/favicon.svg`. O Vite os copia para a raiz de `dist/` no build.
 
@@ -51,7 +56,15 @@ Crie uma subpasta em `src/pages/<nome>/` contendo seu `index.html` e seu script 
 
 ## Comunicação com a API
 
-O Axios está instalado para as futuras requisições HTTP. Quando houver integração com o backend, coloque o código de acesso à API em `src/services/` e importe os serviços nas páginas que precisarem deles. CORS deve ser configurado no servidor da API;
+O Axios usa o caminho relativo `/api`. No Docker, o Vite encaminha `/api` para `https://php:443` pela rede interna do Compose; assim, o navegador conversa somente com `localhost:5173` e não faz preflight CORS para a porta PHP. O proxy usa a identidade `localhost` do Caddy e aceita seu certificado local apenas no servidor de desenvolvimento do Vite. Não use essa exceção como configuração de produção.
+
+- **Login:** `src/services/auth.js` chama `POST /auth/login` com `{ email, senha }`. A API procura `email` em `usuario.email` e compara a senha com `usuario.senha_hash`; o frontend nunca envia nem recebe o hash. A resposta inclui token Bearer e os campos públicos `id`, `nome`, `email`, `papel` e `criado_em`. O token fica em `sessionStorage` por padrão ou em `localStorage` quando “Lembrar de mim” está marcado; o Axios envia `Authorization: Bearer ...` nas chamadas seguintes.
+- **Catálogo:** `src/services/products.js` chama `GET /produtos`. A tela usa `id`, `categoria_nome`, `nome`, `descricao`, `preco`, `estoque`, `imagem_url` e `ativo`, conforme a resposta de `ProdutoRepository`. Produtos inativos não são exibidos e produtos sem estoque não podem ser adicionados.
+- **Sacola:** `src/services/cart.js` persiste somente `produto_id` e `quantidade`, correspondentes aos campos de `item_carrinho`. Preços e estoque são buscados novamente na API ao abrir a sacola; valores de preço não são tratados como fonte confiável nem gravados no armazenamento local.
+
+A sacola ainda não sincroniza com a tabela `carrinho`/`item_carrinho`. A API também não registra pedidos nem processa pagamentos; as telas de revisão e confirmação informam essa limitação e não simulam uma compra concluída.
+
+Catálogo e login dependem de a API e o banco MySQL estarem ativos e configurados. Para executar o Vite fora do Docker, configure `VITE_API_PROXY_TARGET` com o endereço HTTP da API que não redirecione para HTTPS.
 
 ## Ícones com Lucide
 
@@ -96,7 +109,7 @@ npm ci
 npm run dev
 ```
 
-O Vite mostra o endereço local no terminal, normalmente `http://localhost:5173/`. Para conferir o build das três páginas, use `npm run build`; para visualizar o resultado, `npm run preview`.
+O Vite mostra o endereço local no terminal, normalmente `http://localhost:5173/`. Para gerar o build de todas as páginas, use `npm run build`; para visualizar o resultado, `npm run preview`.
 
 ## Dependências e verificações
 

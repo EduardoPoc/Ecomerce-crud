@@ -1,4 +1,5 @@
 import { initIcons } from '../utils/icons.js';
+import { getCartCount } from '../services/cart.js';
 
 /**
  * Retorna o HTML do cabeçalho da loja Além da Estante.
@@ -6,7 +7,7 @@ import { initIcons } from '../utils/icons.js';
  * @param {number|string} [options.cartCount=3] - Quantidade exibida no badge da sacola
  * @returns {string}
  */
-export function getHeaderHTML({ cartCount = 3 } = {}) {
+export function getHeaderHTML({ cartCount = 0 } = {}) {
   return `
     <header class="bg-paper/95 backdrop-blur-md border-b border-outline/60 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
@@ -47,9 +48,21 @@ export function getHeaderHTML({ cartCount = 3 } = {}) {
  */
 export class AppHeader extends HTMLElement {
   connectedCallback() {
-    const cartCount = this.getAttribute('cart-count') || 3;
-    this.innerHTML = getHeaderHTML({ cartCount });
+    this.innerHTML = getHeaderHTML({ cartCount: getCartCount() });
     initIcons({ root: this });
+    this.handleCartUpdate = () => this.updateCartBadge();
+    window.addEventListener('cart:updated', this.handleCartUpdate);
+    window.addEventListener('storage', this.handleCartUpdate);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('cart:updated', this.handleCartUpdate);
+    window.removeEventListener('storage', this.handleCartUpdate);
+  }
+
+  updateCartBadge() {
+    const badge = this.querySelector('a[href="/carrinho/"] span');
+    if (badge) badge.textContent = String(getCartCount());
   }
 }
 

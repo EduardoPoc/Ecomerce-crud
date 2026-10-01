@@ -8,26 +8,17 @@
     <link rel="stylesheet" href="/src/styles/main.css" />
     <script type="module" src="/src/pages/catalogo/catalogo.js"></script>
   </head>
-  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col justify-between">
-    <div>
-      <app-header cart-count="3"></app-header>
-
-      <main class="max-w-7xl mx-auto px-4 md:px-6 py-10 space-y-6">
-        <div class="border-b border-outline/50 pb-4">
-          <h1 class="text-3xl font-serif font-bold text-navy">Catálogo de Livros</h1>
-          <p class="text-sm text-muted mt-1">Explore nossa curadoria especial de títulos independentes e clássicos.</p>
-        </div>
-
-        <div class="p-8 bg-surface rounded-2xl border border-outline/40 text-center space-y-3">
-          <i data-lucide="book-open" class="w-10 h-10 text-sage mx-auto"></i>
-          <h2 class="text-lg font-bold text-navy">Curadoria em construção</h2>
-          <p class="text-xs text-muted max-w-md mx-auto">
-            Em breve os livros cadastrados na API serão exibidos diretamente nesta vitrine interativa.
-          </p>
-        </div>
-      </main>
-    </div>
-
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main class="max-w-7xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+      <header class="border-b border-outline/50 pb-5 mb-6">
+        <p class="text-xs font-bold tracking-widest text-sage uppercase">Além da Estante</p>
+        <h1 class="text-3xl font-serif font-bold text-navy mt-2">Catálogo de livros</h1>
+        <p class="text-sm text-muted mt-2">Livros disponíveis conforme o catálogo da loja.</p>
+      </header>
+      <p id="catalog-status" class="text-sm text-muted py-4" role="status" aria-live="polite">Carregando livros…</p>
+      <section id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5" aria-label="Livros"></section>
+    </main>
     <app-footer></app-footer>
   </body>
 </html>

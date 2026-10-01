@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import fs from 'node:fs';
-import { defineConfig } from 'vite';
+import https from 'node:https';
+import { defineConfig, loadEnv } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 
 /**
@@ -47,18 +48,41 @@ function cleanUrlsPlugin() {
   };
 }
 
-export default defineConfig({
-  plugins: [tailwindcss(), cleanUrlsPlugin()],
-  build: {
-    rolldownOptions: {
-      input: {
-        inicio: resolve(import.meta.dirname, 'index.html'),
-        catalogo: resolve(import.meta.dirname, 'src/pages/catalogo/index.html'),
-        carrinho: resolve(import.meta.dirname, 'src/pages/carrinho/index.html'),
-        pagamento: resolve(import.meta.dirname, 'src/pages/pagamento/index.html'),
-        finalizado: resolve(import.meta.dirname, 'src/pages/finalizado/index.html'),
-        login: resolve(import.meta.dirname, 'src/pages/login/index.html'),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const apiProxyTarget = process.env.VITE_API_PROXY_TARGET
+    || env.VITE_API_PROXY_TARGET
+    || 'http://localhost:8080';
+  const apiProxyUrl = new URL(apiProxyTarget);
+  const localApiAgent = apiProxyUrl.protocol === 'https:'
+    ? new https.Agent({ rejectUnauthorized: false, servername: 'localhost' })
+    : undefined;
+
+  return {
+    plugins: [tailwindcss(), cleanUrlsPlugin()],
+    server: {
+      proxy: {
+        '/api': {
+          target: apiProxyTarget,
+          changeOrigin: false,
+          // O Caddy local usa certificado próprio; esta exceção vale só no proxy de desenvolvimento.
+          secure: false,
+          agent: localApiAgent,
+          headers: { host: 'localhost' },
+        },
       },
     },
-  },
+    build: {
+      rolldownOptions: {
+        input: {
+          inicio: resolve(import.meta.dirname, 'index.html'),
+          catalogo: resolve(import.meta.dirname, 'src/pages/catalogo/index.html'),
+          carrinho: resolve(import.meta.dirname, 'src/pages/carrinho/index.html'),
+          pagamento: resolve(import.meta.dirname, 'src/pages/pagamento/index.html'),
+          finalizado: resolve(import.meta.dirname, 'src/pages/finalizado/index.html'),
+          login: resolve(import.meta.dirname, 'src/pages/login/index.html'),
+        },
+      },
+    },
+  };
 });
