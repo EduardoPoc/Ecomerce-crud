@@ -1,0 +1,13 @@
+# FrankenPHP configuration
+server:
+  name: localhost
+  http:
+    port: 80
+  roots:
+    - path: /var/www/html
+      index_files: [index.html]
+    - path: /var/www/api
+      index_files: [BooksController.php]
+  log:
+    enabled: true
+    level: debug

@@ -1,84 +1,32 @@
-# Book Library CRUD Application
+# Work-base
 
-A simple MVP book library application built with:
-- **Backend**: PHP RESTful API served by FrankenPHP
-- **Database**: MySQL
-- **Frontend**: HTML/CSS/JavaScript with Axios for API calls
+A crud project
 
-## Features
-- View all books
-- Add new books
-- Edit existing books
-- Delete books
-- Responsive design
+## Ambiente local com Docker
 
-## Project Structure
-```
-Ecomerce-crud/
-├── api/                 # PHP API controllers and models
-│   ├── controllers/     # API endpoints
-│   ├── models/          # Database models
-│   └── utils/           # Utility classes (database connection)
-├── public/              # Frontend assets
-│   ├── css/             # Stylesheets
-│   ├── js/              # JavaScript files
-│   └── index.html       # Main HTML page
-├── db/                  # Database schema
-│   └── schema.sql       # SQL schema and sample data
-├── docker/              # Docker configuration
-│   └── frankenphp/      # FrankenPHP server config
-├── docker-compose.yml   # Docker Compose file
-└── README.md            # This file
+O Compose sobe o frontend Vite, o backend da branch `Rotas` em FrankenPHP e o MySQL. A instalação do frontend acontece dentro do container e é atualizada quando o `package-lock.json` mudar; não é necessário executar comandos npm no host. Requer Docker com Docker Compose.
+
+```sh
+cp docker/php/app.env.example docker/php/app.env
+docker compose up --build
 ```
 
-## Setup Instructions
+- API: <http://localhost:8080/api/health>
+- Frontend: <http://localhost:5173>
+- MySQL no host: `127.0.0.1:3306` (banco/usuário/senha: `loja`)
 
-### Prerequisites
-- Docker and Docker Compose installed
-- Ports 8080 and 3306 available
+Os containers compartilham a rede `app`; a API conecta ao banco pelo hostname `mysql:3306`. O frontend usa a URL pública `http://localhost:8080/api`, acessada pelo navegador, e a API libera a origem `http://localhost:5173` via CORS. A configuração da aplicação em `docker/php/app.env` é montada como `/app/.env`, no caminho e formato que o backend já lê. `api/database/schema.sql` e `api/database/seed.sql` são executados na criação inicial do volume do MySQL.
 
-### Installation
-1. Clone this repository
-2. Navigate to the project directory
-3. Start the application with Docker Compose:
-   ```bash
-   docker-compose up -d
-   ```
+Para usar um cliente SQL no container:
 
-### Access the Application
-- **Frontend**: http://localhost:8080
-- **API Endpoint**: http://localhost:8080/api/controllers/BooksController.php
-- **MySQL**: localhost:3306 (username: user, password: password, database: book_library)
+```sh
+docker compose exec mysql mysql -uloja -ploja loja
+```
 
-## API Endpoints
+Ou enviar um arquivo SQL do host:
 
-| Method | Endpoint                           | Description          |
-|--------|------------------------------------|----------------------|
-| GET    | /api/controllers/BooksController.php | Get all books        |
-| GET    | /api/controllers/BooksController.php/{id} | Get single book    |
-| POST   | /api/controllers/BooksController.php | Create new book      |
-| PUT    | /api/controllers/BooksController.php | Update existing book |
-| DELETE | /api/controllers/BooksController.php | Delete book          |
+```sh
+docker compose exec -T mysql mysql -uloja -ploja loja < caminho/arquivo.sql
+```
 
-## Sample Data
-The application comes with pre-loaded sample data including:
-- The Great Gatsby by F. Scott Fitzgerald
-- To Kill a Mockingbird by Harper Lee
-- 1984 by George Orwell
-- Pride and Prejudice by Jane Austen
-- The Hobbit by J.R.R. Tolkien
-
-## Development Notes
-- The frontend uses vanilla JavaScript with Axios for HTTP requests
-- CORS is enabled on the API to allow cross-origin requests
-- FrankenPHP serves both the static frontend files and the PHP API
-- The application uses a MySQL database initialized with the schema.sql file
-
-## Troubleshooting
-- If the API doesn't respond, check if the FrankenPHP container is running: `docker-compose ps`
-- View logs: `docker-compose logs frankenphp`
-- Restart services: `docker-compose restart`
-- Rebuild containers: `docker-compose up --build -d`
-
-## License
-MIT License
+Os dados ficam no volume `mysql_data`; as dependências do frontend ficam em `frontend_node_modules`. Os scripts SQL só rodam na primeira criação do banco; `docker compose down -v` apaga os volumes e os dados. A API publica `8080`, o Vite `5173` e o MySQL `3306`, somente no host local. O Vite recebe `VITE_API_URL=http://localhost:8080/api` pelo Compose, e o CORS da API permite `http://localhost:5173`.
