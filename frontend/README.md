@@ -18,9 +18,12 @@ frontend/
 │   │   ├── catalogo/
 │   │   │   ├── catalogo.js # Script da página de catálogo
 │   │   │   └── index.html  # Entrada HTML do catálogo
-│   │   └── pagamento/
-│   │       ├── pagamento.js# Script da página de pagamento
-│   │       └── index.html  # Entrada HTML do pagamento
+│   │   ├── pagamento/
+│   │   │   ├── pagamento.js# Script da página de pagamento
+│   │   │   └── index.html  # Entrada HTML do pagamento
+│   │   └── finalizado/
+│   │       ├── finalizado.js# Script da confirmação do pedido
+│   │       └── index.html  # Entrada HTML da confirmação
 │   ├── components/
 │   │   ├── Header.js       # Componente de cabeçalho (<app-header>)
 │   │   └── Footer.js       # Componente de rodapé (<app-footer>)

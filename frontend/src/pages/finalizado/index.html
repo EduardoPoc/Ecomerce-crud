@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Pedido Concluído</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="./finalizado.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col justify-between">
+    <div>
+      <!-- Componente de Cabeçalho Global -->
+      <app-header cart-count="0"></app-header>
+
+      <!-- Conteúdo Central da Confirmação -->
+      <main class="max-w-[760px] mx-auto w-full px-4 sm:px-6 py-8 sm:py-10 space-y-6">
+        <!-- Breadcrumb e Status Ambiente -->
+        <div class="flex items-center justify-between text-xs flex-wrap gap-2">
+          <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-muted">
+            <a href="../../index.html" class="hover:text-navy transition-colors font-medium">Início</a>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            <span class="text-sage font-semibold">Confirmação de Pedido</span>
+          </nav>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage/10 text-sage text-xs font-semibold">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Curadoria Separada</span>
+          </div>
+        </div>
+
+        <!-- Cartão Principal de Confirmação do Pedido -->
+        <article class="bg-surface rounded-2xl p-6 sm:p-10 shadow-card border border-outline/40 space-y-8 relative overflow-hidden">
+          <!-- Marcador de Página Decorativo no Topo -->
+          <div class="absolute top-0 right-8 w-8 h-12 bg-sage/20 rounded-b-sm flex items-end justify-center pb-1.5 pointer-events-none" aria-hidden="true">
+            <span class="w-1.5 h-1.5 rounded-full bg-sage"></span>
+          </div>
+
+          <!-- Cabeçalho e Indicador Comemorativo -->
+          <header class="text-center space-y-3 pt-2">
+            <div class="relative w-16 h-16 rounded-full bg-sage/15 flex items-center justify-center mx-auto shadow-inner">
+              <i data-lucide="check" class="w-8 h-8 text-sage stroke-[2.5]"></i>
+              <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-amber flex items-center justify-center text-navy shadow-sm">
+                <i data-lucide="sparkle" class="w-3 h-3 fill-current"></i>
+              </span>
+            </div>
+            <div>
+              <span class="text-[11px] font-bold text-sage uppercase tracking-widest block mb-1">
+                Experiência Literária Concluída
+              </span>
+              <h1 class="text-2xl sm:text-3xl font-serif font-bold text-navy">
+                Pedido realizado com sucesso!
+              </h1>
+            </div>
+            <p class="text-xs sm:text-sm text-muted max-w-lg mx-auto leading-relaxed">
+              Obrigado por apoiar a Além da Estante. Cada livro é embalado manualmente com carinho e proteção especial de livraria. Enviamos a confirmação detalhada para seu e-mail cadastrado.
+            </p>
+          </header>
+
+          <!-- Bento com Dados Essenciais do Pedido -->
+          <section class="bg-surface-soft/60 rounded-xl p-4 sm:p-5 border border-outline/30 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <span class="text-[10px] font-bold text-muted uppercase tracking-wider block mb-1">Identificador</span>
+              <div class="flex items-center gap-1.5 text-navy font-bold text-base sm:text-lg">
+                <i data-lucide="hash" class="w-4 h-4 text-muted"></i>
+                <span>AE-89421</span>
+              </div>
+            </div>
+            <div>
+              <span class="text-[10px] font-bold text-muted uppercase tracking-wider block mb-1">Data da Compra</span>
+              <div class="text-sm sm:text-base font-semibold text-navy">
+                24 de Outubro de 2025
+              </div>
+            </div>
+            <div class="sm:text-right">
+              <span class="text-[10px] font-bold text-muted uppercase tracking-wider block mb-1">Situação</span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber/20 text-navy text-xs font-semibold">
+                <span class="w-2 h-2 rounded-full bg-amber animate-pulse"></span>
+                Aguardando pagamento
+              </span>
+            </div>
+          </section>
+
+          <!-- Rastreamento de Etapas da Remessa -->
+          <section class="bg-surface-soft/40 rounded-xl p-5 border border-outline/30 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <h2 class="text-sm font-bold text-navy font-serif">Etapas da sua remessa</h2>
+              <span class="text-xs text-muted font-medium flex items-center gap-1">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-sage"></i>
+                Prazo estimado: 3 a 5 dias úteis
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+              <!-- Etapa 1: Ativa -->
+              <div class="flex flex-col items-center text-center p-3 rounded-lg bg-surface border border-navy/20 shadow-xs space-y-1.5">
+                <div class="w-8 h-8 rounded-full bg-navy text-surface flex items-center justify-center font-bold text-xs">
+                  <i data-lucide="credit-card" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-bold text-navy block">Pagamento</span>
+                  <span class="text-[11px] text-amber font-semibold block">Pendente</span>
+                </div>
+              </div>
+
+              <!-- Etapa 2 -->
+              <div class="flex flex-col items-center text-center p-3 rounded-lg bg-surface-soft/50 border border-outline/20 space-y-1.5 opacity-70">
+                <div class="w-8 h-8 rounded-full bg-surface border border-outline text-muted flex items-center justify-center text-xs">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-medium text-muted block">Pago</span>
+                  <span class="text-[11px] text-muted block">Validação</span>
+                </div>
+              </div>
+
+              <!-- Etapa 3 -->
+              <div class="flex flex-col items-center text-center p-3 rounded-lg bg-surface-soft/50 border border-outline/20 space-y-1.5 opacity-70">
+                <div class="w-8 h-8 rounded-full bg-surface border border-outline text-muted flex items-center justify-center text-xs">
+                  <i data-lucide="truck" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-medium text-muted block">Enviado</span>
+                  <span class="text-[11px] text-muted block">Com rastreio</span>
+                </div>
+              </div>
+
+              <!-- Etapa 4 -->
+              <div class="flex flex-col items-center text-center p-3 rounded-lg bg-surface-soft/50 border border-outline/20 space-y-1.5 opacity-70">
+                <div class="w-8 h-8 rounded-full bg-surface border border-outline text-muted flex items-center justify-center text-xs">
+                  <i data-lucide="package-check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <span class="text-xs font-medium text-muted block">Entregue</span>
+                  <span class="text-[11px] text-muted block">Nas suas mãos</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Seção Interativa PIX -->
+          <section class="bg-surface-soft/70 rounded-xl p-5 sm:p-6 border border-outline/40 space-y-5">
+            <div class="flex items-center justify-between flex-wrap gap-3 pb-3 border-b border-outline/30">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-sage/15 text-sage flex items-center justify-center shrink-0">
+                  <i data-lucide="qr-code" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-base font-bold text-navy">Pagamento via PIX Instantâneo</h3>
+                  <p class="text-xs text-muted flex items-center gap-1">
+                    <i data-lucide="timer" class="w-3.5 h-3.5 text-amber"></i>
+                    Vencimento em 30 minutos (às 18:45)
+                  </p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-sage/15 text-sage text-xs font-semibold flex items-center gap-1">
+                <i data-lucide="zap" class="w-3 h-3"></i>
+                Aprovação em segundos
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+              <!-- QR Code Oficial do Figma -->
+              <div class="md:col-span-4 flex flex-col items-center justify-center p-4 bg-surface rounded-xl border border-outline/30 shadow-xs">
+                <img
+                  src="/images/qr-code-pix.svg"
+                  alt="QR Code PIX para pagamento"
+                  class="w-36 h-36 object-contain"
+                />
+                <span class="text-[11px] text-muted font-medium mt-2 text-center">
+                  Aponte a câmera do seu banco
+                </span>
+              </div>
+
+              <!-- Instruções e Código Copia e Cola -->
+              <div class="md:col-span-8 space-y-3.5">
+                <p class="text-xs text-muted leading-relaxed">
+                  Abra o aplicativo de qualquer instituição financeira, escolha a opção <strong class="text-navy font-semibold">PIX Copia e Cola</strong> ou aponte o leitor de QR Code para a imagem ao lado.
+                </p>
+
+                <div>
+                  <label for="pix-code" class="text-xs font-semibold text-navy mb-1.5 block">
+                    Código PIX Copia e Cola:
+                  </label>
+                  <div class="flex rounded-lg overflow-hidden border border-outline bg-surface focus-within:border-navy shadow-xs">
+                    <input
+                      id="pix-code"
+                      type="text"
+                      readonly
+                      value="00020126580014br.gov.bcb.pix0136ae89421-alemdaestante-livraria-pix5204000053039865406187.905802BR5925ALEM DA ESTANTE LIVRARIA6009SAO PAULO62070503***630489F2"
+                      class="font-mono text-xs text-muted bg-transparent px-3 py-2.5 flex-1 truncate outline-none select-all cursor-text"
+                    />
+                    <button
+                      type="button"
+                      class="bg-navy hover:bg-navy/90 text-surface text-xs font-semibold px-4 py-2.5 flex items-center gap-1.5 transition-colors cursor-pointer shrink-0"
+                    >
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                      <span>Copiar Código</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-2 text-xs text-muted pt-1">
+                  <i data-lucide="info" class="w-4 h-4 text-muted shrink-0 mt-0.5"></i>
+                  <p>Caso prefira cartão de crédito, o comprovante será conciliado em Meus Pedidos.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Informações de Entrega -->
+          <section class="bg-surface-soft/40 rounded-xl p-4 sm:p-5 border border-outline/30 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-full bg-surface border border-outline/40 flex items-center justify-center text-navy shrink-0 shadow-xs">
+              <i data-lucide="map-pin" class="w-4 h-4 text-sage"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-navy">Endereço de Entrega</h3>
+                <span class="text-[10px] font-semibold bg-surface border border-outline/40 px-2 py-0.5 rounded text-muted uppercase">Padrão</span>
+              </div>
+              <div class="text-xs sm:text-sm font-semibold text-ink mt-1">Mariana Silveira Silva</div>
+              <p class="text-xs text-muted mt-0.5 leading-relaxed">
+                Rua das Flores, 245, Apto 42 — Pinheiros, São Paulo - SP • CEP 05412-001
+              </p>
+            </div>
+          </section>
+
+          <!-- Livros no Pedido -->
+          <section class="space-y-4">
+            <div class="flex items-center justify-between pb-1">
+              <h3 class="text-base font-bold text-navy font-serif">Livros no Pedido (3 itens)</h3>
+              <span class="text-xs text-sage font-medium flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                Embalagem protetora inclusa
+              </span>
+            </div>
+
+            <ul class="divide-y divide-outline/30 rounded-xl border border-outline/30 bg-surface-soft/30 overflow-hidden">
+              <!-- Item 1: Torto Arado -->
+              <li class="p-3.5 sm:p-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <img
+                    src="/images/torto-arado.png"
+                    alt="Capa do livro Torto Arado"
+                    class="w-12 h-16 object-cover rounded border border-outline/40 shrink-0 shadow-xs"
+                  />
+                  <div class="min-w-0">
+                    <span class="text-[11px] text-muted block truncate">Itamar Vieira Junior</span>
+                    <h4 class="text-sm font-bold text-navy font-serif truncate">Torto Arado</h4>
+                    <span class="text-xs text-muted block mt-0.5">Edição brochura especial • Qtd: 1</span>
+                  </div>
+                </div>
+                <div class="text-sm font-bold text-navy shrink-0">R$ 54,90</div>
+              </li>
+
+              <!-- Item 2: A Hora da Estrela -->
+              <li class="p-3.5 sm:p-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <img
+                    src="/images/a-hora-da-estrela.png"
+                    alt="Capa do livro A Hora da Estrela"
+                    class="w-12 h-16 object-cover rounded border border-outline/40 shrink-0 shadow-xs"
+                  />
+                  <div class="min-w-0">
+                    <span class="text-[11px] text-muted block truncate">Clarice Lispector</span>
+                    <h4 class="text-sm font-bold text-navy font-serif truncate">A Hora da Estrela</h4>
+                    <span class="text-xs text-muted block mt-0.5">Capa dura comemorativa • Qtd: 2</span>
+                  </div>
+                </div>
+                <div class="text-right shrink-0">
+                  <div class="text-sm font-bold text-navy">R$ 76,00</div>
+                  <div class="text-[11px] text-muted">R$ 38,00 un.</div>
+                </div>
+              </li>
+
+              <!-- Item 3: O Mito de Sísifo -->
+              <li class="p-3.5 sm:p-4 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <img
+                    src="/images/o-mito-de-sisifo.png"
+                    alt="Capa do livro O Mito de Sísifo"
+                    class="w-12 h-16 object-cover rounded border border-outline/40 shrink-0 shadow-xs"
+                  />
+                  <div class="min-w-0">
+                    <span class="text-[11px] text-muted block truncate">Albert Camus</span>
+                    <h4 class="text-sm font-bold text-navy font-serif truncate">O Mito de Sísifo</h4>
+                    <span class="text-xs text-muted block mt-0.5">Ensaio filosófico • Qtd: 1</span>
+                  </div>
+                </div>
+                <div class="text-sm font-bold text-navy shrink-0">R$ 45,00</div>
+              </li>
+            </ul>
+
+            <!-- Resumo Financeiro -->
+            <div class="bg-surface-soft/50 rounded-xl p-4 border border-outline/30 space-y-2.5 text-xs text-muted">
+              <div class="flex justify-between items-center">
+                <span>Subtotal (4 volumes)</span>
+                <span class="font-semibold text-ink">R$ 175,90</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="flex items-center gap-1">
+                  Frete com rastreio ecológico
+                  <i data-lucide="leaf" class="w-3 h-3 text-sage"></i>
+                </span>
+                <span class="font-semibold text-ink">R$ 12,00</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span>Cortesia de Marcadores de Página</span>
+                <span class="font-semibold text-sage">Grátis</span>
+              </div>
+              <div class="border-t border-outline/40 pt-2.5 flex items-center justify-between">
+                <span class="text-sm font-bold text-navy">Total do Pedido</span>
+                <span class="text-lg font-bold text-navy">R$ 187,90</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Botões de Ação Final -->
+          <footer class="flex flex-col sm:flex-row items-center justify-between gap-3.5 pt-4 border-t border-outline/30">
+            <a
+              href="#"
+              class="w-full sm:w-auto border border-outline hover:border-navy text-navy font-semibold text-xs sm:text-sm px-5 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer text-center"
+            >
+              <i data-lucide="package" class="w-4 h-4"></i>
+              <span>Acompanhar em Meus Pedidos</span>
+            </a>
+
+            <a
+              href="../catalogo/index.html"
+              class="w-full sm:w-auto bg-navy hover:bg-navy/90 text-surface font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm cursor-pointer text-center"
+            >
+              <span>Continuar explorando</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </footer>
+        </article>
+
+        <!-- Nota de Atendimento e Garantia da Livraria -->
+        <aside class="flex items-center justify-center gap-2 text-xs text-muted text-center py-2">
+          <i data-lucide="help-circle" class="w-4 h-4 text-sage shrink-0"></i>
+          <p>Dúvidas com seu pedido? Nossa equipe de livreiros está à disposição no canal de atendimento.</p>
+        </aside>
+      </main>
+    </div>
+
+    <!-- Componente de Rodapé Global -->
+    <app-footer></app-footer>
+  </body>
+</html>
