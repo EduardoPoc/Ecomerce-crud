@@ -1,0 +1,15 @@
+{
+  "name": "ecommerce/api",
+  "description": "API do e-commerce de livros",
+  "type": "project",
+  "require": {
+    "php": ">=8.1",
+    "ext-pdo": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ecommerce\\Api\\": "src/"
+    }
+  }
+}
