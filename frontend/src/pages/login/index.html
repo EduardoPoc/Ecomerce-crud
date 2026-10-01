@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Entrar</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="module" src="./login.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col justify-between items-center px-4 py-8 sm:py-12 relative">
+    <!-- Cabeçalho de Navegação Superior -->
+    <header class="w-full max-w-[440px] flex items-center justify-between mb-4">
+      <a
+        href="../../index.html"
+        class="inline-flex items-center gap-1.5 text-xs text-muted hover:text-navy transition-colors font-medium"
+      >
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Voltar para a livraria</span>
+      </a>
+    </header>
+
+    <!-- Cartão Central de Login -->
+    <main class="w-full max-w-[440px] bg-surface rounded-2xl p-6 sm:p-10 shadow-card border border-outline/40 space-y-6">
+      <!-- Topo: Logotipo e Saudação -->
+      <div class="flex flex-col items-center text-center">
+        <a href="../../index.html" class="group block mb-3" aria-label="Página inicial Além da Estante">
+          <div class="w-20 h-20 rounded-full bg-surface-soft border border-outline/40 shadow-xs flex items-center justify-center p-2 transition-transform group-hover:scale-105">
+            <img
+              src="/images/logo.png"
+              alt="Logotipo Além da Estante"
+              class="w-16 h-16 rounded-full object-contain"
+            />
+          </div>
+        </a>
+
+        <span class="text-[11px] font-bold tracking-widest text-sage uppercase">
+          Livraria & Refúgio
+        </span>
+
+        <h1 class="text-2xl font-serif font-bold text-navy mt-2.5 mb-1.5">
+          Entrar na Além da Estante
+        </h1>
+
+        <p class="text-xs text-muted leading-relaxed max-w-xs">
+          Bem-vindo de volta ao seu refúgio literário. Insira seus dados para continuar suas leituras.
+        </p>
+      </div>
+
+      <!-- Formulário de Autenticação -->
+      <form class="space-y-4" onsubmit="event.preventDefault();">
+        <!-- Campo: E-mail -->
+        <div class="space-y-1.5">
+          <label for="email" class="block text-xs font-semibold text-navy">
+            E-mail
+          </label>
+          <div class="relative">
+            <i
+              data-lucide="mail"
+              class="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            ></i>
+            <input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              required
+              class="w-full bg-surface-soft border border-outline rounded-lg pl-10 pr-4 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-navy focus:bg-surface transition-colors"
+            />
+          </div>
+        </div>
+
+        <!-- Campo: Senha -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="senha" class="block text-xs font-semibold text-navy">
+              Senha
+            </label>
+          </div>
+          <div class="relative">
+            <i
+              data-lucide="lock"
+              class="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+            ></i>
+            <input
+              id="senha"
+              type="password"
+              placeholder="••••••••"
+              required
+              class="w-full bg-surface-soft border border-outline rounded-lg pl-10 pr-10 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-navy focus:bg-surface transition-colors"
+            />
+            <button
+              type="button"
+              aria-label="Alternar visibilidade da senha"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-navy cursor-pointer transition-colors"
+            >
+              <i data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Opções: Lembrar de mim & Recuperação -->
+        <div class="flex items-center justify-between pt-0.5 text-xs">
+          <label class="flex items-center gap-2 text-muted cursor-pointer select-none">
+            <input
+              type="checkbox"
+              class="accent-navy rounded border-outline cursor-pointer"
+            />
+            <span>Lembrar de mim</span>
+          </label>
+          <a
+            href="#"
+            class="text-sage hover:text-navy hover:underline font-medium transition-colors"
+          >
+            Esqueceu sua senha?
+          </a>
+        </div>
+
+        <!-- Botão de Ação -->
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full bg-navy hover:bg-navy/90 text-surface font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors cursor-pointer shadow-sm"
+          >
+            <span>Entrar na conta</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Rodapé do Cartão: Link para Cadastro -->
+      <footer class="pt-2 border-t border-outline/30 text-center">
+        <p class="text-xs text-muted">
+          Ainda não tem uma conta?
+          <a
+            href="../cadastro/index.html"
+            class="text-navy hover:underline font-semibold"
+          >
+            Cadastre-se gratuitamente
+          </a>
+        </p>
+      </footer>
+    </main>
+
+    <!-- Citação Literária no Rodapé -->
+    <aside class="w-full max-w-sm text-center mt-8 space-y-2">
+      <div class="flex justify-center text-sage/80 mb-1">
+        <i data-lucide="book-open" class="w-5 h-5"></i>
+      </div>
+      <blockquote class="font-serif italic text-xs sm:text-sm text-muted">
+        “Um livro é a extensão da memória e da imaginação.”
+      </blockquote>
+      <p class="text-[11px] text-muted/70 font-medium">
+        — Jorge Luis Borges
+      </p>
+    </aside>
+  </body>
+</html>
