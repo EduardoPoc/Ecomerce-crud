@@ -15,9 +15,14 @@ frontend/
 │   │   ├── carrinho/
 │   │   │   ├── carrinho.js # Script da página de carrinho
 │   │   │   └── index.html  # Entrada HTML do carrinho
-│   │   └── catalogo/
-│   │       ├── catalogo.js # Script da página de catálogo
-│   │       └── index.html  # Entrada HTML do catálogo
+│   │   ├── catalogo/
+│   │   │   ├── catalogo.js # Script da página de catálogo
+│   │   │   └── index.html  # Entrada HTML do catálogo
+│   │   └── pagamento/
+│   │       ├── pagamento.js# Script da página de pagamento
+│   │       └── index.html  # Entrada HTML do pagamento
+│   ├── utils/
+│   │   └── icons.js        # Utilitário de ícones com Lucide
 │   └── styles/
 │       ├── main.css        # Tailwind e configuração visual
 │       └── tokens.css      # Valores da paleta

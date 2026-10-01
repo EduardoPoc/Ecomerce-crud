@@ -10,6 +10,7 @@ export default defineConfig({
         inicio: resolve(import.meta.dirname, 'index.html'),
         catalogo: resolve(import.meta.dirname, 'src/pages/catalogo/index.html'),
         carrinho: resolve(import.meta.dirname, 'src/pages/carrinho/index.html'),
+        pagamento: resolve(import.meta.dirname, 'src/pages/pagamento/index.html'),
       },
     },
   },
