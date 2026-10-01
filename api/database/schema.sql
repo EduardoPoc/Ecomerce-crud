@@ -14,6 +14,7 @@ CREATE TABLE usuario (
   senha_hash  VARCHAR(255) NOT NULL,
   papel       VARCHAR(20)  NOT NULL DEFAULT 'CLIENTE',
   criado_em   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ativo     BOOLEAN      NOT NULL DEFAULT TRUE,
   PRIMARY KEY (id),
   UNIQUE KEY uk_usuario_email (email),
   CONSTRAINT ck_usuario_papel CHECK (papel IN ('CLIENTE', 'ADMIN'))
