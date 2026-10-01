@@ -141,3 +141,17 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# IDE e Editores
+.vscode/*
+!.vscode/settings.json
+
+# Ferramentas de IA, Agentes e MCP
+.agents/
+.codex/
+.claude/
+.gemini/
+.cursor/
+*.mcp.json
+.vscode/mcp.json
+
