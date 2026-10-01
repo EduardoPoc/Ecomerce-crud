@@ -23,3 +23,8 @@ body {
   color: var(--brand-ink);
   font-family: var(--brand-font);
 }
+
+.lucide {
+  display: inline-block;
+  vertical-align: middle;
+}
