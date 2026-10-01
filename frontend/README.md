@@ -66,6 +66,37 @@ A sacola ainda não sincroniza com a tabela `carrinho`/`item_carrinho`. A API ta
 
 Catálogo e login dependem de a API e o banco MySQL estarem ativos e configurados. Para executar o Vite fora do Docker, configure `VITE_API_PROXY_TARGET` com o endereço HTTP da API que não redirecione para HTTPS.
 
+## Rodar com Docker
+
+Os comandos abaixo devem ser executados na raiz do repositório, pois o Compose e o Dockerfile do frontend ficam fora desta pasta. É necessário Docker com Docker Compose. Antes da primeira inicialização, prepare o arquivo de ambiente local do PHP:
+
+```sh
+cp docker/php/app.env.example docker/php/app.env
+```
+
+Para iniciar o frontend e suas dependências:
+
+```sh
+docker compose up --build frontend
+```
+
+Esse comando também inicia PHP e MySQL por causa das dependências declaradas no Compose. Para subir todos os serviços definidos no Compose de uma vez, use:
+
+```sh
+docker compose up --build
+```
+
+Abra <http://localhost:5173>. No Docker, o Vite recebe `VITE_API_URL=/api` e encaminha as chamadas para `https://php:443` pela rede interna; não configure no navegador a URL direta da API para este fluxo. A API fica disponível em <http://localhost:8080/api/health> para diagnóstico. A configuração para aceitar o certificado local é exclusiva do servidor Vite de desenvolvimento.
+
+Para acompanhar o frontend e encerrar os serviços:
+
+```sh
+docker compose logs -f frontend
+docker compose down
+```
+
+Use `docker compose down -v` somente se quiser apagar também os volumes locais, incluindo os dados do MySQL.
+
 ## Ícones com Lucide
 
 A biblioteca `lucide` está instalada para uso com JavaScript puro e Tailwind CSS.
