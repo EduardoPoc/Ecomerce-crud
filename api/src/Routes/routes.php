@@ -17,6 +17,7 @@ use Ecommerce\Api\Middlewares\AdminMiddleware;
 use Ecommerce\Api\Middlewares\AuthMiddleware;
 
 
+
 /**
  * Todas as rotas da API ficam aqui. O frontend usa VITE_API_BASE_URL = http://host:porta/api,
  * por isso tudo fica sob o prefixo /api.
@@ -69,11 +70,17 @@ return static function (Router $router): void {
         // Categorias (públicas)
         $api->get('/categorias', [CategoriaController::class, 'index']);
         $api->get('/categorias/{id:\\d+}', [CategoriaController::class, 'show']);
+                // ---------- Pedidos (usuário logado; mudar status é só ADMIN) ----------
+        $api->group('/pedidos', [AuthMiddleware::class], function (Router $r): void {
+            $r->get('', [PedidoController::class, 'index']);
+            $r->post('', [PedidoController::class, 'store']);
+            $r->get('/{id:\d+}', [PedidoController::class, 'show']);
+            $r->patch('/{id:\d+}/status', [PedidoController::class, 'atualizarStatus'], [AdminMiddleware::class]);
+        });
 
         // ---------- A DEFINIR PELO TIME (o schema e o frontend já precisam disso) ----------
         // Catálogo (público):   GET /categorias
         // Carrinho:             GET /carrinho, POST /carrinho/itens, PATCH/DELETE /carrinho/itens/{id}
-        // Pedidos (logado):     POST /pedidos, GET /pedidos, GET /pedidos/{id}
         // Endereços (logado):   GET/POST /enderecos, PUT/DELETE /enderecos/{id}
         // Admin:                PATCH /pedidos/{id}/status
     });
