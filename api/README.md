@@ -1,4 +1,147 @@
-Api do projeto Ecomerce
+# API do projeto Ecomerce
+
+## Execução
+
+Com Docker Compose, a API fica disponível em `http://localhost:8080`:
+
+```sh
+cp docker/php/app.env.example docker/php/app.env
+docker compose up --build
+```
+
+Todas as rotas abaixo usam o prefixo `/api`.
+
+## Autenticação
+
+As rotas públicas não exigem autenticação. As rotas protegidas usam um token JWT no cabeçalho:
+
+```http
+Authorization: Bearer <token>
+```
+
+O login retorna um token de usuário. As rotas de usuários exigem um token de um usuário com papel `ADMIN`.
+
+Usuário administrador incluído no seed local:
+
+```text
+e-mail: admin@livraria.com
+senha: senha123
+```
+
+## Rotas implementadas
+
+### Saúde da API
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/health` | Pública | Verifica se a API e o banco estão disponíveis. Retorna `200` ou `503`. |
+
+### Autenticação
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `POST` | `/api/auth/login` | Pública | Autentica por e-mail e senha e retorna um token JWT. |
+| `POST` | `/api/auth/cadastro` | Pública | Cria um usuário com papel `CLIENTE` e retorna um token. |
+| `GET` | `/api/auth/me` | Bearer | Retorna os dados do usuário autenticado. |
+
+Exemplo de login:
+
+```sh
+curl -X POST http://localhost:8080/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@livraria.com","senha":"senha123"}'
+```
+
+Exemplo de cadastro:
+
+```sh
+curl -X POST http://localhost:8080/api/auth/cadastro \
+  -H 'Content-Type: application/json' \
+  -d '{"nome":"Ana Silva","email":"ana@email.com","senha":"senha123"}'
+```
+
+### Produtos
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/produtos` | Pública | Lista os produtos cadastrados. |
+| `GET` | `/api/produtos/{id}` | Pública | Retorna um produto pelo ID. |
+
+### Categorias
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/categorias` | Pública | Lista as categorias. |
+| `GET` | `/api/categorias/{id}` | Pública | Retorna uma categoria pelo ID. |
+
+### Usuários — somente administradores
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/usuarios` | Admin | Lista usuários com paginação. |
+| `GET` | `/api/usuarios/{id}` | Admin | Retorna um usuário pelo ID. |
+| `POST` | `/api/usuarios` | Admin | Cria um usuário; permite `CLIENTE` ou `ADMIN`. |
+| `PUT` | `/api/usuarios/{id}` | Admin | Atualiza os campos enviados. |
+| `PATCH` | `/api/usuarios/{id}` | Admin | Atualiza parcialmente os campos enviados. |
+| `DELETE` | `/api/usuarios/{id}` | Admin | Exclui um usuário, exceto a própria conta. |
+
+Paginação de usuários:
+
+```http
+GET /api/usuarios?pagina=1&limite=20
+```
+
+`pagina` começa em `1`; `limite` varia de `1` a `100` e o padrão é `20`.
+
+Exemplo de consulta autenticada:
+
+```sh
+curl http://localhost:8080/api/usuarios \
+  -H 'Authorization: Bearer <token-admin>'
+```
+
+Corpo para criar ou atualizar usuário:
+
+```json
+{
+  "nome": "Ana Silva",
+  "email": "ana@email.com",
+  "senha": "senha123",
+  "papel": "CLIENTE"
+}
+```
+
+## Respostas e erros
+
+Respostas JSON de erro usam o formato `{"erro":"..."}`. Quando aplicável, a resposta também inclui `detalhes`.
+
+Status mais comuns:
+
+- `200`: operação concluída.
+- `201`: recurso criado.
+- `204`: recurso excluído sem conteúdo.
+- `400`: requisição inválida.
+- `401`: token ausente, inválido ou expirado.
+- `403`: usuário autenticado sem permissão.
+- `404`: recurso ou rota não encontrada.
+- `409`: conflito, como e-mail já cadastrado.
+- `422`: dados de entrada inválidos.
+- `500`: erro interno inesperado.
+- `503`: API sem conexão com o banco, no endpoint `/api/health`.
+
+## Rotas ainda não implementadas
+
+As funcionalidades abaixo estão previstas no schema, mas ainda não possuem rotas registradas em `api/src/Routes/routes.php`:
+
+- Carrinho: `GET /api/carrinho`, `POST /api/carrinho/itens`, `PATCH/DELETE /api/carrinho/itens/{id}`.
+- Pedidos: `POST /api/pedidos`, `GET /api/pedidos`, `GET /api/pedidos/{id}`.
+- Endereços: `GET/POST /api/enderecos`, `PUT/DELETE /api/enderecos/{id}`.
+- Administração de produtos: `POST/PUT/DELETE /api/produtos/{id}`.
+- Atualização de status de pedidos: `PATCH /api/pedidos/{id}/status`.
+
+Embora existam alguns controllers/services experimentais para pedidos e operações de escrita de produtos, eles não estão expostos pelo router e não devem ser considerados endpoints disponíveis.
+
+## Organização do backend
 
 ENTRADA E ROTAS
 
