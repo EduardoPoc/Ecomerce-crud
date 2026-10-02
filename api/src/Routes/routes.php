@@ -7,6 +7,9 @@ use Ecommerce\Api\Controllers\AuthController;
 use Ecommerce\Api\Controllers\ProdutoController;
 use Ecommerce\Api\Controllers\UsuarioController;
 use Ecommerce\Api\Controllers\CategoriaController;
+use Ecommerce\Api\Controllers\CarrinhoController;
+use Ecommerce\Api\Controllers\EnderecoController;
+use Ecommerce\Api\Controllers\PedidoController;
 use Ecommerce\Api\Core\Request;
 use Ecommerce\Api\Core\Response;
 use Ecommerce\Api\Core\Router;
@@ -58,11 +61,37 @@ return static function (Router $router): void {
         $api->get('/categorias', [CategoriaController::class, 'index']);
         $api->get('/categorias/{id:\\d+}', [CategoriaController::class, 'show']);
 
-        // ---------- A DEFINIR PELO TIME (o schema e o frontend já precisam disso) ----------
-        // Catálogo (público):   GET /categorias
-        // Carrinho:             GET /carrinho, POST /carrinho/itens, PATCH/DELETE /carrinho/itens/{id}
-        // Pedidos (logado):     POST /pedidos, GET /pedidos, GET /pedidos/{id}
-        // Endereços (logado):   GET/POST /enderecos, PUT/DELETE /enderecos/{id}
-        // Admin:                POST/PUT/DELETE /produtos/{id}, PATCH /pedidos/{id}/status
+        // Operação de vendedores: produtos e estoque. Categorias são somente leitura.
+        $api->group('/produtos', [AuthMiddleware::class, AdminMiddleware::class], function (Router $r): void {
+            $r->post('', [ProdutoController::class, 'store']);
+            $r->put('/{id:\\d+}', [ProdutoController::class, 'update']);
+            $r->patch('/{id:\\d+}', [ProdutoController::class, 'update']);
+            $r->delete('/{id:\\d+}', [ProdutoController::class, 'destroy']);
+        });
+
+        // Carrinho e checkout exigem login; não existe carrinho de visitante.
+        $api->group('/carrinho', [AuthMiddleware::class], function (Router $r): void {
+            $r->get('', [CarrinhoController::class, 'show']);
+            $r->post('/itens', [CarrinhoController::class, 'add']);
+            $r->patch('/itens/{produto_id:\\d+}', [CarrinhoController::class, 'update']);
+            $r->delete('/itens/{produto_id:\\d+}', [CarrinhoController::class, 'remove']);
+        });
+
+        $api->group('/enderecos', [AuthMiddleware::class], function (Router $r): void {
+            $r->get('', [EnderecoController::class, 'index']);
+            $r->post('', [EnderecoController::class, 'store']);
+            $r->put('/{id:\\d+}', [EnderecoController::class, 'update']);
+            $r->patch('/{id:\\d+}', [EnderecoController::class, 'update']);
+            $r->delete('/{id:\\d+}', [EnderecoController::class, 'destroy']);
+        });
+
+        $api->group('/pedidos', [AuthMiddleware::class], function (Router $r): void {
+            $r->get('', [PedidoController::class, 'index']);
+            $r->get('/{id:\\d+}', [PedidoController::class, 'show']);
+            $r->post('', [PedidoController::class, 'store']);
+            $r->post('/{id:\\d+}/pagar', [PedidoController::class, 'pay']);
+        });
+
+        $api->patch('/pedidos/{id:\\d+}/status', [PedidoController::class, 'updateStatus'], [AuthMiddleware::class, AdminMiddleware::class]);
     });
 };

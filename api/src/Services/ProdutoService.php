@@ -6,8 +6,6 @@ namespace Ecommerce\Api\Services;
 
 use Ecommerce\Api\Repositories\ProdutoRepository;
 use Ecommerce\Api\Core\HttpException;
-use InvalidArgumentException;
-use RuntimeException;
 
 class ProdutoService
 {
@@ -62,7 +60,7 @@ class ProdutoService
         );
 
         if (!$this->repository->categoryExists($categoriaId)) {
-            throw new RuntimeException(
+            throw new HttpException(422,
                 'Categoria não encontrada.'
             );
         }
@@ -81,13 +79,13 @@ class ProdutoService
     public function update(int $id, array $data): void
     {
         if ($id <= 0) {
-            throw new InvalidArgumentException('ID inválido.');
+            throw new HttpException(400, 'ID inválido.');
         }
 
         $produto = $this->repository->findById($id);
 
         if ($produto === null) {
-            throw new RuntimeException('Produto não encontrado.');
+            throw new HttpException(404, 'Produto não encontrado.');
         }
 
         $categoriaId = (int) ($data['categoria_id'] ?? 0);
@@ -112,7 +110,7 @@ class ProdutoService
         );
 
         if (!$this->repository->categoryExists($categoriaId)) {
-            throw new RuntimeException(
+            throw new HttpException(422,
                 'Categoria não encontrada.'
             );
         }
@@ -132,13 +130,13 @@ class ProdutoService
     public function delete(int $id): void
     {
         if ($id <= 0) {
-            throw new InvalidArgumentException('ID inválido.');
+            throw new HttpException(400, 'ID inválido.');
         }
 
         $produto = $this->repository->findById($id);
 
         if ($produto === null) {
-            throw new RuntimeException(
+            throw new HttpException(404,
                 'Produto não encontrado.'
             );
         }
@@ -154,37 +152,37 @@ class ProdutoService
         mixed $estoque
     ): void {
         if ($categoriaId <= 0) {
-            throw new InvalidArgumentException(
+            throw new HttpException(422,
                 'Categoria é obrigatória.'
             );
         }
 
         if ($nome === '') {
-            throw new InvalidArgumentException(
+            throw new HttpException(422,
                 'Nome é obrigatório.'
             );
         }
 
         if ($preco === null || !is_numeric($preco)) {
-            throw new InvalidArgumentException(
+            throw new HttpException(422,
                 'Preço deve ser numérico.'
             );
         }
 
         if ((float) $preco < 0) {
-            throw new InvalidArgumentException(
+            throw new HttpException(422,
                 'Preço não pode ser negativo.'
             );
         }
 
         if ($estoque === null || !is_numeric($estoque)) {
-            throw new InvalidArgumentException(
+            throw new HttpException(422,
                 'Estoque deve ser numérico.'
             );
         }
 
         if ((int) $estoque < 0) {
-            throw new InvalidArgumentException(
+            throw new HttpException(422,
                 'Estoque não pode ser negativo.'
             );
         }

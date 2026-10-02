@@ -66,6 +66,9 @@ curl -X POST http://localhost:8080/api/auth/cadastro \
 | --- | --- | --- | --- |
 | `GET` | `/api/produtos` | Pública | Lista os produtos cadastrados. |
 | `GET` | `/api/produtos/{id}` | Pública | Retorna um produto pelo ID. |
+| `POST` | `/api/produtos` | Admin | Cadastra um produto. |
+| `PUT`/`PATCH` | `/api/produtos/{id}` | Admin | Atualiza um produto. |
+| `DELETE` | `/api/produtos/{id}` | Admin | Desativa um produto sem apagar o histórico. |
 
 ### Categorias
 
@@ -100,6 +103,36 @@ curl http://localhost:8080/api/usuarios \
   -H 'Authorization: Bearer <token-admin>'
 ```
 
+### Carrinho — somente usuários autenticados
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/carrinho` | Bearer | Retorna os itens e o subtotal do carrinho do usuário. |
+| `POST` | `/api/carrinho/itens` | Bearer | Adiciona `produto_id` e `quantidade`, respeitando o estoque. |
+| `PATCH` | `/api/carrinho/itens/{produto_id}` | Bearer | Define a quantidade do item. |
+| `DELETE` | `/api/carrinho/itens/{produto_id}` | Bearer | Remove o item. |
+
+Visitantes não possuem carrinho na API e devem fazer login antes de adicionar produtos.
+
+### Endereços — somente usuários autenticados
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/enderecos` | Bearer | Lista os endereços ativos do usuário. |
+| `POST` | `/api/enderecos` | Bearer | Cria um endereço. |
+| `PUT`/`PATCH` | `/api/enderecos/{id}` | Bearer | Atualiza um endereço próprio. |
+| `DELETE` | `/api/enderecos/{id}` | Bearer | Desativa um endereço próprio. |
+
+### Pedidos e pagamento simulado
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `POST` | `/api/pedidos` | Bearer | Cria um pedido pendente usando o carrinho e `endereco_id`. |
+| `POST` | `/api/pedidos/{id}/pagar` | Bearer | Simula o pagamento, reduz estoque, limpa o carrinho e marca como `PAGO`. |
+| `GET` | `/api/pedidos` | Bearer | Cliente vê os próprios pedidos; admin vê todos. |
+| `GET` | `/api/pedidos/{id}` | Bearer | Cliente vê os próprios pedidos; admin pode consultar qualquer pedido. |
+| `PATCH` | `/api/pedidos/{id}/status` | Admin | Atualiza o status operacional do pedido. |
+
 Corpo para criar ou atualizar usuário:
 
 ```json
@@ -129,17 +162,13 @@ Status mais comuns:
 - `500`: erro interno inesperado.
 - `503`: API sem conexão com o banco, no endpoint `/api/health`.
 
-## Rotas ainda não implementadas
+## Regras operacionais
 
-As funcionalidades abaixo estão previstas no schema, mas ainda não possuem rotas registradas em `api/src/Routes/routes.php`:
-
-- Carrinho: `GET /api/carrinho`, `POST /api/carrinho/itens`, `PATCH/DELETE /api/carrinho/itens/{id}`.
-- Pedidos: `POST /api/pedidos`, `GET /api/pedidos`, `GET /api/pedidos/{id}`.
-- Endereços: `GET/POST /api/enderecos`, `PUT/DELETE /api/enderecos/{id}`.
-- Administração de produtos: `POST/PUT/DELETE /api/produtos/{id}`.
-- Atualização de status de pedidos: `PATCH /api/pedidos/{id}/status`.
-
-Embora existam alguns controllers/services experimentais para pedidos e operações de escrita de produtos, eles não estão expostos pelo router e não devem ser considerados endpoints disponíveis.
+- Categorias são fixas e somente leitura pela API.
+- Produtos são desativados, e não apagados fisicamente, para preservar o histórico dos pedidos.
+- O pagamento é sempre simulado; não existe integração com gateway.
+- O estoque só é reduzido quando o usuário confirma o pagamento.
+- Vendedores com papel `ADMIN` gerenciam produtos, visualizam todos os pedidos e atualizam seus status.
 
 ## Organização do backend
 
