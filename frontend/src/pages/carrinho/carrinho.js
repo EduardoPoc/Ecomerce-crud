@@ -1,6 +1,7 @@
 import '../../main.js';
 import { getProducts, getProductStock, isProductActive, formatPrice } from '../../services/products.js';
 import { getCartItems, getCartCount, setCartQuantity, removeFromCart } from '../../services/cart.js';
+import { createProductImageElement } from '../../utils/productImage.js';
 
 const status = document.querySelector('#cart-status');
 const itemsContainer = document.querySelector('#cart-items');
@@ -19,23 +20,8 @@ function productCard(item, product) {
   const inStock = Boolean(product && isProductActive(product) && stock > 0);
   const available = inStock && item.quantidade <= stock;
   const row = element('article', 'bg-surface rounded-xl border border-outline/50 p-4 flex flex-col sm:flex-row gap-4 sm:items-center');
-  const cover = element('div', 'w-20 h-28 shrink-0 bg-surface-soft rounded-lg flex items-center justify-center text-sage');
-
-  if (product?.imagem_url) {
-    try {
-      const url = new URL(product.imagem_url, window.location.origin);
-      if (url.protocol === 'http:' || url.protocol === 'https:') {
-        const image = element('img', 'w-full h-full object-cover rounded-lg');
-        image.src = url.href;
-        image.alt = `Capa de ${product.nome}`;
-        image.loading = 'lazy';
-        image.addEventListener('error', () => image.remove(), { once: true });
-        cover.append(image);
-      }
-    } catch {
-      // Mantém o espaço da capa sem imagem.
-    }
-  }
+  const cover = element('div', 'w-20 h-28 shrink-0 bg-surface-soft rounded-lg flex items-center justify-center text-sage overflow-hidden');
+  cover.append(createProductImageElement(product, 'w-full h-full object-cover rounded-lg'));
 
   const details = element('div', 'flex-1 min-w-0');
   const title = element('h2', 'text-lg font-serif font-bold text-navy', product?.nome || `Produto ${item.produto_id}`);

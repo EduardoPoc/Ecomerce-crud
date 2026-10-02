@@ -1,10 +1,14 @@
 import '../../main.js';
 import { getProducts, isProductActive, getProductStock, formatPrice } from '../../services/products.js';
 import { addToCart, getCartItems } from '../../services/cart.js';
-import { initIcons } from '../../utils/icons.js';
+import { createProductImageElement } from '../../utils/productImage.js';
 
 const status = document.querySelector('#catalog-status');
 const productList = document.querySelector('#product-list');
+const pagination = document.querySelector('#catalog-pagination');
+const PAGE_SIZE = 12;
+let visibleProducts = [];
+let currentPage = 1;
 
 function makeElement(tag, className, text) {
   const element = document.createElement(tag);
@@ -15,33 +19,7 @@ function makeElement(tag, className, text) {
 
 function productImage(product) {
   const frame = makeElement('div', 'aspect-[3/4] bg-surface-soft rounded-lg overflow-hidden flex items-center justify-center');
-  const source = typeof product.imagem_url === 'string' ? product.imagem_url.trim() : '';
-
-  if (source) {
-    try {
-      const imageUrl = new URL(source, window.location.origin);
-      if (imageUrl.protocol === 'http:' || imageUrl.protocol === 'https:') {
-        const image = makeElement('img', 'w-full h-full object-cover');
-        image.src = imageUrl.href;
-        image.alt = `Capa de ${product.nome}`;
-        image.loading = 'lazy';
-        image.addEventListener('error', () => {
-          const icon = makeElement('i', 'w-10 h-10 text-sage');
-          icon.dataset.lucide = 'book-open';
-          frame.replaceChildren(icon);
-          initIcons({ root: frame });
-        }, { once: true });
-        frame.append(image);
-        return frame;
-      }
-    } catch {
-      // URL inválida: exibe o ícone de capa ausente.
-    }
-  }
-
-  const icon = makeElement('i', 'w-10 h-10 text-sage');
-  icon.dataset.lucide = 'book-open';
-  frame.append(icon);
+  frame.append(createProductImageElement(product, 'w-full h-full object-cover'));
   return frame;
 }
 
@@ -77,19 +55,72 @@ function renderProduct(product) {
   return card;
 }
 
-async function renderCatalog() {
-  try {
-    const products = await getProducts();
-    const visibleProducts = products.filter(isProductActive);
-    productList.replaceChildren(...visibleProducts.map(renderProduct));
+function renderPagination() {
+  const pageCount = Math.ceil(visibleProducts.length / PAGE_SIZE);
+  pagination.replaceChildren();
 
-    status.textContent = visibleProducts.length === 0
-      ? 'Não há livros disponíveis no catálogo neste momento.'
-      : `${visibleProducts.length} livros no catálogo. Itens sem estoque aparecem como indisponíveis.`;
+  if (pageCount <= 1) {
+    pagination.hidden = true;
+    return;
+  }
+
+  pagination.hidden = false;
+
+  const previous = makeElement('button', 'rounded-lg border border-outline px-4 py-2 text-sm font-semibold text-navy transition-colors hover:bg-surface-soft disabled:cursor-not-allowed disabled:opacity-50', 'Anterior');
+  previous.type = 'button';
+  previous.disabled = currentPage === 1;
+  previous.setAttribute('aria-controls', 'product-list');
+  previous.addEventListener('click', () => {
+    currentPage -= 1;
+    renderCatalogPage();
+  });
+
+  const pageLabel = makeElement('span', 'min-w-28 text-center text-sm text-muted', `Página ${currentPage} de ${pageCount}`);
+  pageLabel.setAttribute('aria-live', 'polite');
+
+  const next = makeElement('button', 'rounded-lg border border-outline px-4 py-2 text-sm font-semibold text-navy transition-colors hover:bg-surface-soft disabled:cursor-not-allowed disabled:opacity-50', 'Próxima');
+  next.type = 'button';
+  next.disabled = currentPage === pageCount;
+  next.setAttribute('aria-controls', 'product-list');
+  next.addEventListener('click', () => {
+    currentPage += 1;
+    renderCatalogPage();
+  });
+
+  pagination.replaceChildren(previous, pageLabel, next);
+}
+
+function renderCatalogPage() {
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageProducts = visibleProducts.slice(start, start + PAGE_SIZE);
+  productList.replaceChildren(...pageProducts.map(renderProduct));
+  renderPagination();
+}
+
+async function renderCatalog() {
+  let products;
+
+  try {
+    products = await getProducts();
   } catch (error) {
     status.textContent = error.response
       ? 'Não foi possível carregar o catálogo. Tente novamente mais tarde.'
-      : 'Não foi possível conectar à API. Confirme que o backend e o banco de dados estão em execução.';
+      : error.request
+        ? 'Não foi possível conectar à API. Confirme que o backend e o banco de dados estão em execução.'
+        : 'A API retornou uma resposta inválida para o catálogo.';
+    return;
+  }
+
+  visibleProducts = products.filter(isProductActive);
+  currentPage = 1;
+
+  try {
+    renderCatalogPage();
+    status.textContent = visibleProducts.length === 0
+      ? 'Não há livros disponíveis no catálogo neste momento.'
+      : `${visibleProducts.length} livros no catálogo. Itens sem estoque aparecem como indisponíveis.`;
+  } catch {
+    status.textContent = 'Não foi possível exibir o catálogo. Atualize a página para tentar novamente.';
   }
 }
 

@@ -1,5 +1,13 @@
 import { initIcons } from '../utils/icons.js';
 import { getCartCount } from '../services/cart.js';
+import { getCurrentUser } from '../services/authState.js';
+
+function initialsFor(name) {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'U';
+  if (parts.length === 1) return Array.from(parts[0]).slice(0, 2).join('').toLocaleUpperCase('pt-BR');
+  return `${Array.from(parts[0])[0]}${Array.from(parts[parts.length - 1])[0]}`.toLocaleUpperCase('pt-BR');
+}
 
 /**
  * Retorna o HTML do cabeçalho da loja Além da Estante.
@@ -29,9 +37,7 @@ export function getHeaderHTML({ cartCount = 0 } = {}) {
           <button aria-label="Buscar livros" type="button" class="p-2 text-ink hover:text-navy transition-colors">
             <i data-lucide="search" class="w-5 h-5"></i>
           </button>
-          <a href="/login/" aria-label="Minha conta" class="p-2 text-ink hover:text-navy transition-colors">
-            <i data-lucide="user" class="w-5 h-5"></i>
-          </a>
+          <div data-account-control class="flex items-center"></div>
           <a href="/carrinho/" aria-label="Sacola de compras" class="relative p-2 text-ink hover:text-navy transition-colors">
             <i data-lucide="shopping-bag" class="w-5 h-5"></i>
             <span class="absolute -top-1 -right-1 bg-navy text-white text-[11px] font-bold w-4 h-4 rounded-full flex items-center justify-center">${cartCount}</span>
@@ -49,15 +55,53 @@ export function getHeaderHTML({ cartCount = 0 } = {}) {
 export class AppHeader extends HTMLElement {
   connectedCallback() {
     this.innerHTML = getHeaderHTML({ cartCount: getCartCount() });
+    this.updateAccountControl();
     initIcons({ root: this });
     this.handleCartUpdate = () => this.updateCartBadge();
+    this.handleAuthUpdate = () => this.updateAccountControl();
+    this.handleStorageUpdate = () => {
+      this.updateCartBadge();
+      this.updateAccountControl();
+    };
     window.addEventListener('cart:updated', this.handleCartUpdate);
-    window.addEventListener('storage', this.handleCartUpdate);
+    window.addEventListener('auth:updated', this.handleAuthUpdate);
+    window.addEventListener('storage', this.handleStorageUpdate);
   }
 
   disconnectedCallback() {
     window.removeEventListener('cart:updated', this.handleCartUpdate);
-    window.removeEventListener('storage', this.handleCartUpdate);
+    window.removeEventListener('auth:updated', this.handleAuthUpdate);
+    window.removeEventListener('storage', this.handleStorageUpdate);
+  }
+
+  updateAccountControl() {
+    const control = this.querySelector('[data-account-control]');
+    if (!control) return;
+
+    const user = getCurrentUser();
+    if (!user) {
+      const link = document.createElement('a');
+      link.href = '/login/';
+      link.className = 'p-2 text-ink hover:text-navy transition-colors';
+      link.setAttribute('aria-label', 'Entrar ou acessar minha conta');
+
+      const icon = document.createElement('i');
+      icon.dataset.lucide = 'user';
+      icon.className = 'w-5 h-5';
+      link.append(icon);
+      control.replaceChildren(link);
+      initIcons({ root: control });
+      return;
+    }
+
+    const name = String(user.nome || user.email || '').trim();
+    const avatar = document.createElement('span');
+    avatar.className = 'flex h-9 w-9 items-center justify-center rounded-full border border-outline bg-sage text-xs font-bold tracking-wide text-surface';
+    avatar.setAttribute('role', 'img');
+    avatar.setAttribute('aria-label', name ? `Usuário autenticado: ${name}` : 'Usuário autenticado');
+    if (name) avatar.title = name;
+    avatar.textContent = initialsFor(name);
+    control.replaceChildren(avatar);
   }
 
   updateCartBadge() {
