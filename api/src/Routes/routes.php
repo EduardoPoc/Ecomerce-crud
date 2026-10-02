@@ -6,11 +6,13 @@ use Ecommerce\Api\Config\Database;
 use Ecommerce\Api\Controllers\AuthController;
 use Ecommerce\Api\Controllers\ProdutoController;
 use Ecommerce\Api\Controllers\UsuarioController;
+use Ecommerce\Api\Controllers\CategoriaController;
 use Ecommerce\Api\Core\Request;
 use Ecommerce\Api\Core\Response;
 use Ecommerce\Api\Core\Router;
 use Ecommerce\Api\Middlewares\AdminMiddleware;
 use Ecommerce\Api\Middlewares\AuthMiddleware;
+
 
 /**
  * Todas as rotas da API ficam aqui. O frontend usa VITE_API_BASE_URL = http://host:porta/api,
@@ -51,6 +53,10 @@ return static function (Router $router): void {
             $r->patch('/{id:\d+}', [UsuarioController::class, 'update']);
             $r->delete('/{id:\d+}', [UsuarioController::class, 'destroy']);
         });
+
+        // Categorias (públicas)
+        $api->get('/categorias', [CategoriaController::class, 'index']);
+        $api->get('/categorias/{id:\\d+}', [CategoriaController::class, 'show']);
 
         // ---------- A DEFINIR PELO TIME (o schema e o frontend já precisam disso) ----------
         // Catálogo (público):   GET /categorias
