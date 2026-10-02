@@ -1,4 +1,176 @@
-Api do projeto Ecomerce
+# API do projeto Ecomerce
+
+## Execução
+
+Com Docker Compose, a API fica disponível em `http://localhost:8080`:
+
+```sh
+cp docker/php/app.env.example docker/php/app.env
+docker compose up --build
+```
+
+Todas as rotas abaixo usam o prefixo `/api`.
+
+## Autenticação
+
+As rotas públicas não exigem autenticação. As rotas protegidas usam um token JWT no cabeçalho:
+
+```http
+Authorization: Bearer <token>
+```
+
+O login retorna um token de usuário. As rotas de usuários exigem um token de um usuário com papel `ADMIN`.
+
+Usuário administrador incluído no seed local:
+
+```text
+e-mail: admin@livraria.com
+senha: senha123
+```
+
+## Rotas implementadas
+
+### Saúde da API
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/health` | Pública | Verifica se a API e o banco estão disponíveis. Retorna `200` ou `503`. |
+
+### Autenticação
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `POST` | `/api/auth/login` | Pública | Autentica por e-mail e senha e retorna um token JWT. |
+| `POST` | `/api/auth/cadastro` | Pública | Cria um usuário com papel `CLIENTE` e retorna um token. |
+| `GET` | `/api/auth/me` | Bearer | Retorna os dados do usuário autenticado. |
+
+Exemplo de login:
+
+```sh
+curl -X POST http://localhost:8080/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@livraria.com","senha":"senha123"}'
+```
+
+Exemplo de cadastro:
+
+```sh
+curl -X POST http://localhost:8080/api/auth/cadastro \
+  -H 'Content-Type: application/json' \
+  -d '{"nome":"Ana Silva","email":"ana@email.com","senha":"senha123"}'
+```
+
+### Produtos
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/produtos` | Pública | Lista os produtos cadastrados. |
+| `GET` | `/api/produtos/{id}` | Pública | Retorna um produto pelo ID. |
+| `POST` | `/api/produtos` | Admin | Cadastra um produto. |
+| `PUT`/`PATCH` | `/api/produtos/{id}` | Admin | Atualiza um produto. |
+| `DELETE` | `/api/produtos/{id}` | Admin | Desativa um produto sem apagar o histórico. |
+
+### Categorias
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/categorias` | Pública | Lista as categorias. |
+| `GET` | `/api/categorias/{id}` | Pública | Retorna uma categoria pelo ID. |
+
+### Usuários — somente administradores
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/usuarios` | Admin | Lista usuários com paginação. |
+| `GET` | `/api/usuarios/{id}` | Admin | Retorna um usuário pelo ID. |
+| `POST` | `/api/usuarios` | Admin | Cria um usuário; permite `CLIENTE` ou `ADMIN`. |
+| `PUT` | `/api/usuarios/{id}` | Admin | Atualiza os campos enviados. |
+| `PATCH` | `/api/usuarios/{id}` | Admin | Atualiza parcialmente os campos enviados. |
+| `DELETE` | `/api/usuarios/{id}` | Admin | Exclui um usuário, exceto a própria conta. |
+
+Paginação de usuários:
+
+```http
+GET /api/usuarios?pagina=1&limite=20
+```
+
+`pagina` começa em `1`; `limite` varia de `1` a `100` e o padrão é `20`.
+
+Exemplo de consulta autenticada:
+
+```sh
+curl http://localhost:8080/api/usuarios \
+  -H 'Authorization: Bearer <token-admin>'
+```
+
+### Carrinho — somente usuários autenticados
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/carrinho` | Bearer | Retorna os itens e o subtotal do carrinho do usuário. |
+| `POST` | `/api/carrinho/itens` | Bearer | Adiciona `produto_id` e `quantidade`, respeitando o estoque. |
+| `PATCH` | `/api/carrinho/itens/{produto_id}` | Bearer | Define a quantidade do item. |
+| `DELETE` | `/api/carrinho/itens/{produto_id}` | Bearer | Remove o item. |
+
+Visitantes não possuem carrinho na API e devem fazer login antes de adicionar produtos.
+
+### Endereços — somente usuários autenticados
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/enderecos` | Bearer | Lista os endereços ativos do usuário. |
+| `POST` | `/api/enderecos` | Bearer | Cria um endereço. |
+| `PUT`/`PATCH` | `/api/enderecos/{id}` | Bearer | Atualiza um endereço próprio. |
+| `DELETE` | `/api/enderecos/{id}` | Bearer | Desativa um endereço próprio. |
+
+### Pedidos e pagamento simulado
+
+| Método | Rota | Auth | Descrição |
+| --- | --- | --- | --- |
+| `POST` | `/api/pedidos` | Bearer | Cria um pedido pendente usando o carrinho e `endereco_id`. |
+| `POST` | `/api/pedidos/{id}/pagar` | Bearer | Simula o pagamento, reduz estoque, limpa o carrinho e marca como `PAGO`. |
+| `GET` | `/api/pedidos` | Bearer | Cliente vê os próprios pedidos; admin vê todos. |
+| `GET` | `/api/pedidos/{id}` | Bearer | Cliente vê os próprios pedidos; admin pode consultar qualquer pedido. |
+| `PATCH` | `/api/pedidos/{id}/status` | Admin | Atualiza o status operacional do pedido. |
+
+Corpo para criar ou atualizar usuário:
+
+```json
+{
+  "nome": "Ana Silva",
+  "email": "ana@email.com",
+  "senha": "senha123",
+  "papel": "CLIENTE"
+}
+```
+
+## Respostas e erros
+
+Respostas JSON de erro usam o formato `{"erro":"..."}`. Quando aplicável, a resposta também inclui `detalhes`.
+
+Status mais comuns:
+
+- `200`: operação concluída.
+- `201`: recurso criado.
+- `204`: recurso excluído sem conteúdo.
+- `400`: requisição inválida.
+- `401`: token ausente, inválido ou expirado.
+- `403`: usuário autenticado sem permissão.
+- `404`: recurso ou rota não encontrada.
+- `409`: conflito, como e-mail já cadastrado.
+- `422`: dados de entrada inválidos.
+- `500`: erro interno inesperado.
+- `503`: API sem conexão com o banco, no endpoint `/api/health`.
+
+## Regras operacionais
+
+- Categorias são fixas e somente leitura pela API.
+- Produtos são desativados, e não apagados fisicamente, para preservar o histórico dos pedidos.
+- O pagamento é sempre simulado; não existe integração com gateway.
+- O estoque só é reduzido quando o usuário confirma o pagamento.
+- Vendedores com papel `ADMIN` gerenciam produtos, visualizam todos os pedidos e atualizam seus status.
+
+## Organização do backend
 
 ENTRADA E ROTAS
 

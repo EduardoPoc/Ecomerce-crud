@@ -33,31 +33,31 @@ class ProdutoController
         return Response::json($this->service->getById($id));
     }
 
-    public function store(array $data): array
+    public function store(Request $request): Response
     {
-        $id = $this->service->create($data);
+        $id = $this->service->create($request->json());
 
-        return [
+        return Response::created([
             'message' => 'Produto criado com sucesso.',
             'id' => $id
-        ];
+        ]);
     }
 
-    public function update(int $id, array $data): array
+    public function update(Request $request): Response
     {
-        $this->service->update($id, $data);
+        $this->service->update((int) $request->param('id'), $request->json());
 
-        return [
+        return Response::json([
             'message' => 'Produto atualizado com sucesso.'
-        ];
+        ]);
     }
 
-    public function destroy(int $id): array
+    public function destroy(Request $request): Response
     {
-        $this->service->delete($id);
+        $this->service->delete((int) $request->param('id'));
 
-        return [
-            'message' => 'Produto removido com sucesso.'
-        ];
+        return Response::json([
+            'message' => 'Produto desativado com sucesso.'
+        ]);
     }
 }

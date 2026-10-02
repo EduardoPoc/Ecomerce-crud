@@ -176,7 +176,8 @@ class ProdutoRepository
     public function delete(int $id): bool
     {
         $sql = "
-            DELETE FROM produto
+            UPDATE produto
+            SET ativo = 0
             WHERE id = :id
         ";
 
