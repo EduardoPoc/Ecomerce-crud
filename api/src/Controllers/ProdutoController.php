@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Ecommerce\Api\Controllers;
 
-use Ecommerce\Api\Services\ProdutoService;
-use Ecommerce\Api\Core\HttpException;
 use Ecommerce\Api\Core\Request;
 use Ecommerce\Api\Core\Response;
+use Ecommerce\Api\Services\ProdutoService;
 
 class ProdutoController
 {
@@ -18,46 +17,41 @@ class ProdutoController
         $this->service = new ProdutoService();
     }
 
+    /** GET /produtos (público): só ativos. */
     public function index(Request $request): Response
     {
-        return Response::json($this->service->getAll());
+        return Response::json($this->service->listarAtivos());
     }
 
+    /** GET /admin/produtos (admin): todos, inclusive inativos. */
+    public function indexAdmin(Request $request): Response
+    {
+        return Response::json($this->service->listarTodos());
+    }
+
+    /** GET /produtos/{id} (público). */
     public function show(Request $request): Response
     {
-        $id = (int) $request->param('id');
-        if ($id <= 0) {
-            throw new HttpException(400, 'ID do produto inválido.');
-        }
-
-        return Response::json($this->service->getById($id));
+        return Response::json($this->service->buscarAtivo((int) $request->param('id')));
     }
 
+    /** POST /produtos (admin). */
     public function store(Request $request): Response
     {
-        $id = $this->service->create($request->json());
-
-        return Response::created([
-            'message' => 'Produto criado com sucesso.',
-            'id' => $id
-        ]);
+        return Response::created($this->service->criar($request->json()));
     }
 
+    /** PUT/PATCH /produtos/{id} (admin). */
     public function update(Request $request): Response
     {
-        $this->service->update((int) $request->param('id'), $request->json());
-
-        return Response::json([
-            'message' => 'Produto atualizado com sucesso.'
-        ]);
+        return Response::json($this->service->atualizar((int) $request->param('id'), $request->json()));
     }
 
+    /** DELETE /produtos/{id} (admin). */
     public function destroy(Request $request): Response
     {
-        $this->service->delete((int) $request->param('id'));
+        $this->service->remover((int) $request->param('id'));
 
-        return Response::json([
-            'message' => 'Produto desativado com sucesso.'
-        ]);
+        return Response::noContent();
     }
 }
