@@ -6,6 +6,7 @@ use PDO;
 
 final class PedidoRepository
 {
+    private const FRETE_FIXO = 30.0;
     private PDO $pdo;
     public function __construct(?PDO $pdo = null) { $this->pdo = $pdo ?? Database::connection(); }
     public function findAll(?int $usuarioId = null): array
@@ -35,7 +36,7 @@ final class PedidoRepository
             if ($cartId === false) throw new \RuntimeException('Carrinho vazio.');
             $stmt = $this->pdo->prepare('SELECT i.produto_id, i.quantidade, p.preco, p.ativo, p.estoque FROM item_carrinho i JOIN produto p ON p.id = i.produto_id WHERE i.carrinho_id = :carrinho_id FOR UPDATE');
             $stmt->execute(['carrinho_id' => $cartId]); $items = $stmt->fetchAll(); if ($items === []) throw new \RuntimeException('Carrinho vazio.');
-            $total = 0.0; foreach ($items as $item) { if (!(bool) $item['ativo'] || (int) $item['quantidade'] > (int) $item['estoque']) throw new \RuntimeException('Um dos produtos não possui estoque suficiente.'); $total += (float) $item['preco'] * (int) $item['quantidade']; }
+            $total = self::FRETE_FIXO; foreach ($items as $item) { if (!(bool) $item['ativo'] || (int) $item['quantidade'] > (int) $item['estoque']) throw new \RuntimeException('Um dos produtos não possui estoque suficiente.'); $total += (float) $item['preco'] * (int) $item['quantidade']; }
             $stmt = $this->pdo->prepare("INSERT INTO pedido (usuario_id, endereco_id, status, total) VALUES (:usuario_id, :endereco_id, 'AGUARDANDO_PAGAMENTO', :total)"); $stmt->execute(['usuario_id' => $userId, 'endereco_id' => $addressId, 'total' => $total]); $orderId = (int) $this->pdo->lastInsertId();
             $insert = $this->pdo->prepare('INSERT INTO item_pedido (pedido_id, produto_id, quantidade, preco_unitario) VALUES (:pedido_id, :produto_id, :quantidade, :preco_unitario)');
             foreach ($items as $item) $insert->execute(['pedido_id' => $orderId, 'produto_id' => $item['produto_id'], 'quantidade' => $item['quantidade'], 'preco_unitario' => $item['preco']]);

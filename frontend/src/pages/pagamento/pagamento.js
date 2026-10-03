@@ -12,6 +12,7 @@ const addressStatus = document.querySelector('#address-status');
 const addressForm = document.querySelector('#address-form');
 const newAddressButton = document.querySelector('#new-address');
 const submitButton = document.querySelector('#checkout-submit');
+const FREIGHT = 30;
 let selectedAddressId = null;
 
 function element(tag, classes, text) {
@@ -24,6 +25,8 @@ function element(tag, classes, text) {
 function renderCart(cart) {
   countLabel.textContent = String(cart.quantidade || 0);
   subtotalLabel.textContent = formatPrice(cart.subtotal || 0);
+  document.querySelector('#checkout-freight').textContent = formatPrice(FREIGHT);
+  document.querySelector('#checkout-total').textContent = formatPrice(Number(cart.subtotal || 0) + FREIGHT);
   itemList.replaceChildren(...(cart.itens || []).map((item) => {
     const name = repairMojibake(item.nome);
     const row = element('li', 'py-4 flex items-start justify-between gap-4');
@@ -47,7 +50,18 @@ async function loadAddresses() {
   selectedAddressId = data[0]?.id || null;
   addressSelect.value = selectedAddressId || '';
   addressStatus.textContent = data.length ? 'Endereço selecionado para entrega.' : 'Cadastre um endereço para continuar.';
-  submitButton.disabled = !selectedAddressId;
+  updateSubmitButton();
+}
+
+function updateSubmitButton() {
+  const enabled = Boolean(selectedAddressId);
+  submitButton.disabled = !enabled;
+  submitButton.classList.toggle('bg-navy', enabled);
+  submitButton.classList.toggle('text-surface', enabled);
+  submitButton.classList.toggle('hover:bg-sage', enabled);
+  submitButton.classList.toggle('bg-outline/50', !enabled);
+  submitButton.classList.toggle('text-muted', !enabled);
+  submitButton.classList.toggle('cursor-not-allowed', !enabled);
 }
 
 async function saveAddress(event) {
@@ -102,7 +116,7 @@ async function initialize() {
   }
 }
 
-addressSelect.addEventListener('change', () => { selectedAddressId = Number(addressSelect.value) || null; submitButton.disabled = !selectedAddressId; });
+addressSelect.addEventListener('change', () => { selectedAddressId = Number(addressSelect.value) || null; updateSubmitButton(); });
 newAddressButton.addEventListener('click', () => addressForm.classList.toggle('hidden'));
 addressForm.addEventListener('submit', saveAddress);
 submitButton.addEventListener('click', pay);
