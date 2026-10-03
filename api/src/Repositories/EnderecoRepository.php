@@ -32,6 +32,7 @@ final class EnderecoRepository
 
     public function create(int $usuarioId, array $data): int
     {
+        $data['padrao'] = !empty($data['padrao']) ? 1 : 0;
         if ($data['padrao']) {
             $this->clearDefault($usuarioId);
         }
@@ -42,6 +43,9 @@ final class EnderecoRepository
 
     public function update(int $id, int $usuarioId, array $data): void
     {
+        if (array_key_exists('padrao', $data)) {
+            $data['padrao'] = !empty($data['padrao']) ? 1 : 0;
+        }
         if ($data['padrao'] ?? false) {
             $this->clearDefault($usuarioId);
         }

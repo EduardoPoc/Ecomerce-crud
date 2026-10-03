@@ -33,4 +33,13 @@ final class AuthController
     {
         return Response::json(Auth::user($request));
     }
+
+    public function updateMe(Request $request): Response
+    {
+        $user = Auth::user($request);
+        $data = $request->json();
+        unset($data['papel']);
+
+        return Response::json($this->service->atualizarPerfil((int) $user['id'], $data));
+    }
 }

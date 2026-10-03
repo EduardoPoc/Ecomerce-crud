@@ -51,6 +51,11 @@ final class AuthService
         return $this->comToken($this->usuarioService->criar($dados, permitirPapel: false));
     }
 
+    public function atualizarPerfil(int $usuarioId, array $dados): array
+    {
+        return $this->usuarioService->atualizar($usuarioId, $dados);
+    }
+
     private function comToken(array $usuario): array
     {
         $token = Auth::issueToken($usuario);

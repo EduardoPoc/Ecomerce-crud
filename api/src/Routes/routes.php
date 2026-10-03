@@ -42,6 +42,7 @@ return static function (Router $router): void {
         $api->post('/auth/login', [AuthController::class, 'login']);
         $api->post('/auth/cadastro', [AuthController::class, 'cadastro']);
         $api->get('/auth/me', [AuthController::class, 'me'], [AuthMiddleware::class]);
+        $api->patch('/auth/me', [AuthController::class, 'updateMe'], [AuthMiddleware::class]);
 
         // Catálogo público de livros.
         $api->get('/produtos', [ProdutoController::class, 'index']);

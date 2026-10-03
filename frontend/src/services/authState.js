@@ -36,6 +36,12 @@ export function clearAuthSession() {
   notifyAuthUpdated();
 }
 
+export function setCurrentUser(user) {
+  const storage = sessionStorage.getItem(TOKEN_KEY) ? sessionStorage : localStorage;
+  storage.setItem(USER_KEY, JSON.stringify(user));
+  notifyAuthUpdated();
+}
+
 function notifyAuthUpdated() {
   window.dispatchEvent(new CustomEvent('auth:updated'));
 }

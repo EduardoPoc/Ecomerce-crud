@@ -28,8 +28,6 @@ export function getHeaderHTML({ cartCount = 0 } = {}) {
         <!-- Navegação de Categorias -->
         <nav aria-label="Navegação do catálogo" class="hidden md:flex items-center gap-8">
           <a href="/catalogo/" class="text-sm font-semibold text-ink hover:text-navy transition-colors">Livros</a>
-          <a href="/catalogo/" class="text-sm font-semibold text-ink hover:text-navy transition-colors">Categorias</a>
-          <a href="/catalogo/" class="text-sm font-semibold text-ink hover:text-navy transition-colors">Curadoria</a>
         </nav>
 
         <!-- Ações do Cabeçalho -->
@@ -102,7 +100,12 @@ export class AppHeader extends HTMLElement {
     avatar.setAttribute('aria-label', name ? `Usuário autenticado: ${name}` : 'Usuário autenticado');
     if (name) avatar.title = name;
     avatar.textContent = initialsFor(name);
-    control.replaceChildren(avatar);
+    const accountLink = document.createElement('a');
+    accountLink.href = '/conta/';
+    accountLink.className = 'rounded-full focus:outline-none focus:ring-2 focus:ring-sage';
+    accountLink.setAttribute('aria-label', 'Abrir minha conta');
+    accountLink.append(avatar);
+    control.replaceChildren(accountLink);
   }
 
   updateCartBadge() {
