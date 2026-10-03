@@ -26,7 +26,9 @@ docker compose exec mysql mysql -uloja -ploja loja
 Ou enviar um arquivo SQL do host:
 
 ```sh
-docker compose exec -T mysql mysql -uloja -ploja loja < caminho/arquivo.sql
+docker compose exec -T mysql mysql --default-character-set=utf8mb4 -uloja -ploja loja < caminho/arquivo.sql
 ```
 
 Os dados ficam no volume `mysql_data`; as dependências do frontend ficam em `frontend_node_modules`. Os scripts SQL só rodam na primeira criação do banco; `docker compose down -v` apaga os volumes e os dados. A API publica `8080`, o Vite `5173` e o MySQL `3306`, somente no host local. O Vite recebe `VITE_API_URL=http://localhost:8080/api` pelo Compose, e o CORS da API permite `http://localhost:5173`.
+
+Para bancos existentes, execute uma vez `api/database/migrations/001_utf8mb4.sql` para garantir UTF-8 completo e corrigir registros antigos gravados com dupla codificação.

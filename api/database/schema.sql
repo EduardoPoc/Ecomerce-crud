@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS loja
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
@@ -18,7 +20,7 @@ CREATE TABLE usuario (
   PRIMARY KEY (id),
   UNIQUE KEY uk_usuario_email (email),
   CONSTRAINT ck_usuario_papel CHECK (papel IN ('CLIENTE', 'ADMIN'))
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- ENDERECO
@@ -40,7 +42,7 @@ CREATE TABLE endereco (
   KEY idx_endereco_usuario (usuario_id),
   CONSTRAINT fk_endereco_usuario
     FOREIGN KEY (usuario_id) REFERENCES usuario (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- CATEGORIA
@@ -51,7 +53,7 @@ CREATE TABLE categoria (
   slug  VARCHAR(120) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY uk_categoria_slug (slug)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- PRODUTO
@@ -70,7 +72,7 @@ CREATE TABLE produto (
   KEY idx_produto_categoria (categoria_id),
   CONSTRAINT fk_produto_categoria
     FOREIGN KEY (categoria_id) REFERENCES categoria (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- PEDIDO
@@ -92,7 +94,7 @@ CREATE TABLE pedido (
     FOREIGN KEY (endereco_id) REFERENCES endereco (id),
   CONSTRAINT ck_pedido_status CHECK (status IN
     ('AGUARDANDO_PAGAMENTO','PAGO','ENVIADO','ENTREGUE','CANCELADO'))
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- ITEM_PEDIDO
@@ -111,7 +113,7 @@ CREATE TABLE item_pedido (
   CONSTRAINT fk_item_pedido_produto
     FOREIGN KEY (produto_id) REFERENCES produto (id),
   CONSTRAINT ck_item_pedido_qtd CHECK (quantidade > 0)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- CARRINHO
@@ -126,7 +128,7 @@ CREATE TABLE carrinho (
   KEY idx_carrinho_usuario (usuario_id),
   CONSTRAINT fk_carrinho_usuario
     FOREIGN KEY (usuario_id) REFERENCES usuario (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 -- =========================
 -- ITEM_CARRINHO
