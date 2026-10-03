@@ -12,6 +12,7 @@ const profileMessage = document.querySelector('#profile-message');
 const addressList = document.querySelector('#address-list');
 const addressForm = document.querySelector('#address-form');
 const addressMessage = document.querySelector('#address-message');
+const adminPanelLink = document.querySelector('#admin-panel-link');
 
 function showMessage(node, text, error = false) {
   node.textContent = text;
@@ -48,6 +49,7 @@ async function loadAccount() {
     const [{ data: user }, { data: addresses }] = await Promise.all([api.get('/auth/me'), api.get('/enderecos')]);
     profileName.value = repairMojibake(user.nome || '');
     profileEmail.value = user.email || '';
+    if (user.papel === 'ADMIN') adminPanelLink.classList.remove('hidden');
     renderAddresses(addresses);
     status.textContent = 'Dados da conta carregados.';
   } catch { status.textContent = 'Não foi possível carregar sua conta.'; }

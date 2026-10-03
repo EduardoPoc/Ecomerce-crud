@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Painel do vendedor</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/admin/admin.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main class="max-w-7xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+      <header class="border-b border-outline/50 pb-5 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <a href="/conta/" class="text-sm text-sage hover:text-navy">← Minha conta</a>
+            <h1 class="text-3xl font-serif font-bold text-navy mt-3">Painel do vendedor</h1>
+            <p id="admin-profile" class="text-sm text-muted mt-2">Verificando acesso…</p>
+          </div>
+          <button id="new-product" type="button" class="rounded-lg bg-navy px-4 py-2.5 text-sm font-semibold text-surface">Novo livro</button>
+        </div>
+      </header>
+
+      <p id="admin-status" class="text-sm text-muted mb-5" role="status" aria-live="polite">Carregando livros…</p>
+      <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] gap-6 items-start">
+        <section class="bg-surface rounded-2xl border border-outline/50 overflow-hidden">
+          <div class="px-5 py-4 border-b border-outline/50">
+            <h2 class="text-xl font-serif font-bold text-navy">Livros cadastrados</h2>
+            <p class="text-sm text-muted mt-1">Edite preço, estoque, categoria e disponibilidade.</p>
+          </div>
+          <div id="product-list" class="divide-y divide-outline/50"></div>
+        </section>
+
+        <section class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6 xl:sticky xl:top-24">
+          <h2 id="form-title" class="text-xl font-serif font-bold text-navy">Novo livro</h2>
+          <form id="product-form" class="space-y-3 mt-5">
+            <p id="product-message" class="hidden rounded-lg border px-3 py-2.5 text-sm" role="alert"></p>
+            <label class="block text-sm font-semibold">Nome
+              <input name="nome" required maxlength="200" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm" />
+            </label>
+            <label class="block text-sm font-semibold">Categoria
+              <select name="categoria_id" required class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm"></select>
+            </label>
+            <label class="block text-sm font-semibold">Descrição
+              <textarea name="descricao" rows="4" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm"></textarea>
+            </label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block text-sm font-semibold">Preço
+                <input name="preco" required min="0" step="0.01" type="number" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm" />
+              </label>
+              <label class="block text-sm font-semibold">Estoque
+                <input name="estoque" required min="0" step="1" type="number" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm" />
+              </label>
+            </div>
+            <label class="block text-sm font-semibold">URL da imagem
+              <input name="imagem_url" type="url" maxlength="500" placeholder="https://…" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm" />
+            </label>
+            <label class="flex items-center gap-2 text-sm text-muted"><input name="ativo" type="checkbox" checked /> Livro disponível no catálogo</label>
+            <div class="flex gap-3 pt-2">
+              <button id="save-product" type="submit" class="rounded-lg bg-sage px-4 py-2.5 text-sm font-semibold text-surface">Salvar livro</button>
+              <button id="cancel-edit" type="button" class="hidden rounded-lg border border-outline px-4 py-2.5 text-sm font-semibold text-navy">Cancelar</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+    <app-footer></app-footer>
+  </body>
+</html>
