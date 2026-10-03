@@ -16,4 +16,5 @@ final class PedidoController
     public function store(Request $request): Response { $order = $this->service->criar((int) $this->user($request)['id'], $request->json()); return Response::created($order); }
     public function pay(Request $request): Response { return Response::json($this->service->pagar((int) $request->param('id'), (int) $this->user($request)['id'])); }
     public function updateStatus(Request $request): Response { return Response::json($this->service->status((int) $request->param('id'), (string) $request->input('status', ''))); }
+    public function destroy(Request $request): Response { $this->service->excluirPendente((int) $request->param('id'), (int) $this->user($request)['id']); return Response::noContent(); }
 }

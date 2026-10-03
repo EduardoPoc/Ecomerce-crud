@@ -129,6 +129,7 @@ Visitantes não possuem carrinho na API e devem fazer login antes de adicionar p
 | --- | --- | --- | --- |
 | `POST` | `/api/pedidos` | Bearer | Cria um pedido pendente usando o carrinho e `endereco_id`. |
 | `POST` | `/api/pedidos/{id}/pagar` | Bearer | Simula o pagamento, reduz estoque, limpa o carrinho e marca como `PAGO`. |
+| `DELETE` | `/api/pedidos/{id}` | Bearer | Exclui um pedido próprio ainda pendente de pagamento. |
 | `GET` | `/api/pedidos` | Bearer | Cliente vê os próprios pedidos; admin vê todos. |
 | `GET` | `/api/pedidos/{id}` | Bearer | Cliente vê os próprios pedidos; admin pode consultar qualquer pedido. |
 | `PATCH` | `/api/pedidos/{id}/status` | Admin | Atualiza o status operacional do pedido. |

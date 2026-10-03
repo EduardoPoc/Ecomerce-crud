@@ -90,6 +90,7 @@ return static function (Router $router): void {
             $r->get('/{id:\\d+}', [PedidoController::class, 'show']);
             $r->post('', [PedidoController::class, 'store']);
             $r->post('/{id:\\d+}/pagar', [PedidoController::class, 'pay']);
+            $r->delete('/{id:\\d+}', [PedidoController::class, 'destroy']);
         });
 
         $api->patch('/pedidos/{id:\\d+}/status', [PedidoController::class, 'updateStatus'], [AuthMiddleware::class, AdminMiddleware::class]);

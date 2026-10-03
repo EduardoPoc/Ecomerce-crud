@@ -1,5 +1,5 @@
 import { initIcons } from '../utils/icons.js';
-import { getCartCount } from '../services/cart.js';
+import { getCartCount, isAuthenticated } from '../services/cart.js';
 import { getCurrentUser } from '../services/authState.js';
 
 function initialsFor(name) {
@@ -54,9 +54,10 @@ export function getHeaderHTML({ cartCount = 0 } = {}) {
  */
 export class AppHeader extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = getHeaderHTML({ cartCount: getCartCount() });
+    this.innerHTML = getHeaderHTML({ cartCount: 0 });
     this.updateAccountControl();
     initIcons({ root: this });
+    this.updateCartBadge();
     this.handleCartUpdate = () => this.updateCartBadge();
     this.handleAuthUpdate = () => this.updateAccountControl();
     this.handleStorageUpdate = () => {
@@ -106,7 +107,12 @@ export class AppHeader extends HTMLElement {
 
   updateCartBadge() {
     const badge = this.querySelector('a[href="/carrinho/"] span');
-    if (badge) badge.textContent = String(getCartCount());
+    if (!badge) return;
+    if (!isAuthenticated()) {
+      badge.textContent = '0';
+      return;
+    }
+    getCartCount().then((count) => { badge.textContent = String(count); }).catch(() => { badge.textContent = '0'; });
   }
 }
 

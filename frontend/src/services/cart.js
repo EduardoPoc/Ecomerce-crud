@@ -1,75 +1,51 @@
-const CART_KEY = 'alem-da-estante-cart-v1';
+import api from './api.js';
 
-function readCart() {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-    if (!Array.isArray(parsed)) return [];
+const EMPTY_CART = { id: null, itens: [], quantidade: 0, subtotal: 0 };
 
-    return parsed.filter((item) =>
-      Number.isSafeInteger(Number(item?.produto_id)) && Number(item.produto_id) > 0 &&
-      Number.isSafeInteger(Number(item?.quantidade)) && Number(item.quantidade) > 0
-    ).map((item) => ({
-      produto_id: Number(item.produto_id),
-      quantidade: Number(item.quantidade),
-    }));
-  } catch {
-    return [];
-  }
+export function isAuthenticated() {
+  return Boolean(sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token'));
 }
 
-function writeCart(items) {
-  localStorage.setItem(CART_KEY, JSON.stringify(items));
-  window.dispatchEvent(new CustomEvent('cart:updated', { detail: { items } }));
+export function loginRedirect(path = `${window.location.pathname}${window.location.search}`) {
+  const redirect = path.startsWith('/') ? path : '/';
+  window.location.assign(`/login/?redirect=${encodeURIComponent(redirect)}`);
 }
 
-export function getCartItems() {
-  return readCart();
+export async function getCart() {
+  if (!isAuthenticated()) return EMPTY_CART;
+  const { data } = await api.get('/carrinho');
+  return data;
 }
 
-export function getCartCount() {
-  return readCart().reduce((total, item) => total + item.quantidade, 0);
+export async function getCartItems() {
+  return (await getCart()).itens || [];
 }
 
-export function addToCart(product, maxStock) {
+export async function getCartCount() {
+  return Number((await getCart()).quantidade || 0);
+}
+
+export async function addToCart(product, quantity = 1) {
   const productId = Number(product?.id);
-  const stock = Math.max(0, Math.floor(Number(maxStock) || 0));
-  if (!Number.isSafeInteger(productId) || productId <= 0 || stock < 1) return false;
-
-  const items = readCart();
-  const existing = items.find((item) => item.produto_id === productId);
-  if (existing) {
-    if (existing.quantidade >= stock) return false;
-    existing.quantidade += 1;
-  } else {
-    items.push({ produto_id: productId, quantidade: 1 });
-  }
-
-  writeCart(items);
-  return true;
+  const itemQuantity = Number(quantity) > 0 ? Number(quantity) : 1;
+  const { data } = await api.post('/carrinho/itens', { produto_id: productId, quantidade: itemQuantity });
+  notifyCartUpdated(data);
+  return data;
 }
 
-export function setCartQuantity(productId, quantity, maxStock) {
-  const id = Number(productId);
-  const nextQuantity = Math.floor(Number(quantity));
-  const stock = Math.max(0, Math.floor(Number(maxStock) || 0));
-  const items = readCart();
-  const item = items.find((entry) => entry.produto_id === id);
-  if (!item) return false;
-
-  if (nextQuantity < 1) return removeFromCart(id);
-  if (stock < 1 || nextQuantity > stock) return false;
-
-  item.quantidade = nextQuantity;
-  writeCart(items);
-  return true;
+export async function setCartQuantity(productId, quantity) {
+  if (Number(quantity) <= 0) return removeFromCart(productId);
+  const { data } = await api.patch(`/carrinho/itens/${Number(productId)}`, { quantidade: Number(quantity) });
+  notifyCartUpdated(data);
+  return data;
 }
 
-export function removeFromCart(productId) {
-  const id = Number(productId);
-  const items = readCart().filter((item) => item.produto_id !== id);
-  writeCart(items);
+export async function removeFromCart(productId) {
+  const { data } = await api.delete(`/carrinho/itens/${Number(productId)}`);
+  notifyCartUpdated(data);
+  return data;
 }
 
-export function clearCart() {
-  writeCart([]);
+function notifyCartUpdated(cart) {
+  window.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart } }));
 }

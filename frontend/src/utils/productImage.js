@@ -2,6 +2,7 @@ const FALLBACK_IMAGE = '/images/image-unavailable.svg';
 
 function getImageSource(source) {
   if (typeof source !== 'string' || source.trim() === '') return FALLBACK_IMAGE;
+  if (source.includes('exemplo.com')) return FALLBACK_IMAGE;
 
   try {
     const url = new URL(source.trim(), window.location.origin);

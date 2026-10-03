@@ -57,4 +57,22 @@ final class PedidoRepository
         } catch (\Throwable $e) { if ($this->pdo->inTransaction()) $this->pdo->rollBack(); throw $e; }
     }
     public function updateStatus(int $id, string $status): bool { $stmt = $this->pdo->prepare('UPDATE pedido SET status = :status WHERE id = :id'); $stmt->execute(['status' => $status, 'id' => $id]); return $stmt->rowCount() > 0; }
+    public function deletePending(int $id, int $userId): bool
+    {
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare("SELECT id FROM pedido WHERE id = :id AND usuario_id = :usuario_id AND status = 'AGUARDANDO_PAGAMENTO' FOR UPDATE");
+            $stmt->execute(['id' => $id, 'usuario_id' => $userId]);
+            if (!$stmt->fetch()) { $this->pdo->rollBack(); return false; }
+            $stmt = $this->pdo->prepare('DELETE FROM item_pedido WHERE pedido_id = :pedido_id');
+            $stmt->execute(['pedido_id' => $id]);
+            $stmt = $this->pdo->prepare('DELETE FROM pedido WHERE id = :id');
+            $stmt->execute(['id' => $id]);
+            $this->pdo->commit();
+            return true;
+        } catch (\Throwable $e) {
+            if ($this->pdo->inTransaction()) $this->pdo->rollBack();
+            throw $e;
+        }
+    }
 }

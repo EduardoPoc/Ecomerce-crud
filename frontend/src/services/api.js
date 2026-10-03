@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAuthToken } from './authState.js';
+import { clearAuthSession, getAuthToken } from './authState.js';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -15,5 +15,17 @@ api.interceptors.request.use((config) => {
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && !window.location.pathname.startsWith('/login')) {
+      clearAuthSession();
+      const redirect = `${window.location.pathname}${window.location.search}`;
+      window.location.assign(`/login/?redirect=${encodeURIComponent(redirect)}`);
+    }
+    return Promise.reject(error);
+  },
+);
 
 export default api;

@@ -1,9 +1,14 @@
 import '../../main.js';
-import { getCartCount } from '../../services/cart.js';
 
+const title = document.querySelector('#confirmation-title');
+const message = document.querySelector('#confirmation-message');
 const summary = document.querySelector('#confirmation-summary');
-const count = getCartCount();
+const orderId = new URLSearchParams(window.location.search).get('pedido');
 
-summary.textContent = count > 0
-  ? `Sua sacola ainda contém ${count} livro(s); os itens não foram enviados como pedido.`
-  : 'Sua sacola está vazia e nenhum pedido foi confirmado nesta sessão.';
+if (orderId) {
+  title.textContent = 'Pedido confirmado';
+  message.textContent = 'O pagamento simulado foi aprovado e seu pedido foi registrado com sucesso.';
+  summary.textContent = `Número do pedido: #${orderId}`;
+} else {
+  summary.textContent = 'Nenhum pedido foi informado nesta sessão.';
+}

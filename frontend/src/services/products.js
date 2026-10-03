@@ -15,7 +15,7 @@ function byteValue(character) {
   return codePoint <= 0xff ? codePoint : WINDOWS_1252_BYTES.get(codePoint) ?? null;
 }
 
-function repairMojibake(value) {
+export function repairMojibake(value) {
   if (typeof value !== 'string') return value;
 
   const characters = Array.from(value);

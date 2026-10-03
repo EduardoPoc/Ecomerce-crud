@@ -10,6 +10,12 @@ const message = document.querySelector('#login-message');
 const submitButton = document.querySelector('#login-submit');
 const submitLabel = document.querySelector('#login-submit-label');
 const passwordToggle = document.querySelector('#toggle-password');
+const signupLink = document.querySelector('#signup-link');
+const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+
+if (redirectParam?.startsWith('/') && signupLink) {
+  signupLink.href = `/cadastro/?redirect=${encodeURIComponent(redirectParam)}`;
+}
 
 function showMessage(text, type = 'error') {
   message.textContent = text;
@@ -47,7 +53,8 @@ form.addEventListener('submit', async (event) => {
   try {
     await login({ email: emailInput.value.trim(), senha: passwordInput.value }, rememberInput.checked);
     showMessage('Login realizado. Redirecionando...', 'success');
-    window.location.assign('/');
+    const redirect = redirectParam?.startsWith('/') ? redirectParam : '/';
+    window.location.assign(redirect);
   } catch (error) {
     showMessage(errorMessage(error));
   } finally {

@@ -1,6 +1,6 @@
 import '../../main.js';
 import { getProducts, isProductActive, getProductStock, formatPrice } from '../../services/products.js';
-import { addToCart, getCartItems } from '../../services/cart.js';
+import { addToCart, loginRedirect } from '../../services/cart.js';
 import { createProductImageElement } from '../../utils/productImage.js';
 
 const status = document.querySelector('#catalog-status');
@@ -40,14 +40,35 @@ function renderProduct(product) {
   button.classList.add(available ? 'bg-navy' : 'bg-outline/50', available ? 'text-surface' : 'text-muted');
   button.setAttribute('aria-label', `${available ? 'Adicionar' : 'Indisponível'}: ${product.nome || 'livro'}`);
 
-  const currentQuantity = () => getCartItems().find((item) => item.produto_id === Number(product.id))?.quantidade || 0;
-  if (currentQuantity() > 0 && available) button.textContent = `Na sacola (${currentQuantity()}) · Adicionar`;
+  const defaultLabel = 'Adicionar à sacola';
+  let feedbackTimer;
 
-  button.addEventListener('click', () => {
-    const added = addToCart(product, stock);
-    button.textContent = added
-      ? `Na sacola (${currentQuantity()}) · Adicionar`
-      : `Limite em estoque (${stock})`;
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    status.textContent = 'Adicionando à sacola…';
+    clearTimeout(feedbackTimer);
+    try {
+      await addToCart(product, 1);
+      button.textContent = 'Adicionado à sacola';
+      button.classList.remove('bg-navy');
+      button.classList.add('bg-sage');
+      feedbackTimer = setTimeout(() => {
+        button.textContent = defaultLabel;
+        button.classList.remove('bg-sage');
+        button.classList.add('bg-navy');
+      }, 2000);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        loginRedirect();
+        return;
+      }
+      const message = error.response?.data?.erro || error.message || 'Não foi possível adicionar';
+      button.textContent = message;
+      status.textContent = message;
+      feedbackTimer = setTimeout(() => { button.textContent = defaultLabel; }, 2000);
+    } finally {
+      button.disabled = false;
+    }
   });
 
   content.append(category, title, description, price, stockText, button);

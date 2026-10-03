@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
  * tanto no servidor de desenvolvimento quanto no build de produção.
  */
 function cleanUrlsPlugin() {
-  const pages = ['catalogo', 'carrinho', 'pagamento', 'finalizado', 'login'];
+  const pages = ['catalogo', 'carrinho', 'pagamento', 'finalizado', 'login', 'cadastro'];
 
   return {
     name: 'clean-urls-plugin',
@@ -73,6 +73,7 @@ export default defineConfig(({ mode }) => {
           pagamento: resolve(import.meta.dirname, 'src/pages/pagamento/index.html'),
           finalizado: resolve(import.meta.dirname, 'src/pages/finalizado/index.html'),
           login: resolve(import.meta.dirname, 'src/pages/login/index.html'),
+          cadastro: resolve(import.meta.dirname, 'src/pages/cadastro/index.html'),
         },
       },
     },

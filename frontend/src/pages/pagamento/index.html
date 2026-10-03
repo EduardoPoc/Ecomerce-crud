@@ -20,6 +20,24 @@
         <section class="lg:col-span-2 bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6">
           <h2 class="text-lg font-serif font-bold text-navy mb-4">Itens selecionados</h2>
           <ul id="checkout-items" class="divide-y divide-outline/50"></ul>
+          <div class="border-t border-outline/50 mt-5 pt-5">
+            <h2 class="text-lg font-serif font-bold text-navy mb-3">Endereço de entrega</h2>
+            <label class="block text-sm font-semibold text-ink" for="address-select">Escolha um endereço salvo</label>
+            <select id="address-select" class="w-full mt-2 rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm"></select>
+            <p id="address-status" class="text-xs text-muted mt-2" role="status"></p>
+            <form id="address-form" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+              <input name="destinatario" required placeholder="Destinatário" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="cep" required inputmode="numeric" placeholder="CEP" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="logradouro" required placeholder="Logradouro" class="rounded-lg border border-outline px-3 py-2 text-sm sm:col-span-2" />
+              <input name="numero" required placeholder="Número" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="complemento" placeholder="Complemento" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="bairro" required placeholder="Bairro" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="cidade" required placeholder="Cidade" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="uf" required maxlength="2" placeholder="UF" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <button class="rounded-lg bg-sage px-4 py-2 text-sm font-semibold text-surface sm:col-span-2" type="submit">Salvar endereço</button>
+            </form>
+            <button id="new-address" type="button" class="text-sm font-semibold text-sage hover:underline mt-3">Cadastrar novo endereço</button>
+          </div>
         </section>
         <aside class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6 shadow-card">
           <h2 class="text-lg font-serif font-bold text-navy border-b border-outline/50 pb-4">Resumo</h2>
@@ -31,13 +49,13 @@
           </div>
           <p class="text-xs text-muted mt-3">Frete será definido quando o fluxo de pedidos estiver disponível.</p>
           <button id="checkout-submit" type="button" disabled class="w-full rounded-lg px-4 py-3 mt-5 text-sm font-semibold bg-outline/50 text-muted cursor-not-allowed">
-            Pagamento indisponível
+            Pagar e confirmar pedido
           </button>
         </aside>
       </div>
       <div class="mt-6 rounded-xl border border-amber/40 bg-amber/10 p-4 text-sm text-ink">
-        <h2 class="font-semibold text-navy">Esta compra ainda não pode ser finalizada</h2>
-        <p class="text-muted mt-1">A API ainda não cria pedidos nem processa pagamentos. Seus itens permanecem na sacola; nenhum pagamento ou pedido será enviado.</p>
+        <h2 class="font-semibold text-navy">Pagamento simulado</h2>
+        <p class="text-muted mt-1">Nenhum gateway real é utilizado. Ao confirmar, o pedido será criado e marcado como pago imediatamente.</p>
       </div>
     </main>
     <app-footer></app-footer>
