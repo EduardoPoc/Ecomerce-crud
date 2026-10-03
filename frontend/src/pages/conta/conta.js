@@ -2,7 +2,7 @@ import '../../main.js';
 import api from '../../services/api.js';
 import { clearAuthSession, getCurrentUser, setCurrentUser } from '../../services/authState.js';
 import { isAuthenticated, loginRedirect } from '../../services/cart.js';
-import { repairMojibake } from '../../services/products.js';
+import { formatPrice, repairMojibake } from '../../services/products.js';
 
 const status = document.querySelector('#account-status');
 const profileForm = document.querySelector('#profile-form');
@@ -13,6 +13,87 @@ const addressList = document.querySelector('#address-list');
 const addressForm = document.querySelector('#address-form');
 const addressMessage = document.querySelector('#address-message');
 const adminPanelLink = document.querySelector('#admin-panel-link');
+const ordersCount = document.querySelector('#orders-count');
+const ordersMessage = document.querySelector('#orders-message');
+const ordersList = document.querySelector('#orders-list');
+
+const ORDER_STATUS = {
+  AGUARDANDO_PAGAMENTO: 'Aguardando pagamento',
+  PAGO: 'Pago',
+  ENVIADO: 'Enviado',
+  ENTREGUE: 'Entregue',
+  CANCELADO: 'Cancelado',
+};
+
+function formatOrderDate(value) {
+  if (!value) return 'Data não informada';
+  const date = new Date(String(value).replace(' ', 'T'));
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+}
+
+function statusClasses(statusValue) {
+  if (statusValue === 'PAGO' || statusValue === 'ENTREGUE') return 'border-sage/30 bg-sage/10 text-sage';
+  if (statusValue === 'CANCELADO') return 'border-error/30 bg-error/10 text-error';
+  return 'border-amber/30 bg-amber/10 text-amber-700';
+}
+
+function renderOrders(orders) {
+  ordersCount.textContent = orders.length ? `${orders.length} pedido${orders.length === 1 ? '' : 's'}` : '';
+  if (!orders.length) {
+    ordersMessage.textContent = 'Você ainda não realizou nenhum pedido.';
+    ordersList.replaceChildren();
+    return;
+  }
+
+  ordersMessage.textContent = '';
+  ordersList.replaceChildren(...orders.map((order) => {
+    const card = document.createElement('article');
+    card.className = 'rounded-xl border border-outline/50 bg-surface-soft p-4 sm:p-5';
+
+    const header = document.createElement('div');
+    header.className = 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3';
+    const title = document.createElement('div');
+    const orderNumber = document.createElement('p');
+    orderNumber.className = 'font-semibold text-navy';
+    orderNumber.textContent = `Pedido #${order.id}`;
+    const date = document.createElement('p');
+    date.className = 'text-sm text-muted mt-1';
+    date.textContent = formatOrderDate(order.criado_em);
+    title.append(orderNumber, date);
+
+    const badge = document.createElement('span');
+    badge.className = `self-start rounded-full border px-3 py-1 text-xs font-semibold ${statusClasses(order.status)}`;
+    badge.textContent = ORDER_STATUS[order.status] || repairMojibake(order.status || 'Status desconhecido');
+    header.append(title, badge);
+
+    const footer = document.createElement('div');
+    footer.className = 'flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mt-4 pt-3 border-t border-outline/50';
+    const delivery = document.createElement('p');
+    delivery.className = 'text-sm text-muted';
+    delivery.textContent = order.destinatario
+      ? `Entrega para ${repairMojibake(order.destinatario)} — ${repairMojibake(order.cidade || '')}/${order.uf || ''}`
+      : 'Endereço de entrega não informado';
+    const total = document.createElement('p');
+    total.className = 'font-bold text-navy';
+    total.textContent = `Total: ${formatPrice(order.total)}`;
+    footer.append(delivery, total);
+
+    card.append(header, footer);
+    return card;
+  }));
+}
+
+async function loadOrders() {
+  try {
+    const { data } = await api.get('/pedidos');
+    renderOrders(Array.isArray(data) ? data : []);
+  } catch {
+    ordersCount.textContent = '';
+    ordersMessage.textContent = 'Não foi possível carregar seu histórico de pedidos.';
+    ordersList.replaceChildren();
+  }
+}
 
 function showMessage(node, text, error = false) {
   node.textContent = text;
@@ -51,6 +132,7 @@ async function loadAccount() {
     profileEmail.value = user.email || '';
     if (user.papel === 'ADMIN') adminPanelLink.classList.remove('hidden');
     renderAddresses(addresses);
+    await loadOrders();
     status.textContent = 'Dados da conta carregados.';
   } catch { status.textContent = 'Não foi possível carregar sua conta.'; }
 }

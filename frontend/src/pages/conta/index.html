@@ -54,6 +54,17 @@
           </form>
         </section>
       </div>
+      <section class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6 mt-6">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-serif font-bold text-navy">Histórico de pedidos</h2>
+            <p class="text-sm text-muted mt-1">Acompanhe suas compras e os pagamentos simulados.</p>
+          </div>
+          <span id="orders-count" class="text-sm text-muted"></span>
+        </div>
+        <p id="orders-message" class="text-sm text-muted mt-5" role="status"></p>
+        <div id="orders-list" class="space-y-3 mt-5"></div>
+      </section>
     </main>
     <app-footer></app-footer>
   </body>
