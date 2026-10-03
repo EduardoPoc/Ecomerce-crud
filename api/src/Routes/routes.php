@@ -13,6 +13,7 @@ use Ecommerce\Api\Controllers\PedidoController;
 use Ecommerce\Api\Core\Request;
 use Ecommerce\Api\Core\Response;
 use Ecommerce\Api\Core\Router;
+use Ecommerce\Api\Core\Logger;
 use Ecommerce\Api\Middlewares\AdminMiddleware;
 use Ecommerce\Api\Middlewares\AuthMiddleware;
 
@@ -33,7 +34,7 @@ return static function (Router $router): void {
                 Database::connection()->query('SELECT 1');
                 return Response::json(['status' => 'ok', 'banco' => 'conectado']);
             } catch (Throwable $e) {
-                error_log((string) $e);
+                Logger::exception($e, 'health.database_unavailable');
                 return Response::json(['status' => 'erro', 'banco' => 'indisponivel'], 503);
             }
         });

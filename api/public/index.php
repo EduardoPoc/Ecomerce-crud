@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Ecommerce\Api\Core\Request;
 use Ecommerce\Api\Core\Response;
 use Ecommerce\Api\Core\Router;
+use Ecommerce\Api\Core\Logger;
 
 $root = dirname(__DIR__);
 
@@ -25,6 +26,12 @@ if (is_file($root . '/vendor/autoload.php')) {
 }
 
 $request = Request::fromGlobals();
+$startedAt = hrtime(true);
+$requestId = $request->header('x-request-id');
+if ($requestId === null || !preg_match('/^[A-Za-z0-9._-]{1,128}$/', $requestId)) {
+    $requestId = bin2hex(random_bytes(16));
+}
+$request->setAttribute('request_id', $requestId);
 
 // CORS: o frontend (Vite) roda em outra porta e chama a API via Axios.
 $env = is_file($root . '/.env') ? (parse_ini_file($root . '/.env', false, INI_SCANNER_RAW) ?: []) : [];
@@ -51,8 +58,17 @@ if ($request->method() === 'OPTIONS') {
     $response = $router->dispatch($request);
 }
 
+$response = $response->withHeader('X-Request-Id', $requestId);
 foreach ($cors as $name => $value) {
     $response = $response->withHeader($name, $value);
 }
+
+Logger::info('http.request', [
+    'request_id' => $requestId,
+    'method' => $request->method(),
+    'path' => $request->path(),
+    'status' => $response->status(),
+    'duration_ms' => round((hrtime(true) - $startedAt) / 1_000_000, 2),
+]);
 
 $response->send();

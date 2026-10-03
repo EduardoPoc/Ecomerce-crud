@@ -91,7 +91,11 @@ final class Router
             return Response::error($e->getMessage(), $e->status(), $e->errors());
         } catch (Throwable $e) {
             // Detalhes só no log do servidor: nunca vazar SQL/credenciais para o cliente.
-            error_log((string) $e);
+            Logger::exception($e, 'request.unhandled_exception', [
+                'request_id' => $request->attribute('request_id'),
+                'method' => $request->method(),
+                'path' => $request->path(),
+            ]);
             return Response::error('Erro interno do servidor.', 500);
         }
     }

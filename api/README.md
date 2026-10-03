@@ -70,6 +70,7 @@ curl -X POST http://localhost:8080/api/auth/cadastro \
 | `POST` | `/api/produtos/{id}/imagem` | Admin | Envia a capa local do produto via `multipart/form-data`. |
 | `PUT`/`PATCH` | `/api/produtos/{id}` | Admin | Atualiza um produto. |
 | `DELETE` | `/api/produtos/{id}` | Admin | Desativa um produto sem apagar o histórico. |
+| `DELETE` | `/api/produtos/{id}/hard` | Admin | Apaga definitivamente um produto inativo sem pedidos vinculados. |
 
 Consulta do catálogo:
 
@@ -173,6 +174,20 @@ Corpo para criar ou atualizar usuário:
 ## Respostas e erros
 
 Respostas JSON de erro usam o formato `{"erro":"..."}`. Quando aplicável, a resposta também inclui `detalhes`.
+
+Toda resposta inclui o cabeçalho `X-Request-Id`. A API registra uma linha JSON por requisição no log do container PHP, com timestamp UTC, método, rota, status, duração e esse identificador. Exceções inesperadas também registram classe, mensagem e localização no servidor, sem enviar detalhes técnicos ao cliente.
+
+Exemplo de log:
+
+```json
+{"timestamp":"2026-10-03T02:21:41+00:00","level":"info","service":"api","message":"http.request","request_id":"...","method":"GET","path":"/api/health","status":200,"duration_ms":2.11}
+```
+
+Para acompanhar os logs durante o desenvolvimento:
+
+```sh
+docker compose logs -f php
+```
 
 Status mais comuns:
 

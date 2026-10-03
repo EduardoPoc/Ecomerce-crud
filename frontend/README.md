@@ -1,6 +1,6 @@
 # Frontend
 
-Frontend da Além da Estante em HTML, JavaScript puro, Vite e Tailwind CSS 4. O catálogo lê os produtos da API e a sacola é mantida localmente no navegador enquanto não há endpoints de carrinho.
+Frontend da Além da Estante em HTML, JavaScript puro, Vite e Tailwind CSS 4. O catálogo, a sacola e o checkout usam a API via Axios.
 
 ## Estrutura
 
@@ -14,7 +14,7 @@ frontend/
 │   ├── services/
 │   │   ├── api.js          # Cliente Axios compartilhado e cabeçalho Bearer
 │   │   ├── auth.js         # Login e armazenamento da sessão
-│   │   ├── cart.js         # Itens locais da sacola (produto_id e quantidade)
+│   │   ├── cart.js         # Operações da sacola autenticada na API
 │   │   └── products.js     # Leitura e normalização dos produtos da API
 │   ├── pages/
 │   │   ├── carrinho/
@@ -60,9 +60,10 @@ O Axios usa o caminho relativo `/api`. No Docker, o Vite encaminha `/api` para `
 
 - **Login:** `src/services/auth.js` chama `POST /auth/login` com `{ email, senha }`. A API procura `email` em `usuario.email` e compara a senha com `usuario.senha_hash`; o frontend nunca envia nem recebe o hash. A resposta inclui token Bearer e os campos públicos `id`, `nome`, `email`, `papel` e `criado_em`. O token fica em `sessionStorage` por padrão ou em `localStorage` quando “Lembrar de mim” está marcado; o Axios envia `Authorization: Bearer ...` nas chamadas seguintes.
 - **Catálogo:** `src/services/products.js` chama `GET /produtos`. A tela usa `id`, `categoria_nome`, `nome`, `descricao`, `preco`, `estoque`, `imagem_url` e `ativo`, conforme a resposta de `ProdutoRepository`. Produtos inativos não são exibidos e produtos sem estoque não podem ser adicionados.
-- **Sacola:** `src/services/cart.js` persiste somente `produto_id` e `quantidade`, correspondentes aos campos de `item_carrinho`. Preços e estoque são buscados novamente na API ao abrir a sacola; valores de preço não são tratados como fonte confiável nem gravados no armazenamento local.
-
-A sacola ainda não sincroniza com a tabela `carrinho`/`item_carrinho`. A API também não registra pedidos nem processa pagamentos; as telas de revisão e confirmação informam essa limitação e não simulam uma compra concluída.
+- **Sacola:** `src/services/cart.js` chama `GET /carrinho`, `POST /carrinho/itens`, `PATCH /carrinho/itens/{produto_id}` e `DELETE /carrinho/itens/{produto_id}`. O carrinho é persistido nas tabelas `carrinho` e `item_carrinho`, exclusivamente para usuários autenticados. O frontend não grava preço ou estoque como fonte confiável; esses dados são recalculados pela API.
+- **Acesso à sacola:** se o visitante tentar adicionar um livro ou abrir o checkout sem login, é redirecionado para `/login/` e retorna à página original após autenticar.
+- **Checkout:** a página `/pagamento/` carrega os itens pela API, exige um endereço do usuário e cria o pedido com `POST /pedidos`. O frete é fixo em R$ 30,00 e é somado ao subtotal no backend.
+- **Pagamento simulado:** o botão de confirmação chama `POST /pedidos/{id}/pagar`. Não existe cobrança real; a API baixa o estoque, marca o pedido como `PAGO` e a tela `/finalizado/` confirma o pedido. Se alguma etapa falhar, o frontend tenta excluir o pedido pendente com `DELETE /pedidos/{id}`.
 
 Catálogo e login dependem de a API e o banco MySQL estarem ativos e configurados. Para executar o Vite fora do Docker, configure `VITE_API_PROXY_TARGET` com o endereço HTTP da API que não redirecione para HTTPS.
 
