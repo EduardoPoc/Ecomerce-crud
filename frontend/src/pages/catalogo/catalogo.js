@@ -6,9 +6,21 @@ import { createProductImageElement } from '../../utils/productImage.js';
 const status = document.querySelector('#catalog-status');
 const productList = document.querySelector('#product-list');
 const pagination = document.querySelector('#catalog-pagination');
+const searchInput = document.querySelector('#catalog-search');
+const categorySelect = document.querySelector('#catalog-category');
+const clearFiltersButton = document.querySelector('#clear-filters');
 const PAGE_SIZE = 12;
 let visibleProducts = [];
+let allProducts = [];
 let currentPage = 1;
+
+function normalizeSearch(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR')
+    .trim();
+}
 
 function makeElement(tag, className, text) {
   const element = document.createElement(tag);
@@ -118,6 +130,42 @@ function renderCatalogPage() {
   renderPagination();
 }
 
+function updateCatalogStatus() {
+  if (!visibleProducts.length) {
+    status.textContent = allProducts.length
+      ? 'Nenhum livro corresponde aos filtros selecionados.'
+      : 'Não há livros disponíveis no catálogo neste momento.';
+    return;
+  }
+  const hasFilters = normalizeSearch(searchInput.value) || categorySelect.value;
+  status.textContent = hasFilters
+    ? `${visibleProducts.length} livro(s) encontrado(s).`
+    : `${visibleProducts.length} livros no catálogo. Itens sem estoque aparecem como indisponíveis.`;
+}
+
+function applyFilters() {
+  const term = normalizeSearch(searchInput.value);
+  const categoryId = categorySelect.value;
+  visibleProducts = allProducts.filter((product) => {
+    const searchable = normalizeSearch(`${product.nome} ${product.descricao}`);
+    const matchesTerm = !term || searchable.includes(term);
+    const matchesCategory = !categoryId || String(product.categoria_id) === categoryId;
+    return matchesTerm && matchesCategory;
+  });
+  currentPage = 1;
+  renderCatalogPage();
+  updateCatalogStatus();
+}
+
+function populateCategories(products) {
+  const categories = [...new Map(products.map((product) => [
+    String(product.categoria_id),
+    { id: product.categoria_id, nome: product.categoria_nome || 'Sem categoria' },
+  ])).values()].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  categorySelect.replaceChildren(new Option('Todas as categorias', ''));
+  categories.forEach((category) => categorySelect.add(new Option(category.nome, category.id)));
+}
+
 async function renderCatalog() {
   let products;
 
@@ -132,17 +180,23 @@ async function renderCatalog() {
     return;
   }
 
-  visibleProducts = products.filter(isProductActive);
-  currentPage = 1;
+  allProducts = products.filter(isProductActive);
+  populateCategories(allProducts);
 
   try {
-    renderCatalogPage();
-    status.textContent = visibleProducts.length === 0
-      ? 'Não há livros disponíveis no catálogo neste momento.'
-      : `${visibleProducts.length} livros no catálogo. Itens sem estoque aparecem como indisponíveis.`;
+    applyFilters();
   } catch {
     status.textContent = 'Não foi possível exibir o catálogo. Atualize a página para tentar novamente.';
   }
 }
+
+searchInput.addEventListener('input', applyFilters);
+categorySelect.addEventListener('change', applyFilters);
+clearFiltersButton.addEventListener('click', () => {
+  searchInput.value = '';
+  categorySelect.value = '';
+  applyFilters();
+  searchInput.focus();
+});
 
 renderCatalog();
