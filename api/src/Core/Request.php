@@ -113,6 +113,13 @@ final class Request
         return $this->json()[$key] ?? $default;
     }
 
+    /** Arquivo enviado por multipart/form-data, ex.: $_FILES['imagem']. */
+    public function file(string $key): ?array
+    {
+        $file = $_FILES[$key] ?? null;
+        return is_array($file) ? $file : null;
+    }
+
     public function setParams(array $params): void
     {
         $this->params = $params;

@@ -239,4 +239,10 @@ class ProdutoRepository
             'id' => $id
         ]);
     }
+
+    public function updateImage(int $id, string $imageUrl): bool
+    {
+        $stmt = $this->db->prepare('UPDATE produto SET imagem_url = :imagem_url WHERE id = :id');
+        return $stmt->execute(['id' => $id, 'imagem_url' => $imageUrl]);
+    }
 }

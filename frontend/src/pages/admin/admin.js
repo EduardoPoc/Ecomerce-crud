@@ -12,6 +12,7 @@ const message = document.querySelector('#product-message');
 const formTitle = document.querySelector('#form-title');
 const cancelEdit = document.querySelector('#cancel-edit');
 const saveButton = document.querySelector('#save-product');
+const currentImage = document.querySelector('#current-image');
 const fields = Object.fromEntries([...form.elements].filter((field) => field.name).map((field) => [field.name, field]));
 let products = [];
 
@@ -22,6 +23,14 @@ function showMessage(text, error = false) {
 
 function apiError(error, fallback) {
   return repairMojibake(error.response?.data?.erro || error.response?.data?.message || fallback);
+}
+
+function validateImageFile(file) {
+  if (!file) return null;
+  const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!acceptedTypes.includes(file.type)) return 'Formato inválido. Use JPG, PNG ou WebP.';
+  if (file.size > 5 * 1024 * 1024) return 'A imagem deve ter no máximo 5 MB.';
+  return null;
 }
 
 function isActive(product) {
@@ -71,11 +80,15 @@ function fillForm(product = null) {
     fields.preco.value = product.preco;
     fields.estoque.value = product.estoque;
     fields.imagem_url.value = product.imagem_url || '';
+    fields.imagem_arquivo.value = '';
+    currentImage.textContent = product.imagem_url ? `Capa atual: ${product.imagem_url}` : 'Nenhuma capa cadastrada. JPG, PNG ou WebP, até 5 MB.';
     fields.ativo.checked = isActive(product);
     formTitle.textContent = `Editar livro #${product.id}`;
     cancelEdit.classList.remove('hidden');
   } else {
     fields.ativo.checked = true;
+    fields.imagem_arquivo.value = '';
+    currentImage.textContent = 'JPG, PNG ou WebP, até 5 MB.';
     formTitle.textContent = 'Novo livro';
     cancelEdit.classList.add('hidden');
   }
@@ -111,6 +124,27 @@ async function loadProducts() {
   renderProducts();
 }
 
+async function uploadProductImage(id) {
+  const file = fields.imagem_arquivo.files?.[0];
+  if (!file) return;
+  const validationError = validateImageFile(file);
+  if (validationError) throw new Error(validationError);
+  const formData = new FormData();
+  formData.append('imagem', file);
+  await api.post(`/produtos/${id}/imagem`, formData);
+}
+
+fields.imagem_arquivo.addEventListener('change', () => {
+  const file = fields.imagem_arquivo.files?.[0];
+  const validationError = validateImageFile(file);
+  if (validationError) {
+    fields.imagem_arquivo.value = '';
+    showMessage(validationError, true);
+    return;
+  }
+  if (file) showMessage(`Imagem selecionada: ${file.name}`);
+});
+
 async function loadAdmin() {
   if (!isAuthenticated()) { loginRedirect('/admin/'); return; }
   try {
@@ -136,7 +170,9 @@ form.addEventListener('submit', async (event) => {
   try {
     const id = fields.id?.value;
     const response = id ? await api.put(`/produtos/${id}`, payload()) : await api.post('/produtos', payload());
-    await loadProducts(); fillForm(); showMessage(repairMojibake(response.data?.message || 'Livro salvo com sucesso.'));
+    const productId = id || response.data?.id;
+    await uploadProductImage(productId);
+    await loadProducts(); fillForm(); showMessage('Livro salvo com sucesso.');
   } catch (error) { showMessage(apiError(error, 'Não foi possível salvar o livro.'), true); }
   finally { saveButton.disabled = false; saveButton.textContent = 'Salvar livro'; }
 });

@@ -121,6 +121,7 @@ class ProdutoService
         $imagemUrl = isset($data['imagem_url'])
             ? trim($data['imagem_url'])
             : null;
+        $imagemAnterior = $produto['imagem_url'] ?? null;
 
         $ativo = $data['ativo'] ?? true;
 
@@ -147,6 +148,10 @@ class ProdutoService
             $imagemUrl,
             (bool) $ativo
         );
+
+        if ($imagemAnterior !== $imagemUrl) {
+            $this->removeLocalImage($imagemAnterior);
+        }
     }
 
     public function delete(int $id): void
@@ -163,7 +168,70 @@ class ProdutoService
             );
         }
 
+        // A desativação é soft delete: a imagem precisa permanecer disponível
+        // caso o livro seja ativado novamente no painel.
         $this->repository->delete($id);
+    }
+
+    public function uploadImage(int $id, ?array $file): string
+    {
+        if ($id <= 0) throw new HttpException(400, 'ID inválido.');
+        $product = $this->repository->findById($id);
+        if ($product === null) throw new HttpException(404, 'Produto não encontrado.');
+        if ($file === null) {
+            throw new HttpException(422, 'Selecione uma imagem. Formatos aceitos: JPG, PNG ou WebP.');
+        }
+
+        $uploadError = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        if ($uploadError !== UPLOAD_ERR_OK) {
+            $message = match ($uploadError) {
+                UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'A imagem excede o limite máximo de 5 MB.',
+                UPLOAD_ERR_PARTIAL => 'O upload da imagem foi interrompido. Tente novamente.',
+                UPLOAD_ERR_NO_FILE => 'Selecione uma imagem. Formatos aceitos: JPG, PNG ou WebP.',
+                default => 'Não foi possível receber a imagem. Tente novamente.',
+            };
+            throw new HttpException(422, $message);
+        }
+
+        $maxSize = 5 * 1024 * 1024;
+        if ((int) ($file['size'] ?? 0) <= 0 || (int) $file['size'] > $maxSize) {
+            throw new HttpException(422, 'A imagem deve ter no máximo 5 MB.');
+        }
+
+        $tmpName = (string) ($file['tmp_name'] ?? '');
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($tmpName);
+        $extensions = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+        ];
+        if (!isset($extensions[$mime]) || @getimagesize($tmpName) === false) {
+            throw new HttpException(422, 'Formato de imagem inválido. Use JPG, PNG ou WebP.');
+        }
+
+        $directory = dirname(__DIR__, 2) . '/public/uploads/livros';
+        if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+            throw new HttpException(500, 'Não foi possível preparar o armazenamento da imagem.');
+        }
+
+        $filename = bin2hex(random_bytes(16)) . '.' . $extensions[$mime];
+        $destination = $directory . '/' . $filename;
+        if (!move_uploaded_file($tmpName, $destination)) {
+            throw new HttpException(500, 'Não foi possível salvar a imagem.');
+        }
+
+        $imageUrl = '/uploads/livros/' . $filename;
+        $this->repository->updateImage($id, $imageUrl);
+        $this->removeLocalImage($product['imagem_url'] ?? null);
+        return $imageUrl;
+    }
+
+    private function removeLocalImage(?string $imageUrl): void
+    {
+        if (!is_string($imageUrl) || !str_starts_with($imageUrl, '/uploads/livros/')) return;
+        $path = dirname(__DIR__, 2) . '/public' . $imageUrl;
+        if (is_file($path)) @unlink($path);
     }
 
     

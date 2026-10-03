@@ -64,6 +64,11 @@ export default defineConfig(({ mode }) => {
           changeOrigin: false,
           headers: { host: 'localhost' },
         },
+        '/uploads': {
+          target: apiProxyTarget,
+          changeOrigin: false,
+          headers: { host: 'localhost' },
+        },
       },
     },
     build: {

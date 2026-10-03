@@ -66,6 +66,7 @@ return static function (Router $router): void {
         // Operação de vendedores: produtos e estoque. Categorias são somente leitura.
         $api->group('/produtos', [AuthMiddleware::class, AdminMiddleware::class], function (Router $r): void {
             $r->post('', [ProdutoController::class, 'store']);
+            $r->post('/{id:\\d+}/imagem', [ProdutoController::class, 'uploadImage']);
             $r->put('/{id:\\d+}', [ProdutoController::class, 'update']);
             $r->patch('/{id:\\d+}', [ProdutoController::class, 'update']);
             $r->delete('/{id:\\d+}', [ProdutoController::class, 'destroy']);

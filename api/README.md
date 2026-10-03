@@ -64,11 +64,36 @@ curl -X POST http://localhost:8080/api/auth/cadastro \
 
 | Método | Rota | Auth | Descrição |
 | --- | --- | --- | --- |
-| `GET` | `/api/produtos` | Pública | Lista os produtos cadastrados. |
+| `GET` | `/api/produtos` | Pública | Lista produtos ativos com paginação, busca, categoria e ordenação. |
 | `GET` | `/api/produtos/{id}` | Pública | Retorna um produto pelo ID. |
 | `POST` | `/api/produtos` | Admin | Cadastra um produto. |
+| `POST` | `/api/produtos/{id}/imagem` | Admin | Envia a capa local do produto via `multipart/form-data`. |
 | `PUT`/`PATCH` | `/api/produtos/{id}` | Admin | Atualiza um produto. |
 | `DELETE` | `/api/produtos/{id}` | Admin | Desativa um produto sem apagar o histórico. |
+
+Consulta do catálogo:
+
+```http
+GET /api/produtos?pagina=1&limite=12&busca=duna&categoria_id=1&ordenar=relevancia
+```
+
+`ordenar` aceita `relevancia`, `nome`, `preco_asc`, `preco_desc` e `recentes`. Na relevância, correspondências no título aparecem antes das correspondências apenas na descrição.
+
+Resposta:
+
+```json
+{
+  "itens": [],
+  "pagina": 1,
+  "limite": 12,
+  "total": 0,
+  "paginas": 0
+}
+```
+
+O painel administrativo usa `GET /api/produtos/admin`, protegido por `ADMIN`, para incluir produtos inativos.
+
+O upload aceita `JPG`, `PNG` e `WebP` até 5 MB no campo `imagem`. A API salva a imagem em `api/public/uploads/livros` com nome aleatório e retorna o caminho local em `imagem_url`.
 
 ### Categorias
 

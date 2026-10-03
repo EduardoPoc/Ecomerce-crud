@@ -57,6 +57,16 @@ class ProdutoController
         ]);
     }
 
+    public function uploadImage(Request $request): Response
+    {
+        $imageUrl = $this->service->uploadImage((int) $request->param('id'), $request->file('imagem'));
+
+        return Response::json([
+            'message' => 'Imagem do produto salva com sucesso.',
+            'imagem_url' => $imageUrl,
+        ]);
+    }
+
     public function destroy(Request $request): Response
     {
         $this->service->delete((int) $request->param('id'));
