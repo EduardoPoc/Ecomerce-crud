@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Sacola</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/carrinho/carrinho.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main id="main-content" class="max-w-7xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+      <header class="border-b border-outline/50 pb-5 mb-6">
+        <a href="/catalogo/" class="text-sm text-sage hover:text-navy">← Voltar ao catálogo</a>
+        <h1 class="text-3xl font-serif font-bold text-navy mt-3">Sua sacola</h1>
+        <p id="cart-status" class="text-sm text-muted mt-2" role="status" aria-live="polite">Carregando sua sacola…</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <section id="cart-items" class="lg:col-span-2 space-y-4" aria-label="Itens na sacola"></section>
+        <aside id="cart-summary" class="bg-surface rounded-2xl border border-outline/50 p-6 shadow-card" aria-label="Resumo da sacola"></aside>
+      </div>
+    </main>
+    <app-footer></app-footer>
+  </body>
+</html>

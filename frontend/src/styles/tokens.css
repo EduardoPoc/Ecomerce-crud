@@ -1,0 +1,25 @@
+:root {
+  /* Paleta inicial da marca Além da Estante. */
+  --brand-paper: #fbf9f4;
+  --brand-surface: #ffffff;
+  --brand-surface-soft: #f5f3ee;
+  --brand-navy: #0b2a42;
+  --brand-ink: #172a3a;
+  --brand-muted: #647582;
+  --brand-sage: #4f7c70;
+  --brand-amber: #f5af19;
+  --brand-border: #e2e6e8;
+  --brand-error: #ba1a1a;
+
+  --brand-font: "Inter", system-ui, sans-serif;
+  --brand-radius-control: 0.5rem;
+  --brand-radius-card: 0.75rem;
+  --brand-space-page: 1.25rem;
+  --brand-shadow-card: 0 2px 8px rgb(11 42 66 / 4%), 0 1px 2px rgb(11 42 66 / 2%);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --brand-space-page: 3rem;
+  }
+}

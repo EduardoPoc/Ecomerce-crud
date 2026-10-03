@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-labelledby="title desc">
+  <title id="title">Imagem indisponível</title>
+  <desc id="desc">Ícone de câmera com um X indicando que a imagem não está disponível</desc>
+  <rect width="600" height="800" fill="#f5f3ee"/>
+  <g fill="none" stroke="#647582" stroke-linecap="round" stroke-linejoin="round" stroke-width="22">
+    <path d="M173 303h57l28-42h84l28 42h57a34 34 0 0 1 34 34v173a34 34 0 0 1-34 34H173a34 34 0 0 1-34-34V337a34 34 0 0 1 34-34Z"/>
+    <circle cx="300" cy="407" r="61"/>
+    <path d="m390 441 66 66m0-66-66 66" stroke="#9b5149"/>
+  </g>
+</svg>

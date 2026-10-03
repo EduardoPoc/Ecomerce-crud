@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Minha conta</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/conta/conta.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main id="main-content" class="max-w-5xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+      <header class="border-b border-outline/50 pb-5 mb-6">
+        <a href="/" class="text-sm text-sage hover:text-navy">← Voltar para a loja</a>
+        <h1 class="text-3xl font-serif font-bold text-navy mt-3">Minha conta</h1>
+        <p id="account-status" class="text-sm text-muted mt-2" role="status" aria-live="polite">Carregando seus dados…</p>
+        <a id="admin-panel-link" href="/admin/" class="hidden inline-block text-sm font-semibold text-sage hover:underline mt-3">Abrir painel do vendedor →</a>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6">
+          <h2 class="text-xl font-serif font-bold text-navy">Dados pessoais</h2>
+          <form id="profile-form" class="space-y-4 mt-5">
+            <p id="profile-message" class="hidden rounded-lg border px-3 py-2.5 text-sm" role="status"></p>
+            <label class="block text-sm font-semibold text-ink">Nome
+              <input id="profile-name" required minlength="2" maxlength="150" class="mt-2 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm" />
+            </label>
+            <label class="block text-sm font-semibold text-ink">E-mail
+              <input id="profile-email" readonly class="mt-2 w-full rounded-lg border border-outline bg-outline/20 px-3 py-2.5 text-sm text-muted" />
+            </label>
+            <button type="submit" class="rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-surface">Salvar alterações</button>
+          </form>
+          <button id="logout" type="button" class="mt-5 text-sm font-semibold text-error hover:underline">Sair da conta</button>
+        </section>
+
+        <section class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-xl font-serif font-bold text-navy">Meus endereços</h2>
+            <button id="new-address" type="button" class="text-sm font-semibold text-sage hover:underline">Adicionar</button>
+          </div>
+          <div id="address-list" class="space-y-3 mt-5"></div>
+          <form id="address-form" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+            <p id="address-message" class="hidden rounded-lg border px-3 py-2.5 text-sm sm:col-span-2" role="alert"></p>
+            <input name="destinatario" required placeholder="Destinatário" aria-label="Destinatário" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <input name="cep" required inputmode="numeric" placeholder="CEP" aria-label="CEP" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <input name="logradouro" required placeholder="Rua" aria-label="Rua" class="rounded-lg border border-outline px-3 py-2 text-sm sm:col-span-2" />
+            <input name="numero" required placeholder="Número" aria-label="Número" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <input name="complemento" placeholder="Complemento" aria-label="Complemento" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <input name="bairro" required placeholder="Bairro" aria-label="Bairro" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <input name="cidade" required placeholder="Cidade" aria-label="Cidade" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <input name="uf" required maxlength="2" placeholder="UF" aria-label="UF" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+            <label class="flex items-center gap-2 text-sm text-muted sm:col-span-2"><input name="padrao" type="checkbox" /> Usar como endereço padrão</label>
+            <div class="flex gap-3 sm:col-span-2"><button type="submit" class="rounded-lg bg-sage px-4 py-2 text-sm font-semibold text-surface">Salvar endereço</button><button id="cancel-address" type="button" class="rounded-lg border border-outline px-4 py-2 text-sm font-semibold text-navy">Cancelar</button></div>
+          </form>
+        </section>
+      </div>
+      <section class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6 mt-6">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-serif font-bold text-navy">Histórico de pedidos</h2>
+            <p class="text-sm text-muted mt-1">Acompanhe suas compras e os pagamentos simulados.</p>
+          </div>
+          <span id="orders-count" class="text-sm text-muted"></span>
+        </div>
+        <p id="orders-message" class="text-sm text-muted mt-5" role="status"></p>
+        <div id="orders-list" class="space-y-3 mt-5"></div>
+      </section>
+    </main>
+    <app-footer></app-footer>
+  </body>
+</html>

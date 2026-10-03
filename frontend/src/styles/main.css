@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme inline {
+  --color-paper: var(--brand-paper);
+  --color-surface: var(--brand-surface);
+  --color-surface-soft: var(--brand-surface-soft);
+  --color-navy: var(--brand-navy);
+  --color-ink: var(--brand-ink);
+  --color-muted: var(--brand-muted);
+  --color-sage: var(--brand-sage);
+  --color-amber: var(--brand-amber);
+  --color-outline: var(--brand-border);
+  --color-error: var(--brand-error);
+  --font-sans: var(--brand-font);
+  --radius-control: var(--brand-radius-control);
+  --radius-card: var(--brand-radius-card);
+  --shadow-card: var(--brand-shadow-card);
+}
+
+body {
+  background: var(--brand-paper);
+  color: var(--brand-ink);
+  font-family: var(--brand-font);
+}
+
+.lucide {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+app-header,
+app-footer {
+  display: block;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--brand-sage);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

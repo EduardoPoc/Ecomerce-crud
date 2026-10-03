@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Confirmação</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/finalizado/finalizado.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main id="main-content" class="max-w-2xl mx-auto w-full px-4 md:px-6 py-16 flex-1">
+      <section class="bg-surface rounded-2xl border border-outline/50 p-6 sm:p-10 text-center shadow-card">
+        <div class="w-14 h-14 rounded-full bg-amber/15 text-amber mx-auto flex items-center justify-center">
+          <i data-lucide="info" class="w-7 h-7"></i>
+        </div>
+        <p class="text-xs font-bold tracking-widest text-sage uppercase mt-5">Além da Estante</p>
+        <h1 id="confirmation-title" class="text-2xl sm:text-3xl font-serif font-bold text-navy mt-2">Pedido não confirmado</h1>
+        <p id="confirmation-message" class="text-sm text-muted leading-relaxed mt-4" role="status" aria-live="polite">
+          A loja ainda não dispõe de uma API para registrar e consultar pedidos. Esta página não representa uma compra concluída.
+        </p>
+        <p id="confirmation-summary" class="text-sm text-navy font-semibold mt-5"></p>
+        <div class="flex flex-col sm:flex-row justify-center gap-3 mt-7">
+          <a href="/carrinho/" class="rounded-lg border border-outline px-5 py-3 text-sm font-semibold text-navy hover:bg-surface-soft">Voltar à sacola</a>
+          <a href="/catalogo/" class="rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-surface hover:bg-navy/90">Continuar explorando</a>
+        </div>
+      </section>
+    </main>
+    <app-footer></app-footer>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Revisão</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/pagamento/pagamento.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main id="main-content" class="max-w-5xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+      <header class="border-b border-outline/50 pb-5 mb-6">
+        <a href="/carrinho/" class="text-sm text-sage hover:text-navy">← Voltar à sacola</a>
+        <h1 class="text-3xl font-serif font-bold text-navy mt-3">Revisão da compra</h1>
+        <p id="checkout-status" class="text-sm text-muted mt-2" role="status" aria-live="polite">Carregando resumo…</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        <section class="lg:col-span-2 bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6">
+          <h2 class="text-lg font-serif font-bold text-navy mb-4">Itens selecionados</h2>
+          <ul id="checkout-items" class="divide-y divide-outline/50"></ul>
+          <div class="border-t border-outline/50 mt-5 pt-5">
+            <h2 class="text-lg font-serif font-bold text-navy mb-3">Endereço de entrega</h2>
+            <label class="block text-sm font-semibold text-ink" for="address-select">Escolha um endereço salvo</label>
+            <select id="address-select" class="w-full mt-2 rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm"></select>
+            <p id="address-status" class="text-xs text-muted mt-2" role="status"></p>
+            <form id="address-form" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+              <input name="destinatario" required placeholder="Destinatário" aria-label="Destinatário" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="cep" required inputmode="numeric" placeholder="CEP" aria-label="CEP" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="logradouro" required placeholder="Rua" aria-label="Rua" class="rounded-lg border border-outline px-3 py-2 text-sm sm:col-span-2" />
+              <input name="numero" required placeholder="Número" aria-label="Número" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="complemento" placeholder="Complemento" aria-label="Complemento" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="bairro" required placeholder="Bairro" aria-label="Bairro" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="cidade" required placeholder="Cidade" aria-label="Cidade" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <input name="uf" required maxlength="2" placeholder="UF" aria-label="UF" class="rounded-lg border border-outline px-3 py-2 text-sm" />
+              <button class="rounded-lg bg-sage px-4 py-2 text-sm font-semibold text-surface sm:col-span-2" type="submit">Salvar endereço</button>
+            </form>
+            <button id="new-address" type="button" class="text-sm font-semibold text-sage hover:underline mt-3">Cadastrar novo endereço</button>
+          </div>
+        </section>
+        <aside class="bg-surface rounded-2xl border border-outline/50 p-5 sm:p-6 shadow-card">
+          <h2 class="text-lg font-serif font-bold text-navy border-b border-outline/50 pb-4">Resumo</h2>
+          <div class="flex flex-wrap justify-between gap-2 text-sm text-muted py-4">
+            <span>Quantidade</span><strong id="checkout-count" class="text-navy">0</strong>
+          </div>
+          <div class="flex flex-wrap justify-between gap-2 text-sm text-muted border-t border-outline/50 pt-4">
+            <span>Subtotal</span><strong id="checkout-subtotal" class="text-navy">—</strong>
+          </div>
+          <div class="flex flex-wrap justify-between gap-2 text-sm text-muted border-t border-outline/50 mt-4 pt-4">
+            <span>Frete</span><strong id="checkout-freight" class="text-navy">R$ 30,00</strong>
+          </div>
+          <div class="flex flex-wrap justify-between gap-2 text-base font-bold text-navy border-t border-outline/50 mt-4 pt-4">
+            <span>Total</span><strong id="checkout-total">—</strong>
+          </div>
+          <p class="text-xs text-muted mt-3">Frete fixo de R$ 30,00 por pedido.</p>
+          <button id="checkout-submit" type="button" disabled class="w-full rounded-lg px-4 py-3 mt-5 text-sm font-semibold bg-outline/50 text-muted cursor-not-allowed">
+            Pagar e confirmar pedido
+          </button>
+        </aside>
+      </div>
+      <div class="mt-6 rounded-xl border border-amber/40 bg-amber/10 p-4 text-sm text-ink">
+        <h2 class="font-semibold text-navy">Pagamento simulado</h2>
+        <p class="text-muted mt-1">Nenhum gateway real é utilizado. Ao confirmar, o pedido será criado e marcado como pago imediatamente.</p>
+      </div>
+    </main>
+    <app-footer></app-footer>
+  </body>
+</html>
