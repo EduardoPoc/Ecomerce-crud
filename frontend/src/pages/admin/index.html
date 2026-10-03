@@ -10,7 +10,7 @@
   </head>
   <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
     <app-header></app-header>
-    <main class="max-w-7xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+    <main id="main-content" class="max-w-7xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
       <header class="border-b border-outline/50 pb-5 mb-6">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -59,7 +59,7 @@
               <span id="current-image" class="block text-xs font-normal text-muted mt-1">Formatos aceitos: JPG, PNG ou WebP. Tamanho máximo: 5 MB.</span>
             </label>
             <label class="flex items-center gap-2 text-sm text-muted"><input name="ativo" type="checkbox" checked /> Livro disponível no catálogo</label>
-            <div class="flex gap-3 pt-2">
+            <div class="flex flex-wrap gap-3 pt-2">
               <button id="save-product" type="submit" class="rounded-lg bg-sage px-4 py-2.5 text-sm font-semibold text-surface">Salvar livro</button>
               <button id="cancel-edit" type="button" class="hidden rounded-lg border border-outline px-4 py-2.5 text-sm font-semibold text-navy">Cancelar</button>
             </div>

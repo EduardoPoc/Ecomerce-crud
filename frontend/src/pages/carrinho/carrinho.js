@@ -50,6 +50,11 @@ function renderItem(item) {
   const quantity = element('span', 'min-w-5 text-center text-sm font-semibold text-navy', String(item.quantidade));
   const increment = element('button', 'w-7 h-7 text-navy font-bold', '+');
   decrement.type = increment.type = 'button';
+  decrement.setAttribute('aria-label', `Diminuir quantidade de ${item.nome}`);
+  increment.setAttribute('aria-label', `Aumentar quantidade de ${item.nome}`);
+  quantity.setAttribute('aria-live', 'polite');
+  controls.setAttribute('role', 'group');
+  controls.setAttribute('aria-label', `Quantidade de ${item.nome}`);
   decrement.disabled = !available;
   increment.disabled = !available || item.quantidade >= Number(item.estoque);
   decrement.addEventListener('click', () => updateQuantity(item, item.quantidade - 1));

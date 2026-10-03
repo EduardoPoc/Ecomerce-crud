@@ -18,11 +18,12 @@ function initialsFor(name) {
 export function getHeaderHTML({ cartCount = 0 } = {}) {
   return `
     <header class="bg-paper/95 backdrop-blur-md border-b border-outline/60 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
+      <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-navy focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-surface">Pular para o conteúdo principal</a>
+      <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 sm:h-20 flex items-center justify-between gap-2">
         <!-- Logo -->
-        <a href="/index.html" class="flex items-center gap-3 group">
+        <a href="/index.html" class="flex min-w-0 items-center gap-3 group">
           <i data-lucide="book-open" class="w-6 h-6 text-navy transition-transform group-hover:scale-105"></i>
-          <span class="text-xl font-bold text-navy tracking-tight">Além da Estante</span>
+          <span class="truncate text-xl font-bold text-navy tracking-tight">Além da Estante</span>
         </a>
 
         <!-- Navegação de Categorias -->
@@ -31,10 +32,10 @@ export function getHeaderHTML({ cartCount = 0 } = {}) {
         </nav>
 
         <!-- Ações do Cabeçalho -->
-        <div class="flex items-center gap-2 sm:gap-4">
-          <button aria-label="Buscar livros" type="button" class="p-2 text-ink hover:text-navy transition-colors">
+        <div class="flex shrink-0 items-center gap-1 sm:gap-4">
+          <a href="/catalogo/" aria-label="Buscar livros" class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-ink hover:text-navy transition-colors">
             <i data-lucide="search" class="w-5 h-5"></i>
-          </button>
+          </a>
           <div data-account-control class="flex items-center"></div>
           <a href="/carrinho/" aria-label="Sacola de compras" class="relative p-2 text-ink hover:text-navy transition-colors">
             <i data-lucide="shopping-bag" class="w-5 h-5"></i>
@@ -81,7 +82,7 @@ export class AppHeader extends HTMLElement {
     if (!user) {
       const link = document.createElement('a');
       link.href = '/login/';
-      link.className = 'p-2 text-ink hover:text-navy transition-colors';
+      link.className = 'inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-ink hover:text-navy transition-colors';
       link.setAttribute('aria-label', 'Entrar ou acessar minha conta');
 
       const icon = document.createElement('i');

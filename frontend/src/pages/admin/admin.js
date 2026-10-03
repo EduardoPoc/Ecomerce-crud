@@ -58,7 +58,7 @@ function renderProducts() {
     state.textContent = isActive(product) ? 'Ativo' : 'Inativo';
     info.append(name, details, state);
     const actions = document.createElement('div');
-    actions.className = 'flex shrink-0 gap-3';
+    actions.className = 'flex shrink-0 flex-wrap gap-x-3 gap-y-2 sm:justify-end';
     const edit = document.createElement('button');
     edit.type = 'button'; edit.className = 'text-sm font-semibold text-navy hover:underline'; edit.textContent = 'Editar';
     edit.addEventListener('click', () => fillForm(product));

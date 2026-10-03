@@ -49,7 +49,7 @@ export function getFooterHTML() {
         <!-- Linha Inferior de Copyright e Termos -->
         <div class="pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-muted gap-4">
           <p>© 2025 Além da Estante Livraria Independente Ltda. Todos os direitos reservados.</p>
-          <div class="flex items-center gap-6">
+          <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <a href="#" class="hover:text-navy transition-colors">Termos de Serviço</a>
             <a href="#" class="hover:text-navy transition-colors">Política de Privacidade</a>
             <a href="#" class="hover:text-navy transition-colors">Trocas e Devoluções</a>
