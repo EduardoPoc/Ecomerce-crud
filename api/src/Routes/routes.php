@@ -69,6 +69,7 @@ return static function (Router $router): void {
             $r->post('/{id:\\d+}/imagem', [ProdutoController::class, 'uploadImage']);
             $r->put('/{id:\\d+}', [ProdutoController::class, 'update']);
             $r->patch('/{id:\\d+}', [ProdutoController::class, 'update']);
+            $r->delete('/{id:\\d+}/hard', [ProdutoController::class, 'hardDestroy']);
             $r->delete('/{id:\\d+}', [ProdutoController::class, 'destroy']);
         });
 

@@ -65,7 +65,10 @@ function renderProducts() {
     const toggle = document.createElement('button');
     toggle.type = 'button'; toggle.className = 'text-sm font-semibold text-error hover:underline'; toggle.textContent = isActive(product) ? 'Desativar' : 'Ativar';
     toggle.addEventListener('click', () => toggleProduct(product));
-    actions.append(edit, toggle); row.append(info, actions); return row;
+    const hardDelete = document.createElement('button');
+    hardDelete.type = 'button'; hardDelete.className = 'text-sm font-semibold text-error hover:underline'; hardDelete.textContent = 'Excluir definitivamente';
+    hardDelete.addEventListener('click', () => hardDeleteProduct(product));
+    actions.append(edit, toggle, hardDelete); row.append(info, actions); return row;
   }));
 }
 
@@ -103,6 +106,19 @@ async function toggleProduct(product) {
     await loadProducts();
     status.textContent = `Livro ${action === 'ativar' ? 'ativado' : 'desativado'} com sucesso.`;
   } catch (error) { status.textContent = apiError(error, `Não foi possível ${action} o livro.`); }
+}
+
+async function hardDeleteProduct(product) {
+  if (isActive(product)) {
+    status.textContent = 'Desative o livro antes de apagá-lo definitivamente.';
+    return;
+  }
+  if (!window.confirm(`Esta ação apagará “${repairMojibake(product.nome)}” definitivamente. Continuar?`)) return;
+  try {
+    await api.delete(`/produtos/${product.id}/hard`);
+    await loadProducts();
+    status.textContent = 'Livro apagado definitivamente.';
+  } catch (error) { status.textContent = apiError(error, 'Não foi possível apagar o livro definitivamente.'); }
 }
 
 function payload(source = null, active = fields.ativo.checked) {

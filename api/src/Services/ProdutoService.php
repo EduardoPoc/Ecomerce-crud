@@ -173,6 +173,21 @@ class ProdutoService
         $this->repository->delete($id);
     }
 
+    public function hardDelete(int $id): void
+    {
+        if ($id <= 0) throw new HttpException(400, 'ID inválido.');
+        $produto = $this->repository->findById($id);
+        if ($produto === null) throw new HttpException(404, 'Produto não encontrado.');
+        if ((bool) $produto['ativo']) throw new HttpException(409, 'Desative o livro antes de apagá-lo definitivamente.');
+
+        try {
+            if (!$this->repository->hardDelete($id)) throw new HttpException(404, 'Produto não encontrado.');
+        } catch (\RuntimeException $error) {
+            throw new HttpException(409, $error->getMessage());
+        }
+        $this->removeLocalImage($produto['imagem_url'] ?? null);
+    }
+
     public function uploadImage(int $id, ?array $file): string
     {
         if ($id <= 0) throw new HttpException(400, 'ID inválido.');

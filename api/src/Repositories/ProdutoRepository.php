@@ -182,7 +182,7 @@ class ProdutoRepository
             'preco' => $preco,
             'estoque' => $estoque,
             'imagem_url' => $imagemUrl,
-            'ativo' => $ativo
+            'ativo' => $ativo ? 1 : 0
         ]);
 
         return (int) $this->db->lastInsertId();
@@ -221,7 +221,7 @@ class ProdutoRepository
             'preco' => $preco,
             'estoque' => $estoque,
             'imagem_url' => $imagemUrl,
-            'ativo' => $ativo
+            'ativo' => $ativo ? 1 : 0
         ]);
     }
 
@@ -244,5 +244,28 @@ class ProdutoRepository
     {
         $stmt = $this->db->prepare('UPDATE produto SET imagem_url = :imagem_url WHERE id = :id');
         return $stmt->execute(['id' => $id, 'imagem_url' => $imageUrl]);
+    }
+
+    public function hardDelete(int $id): bool
+    {
+        $this->db->beginTransaction();
+        try {
+            $orders = $this->db->prepare('SELECT COUNT(*) FROM item_pedido WHERE produto_id = :id');
+            $orders->execute(['id' => $id]);
+            if ((int) $orders->fetchColumn() > 0) {
+                throw new \RuntimeException('Este livro possui pedidos vinculados e não pode ser apagado definitivamente.');
+            }
+
+            $cartItems = $this->db->prepare('DELETE FROM item_carrinho WHERE produto_id = :id');
+            $cartItems->execute(['id' => $id]);
+            $product = $this->db->prepare('DELETE FROM produto WHERE id = :id');
+            $product->execute(['id' => $id]);
+            $deleted = $product->rowCount() > 0;
+            $this->db->commit();
+            return $deleted;
+        } catch (\Throwable $error) {
+            if ($this->db->inTransaction()) $this->db->rollBack();
+            throw $error;
+        }
     }
 }

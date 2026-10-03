@@ -75,4 +75,10 @@ class ProdutoController
             'message' => 'Produto desativado com sucesso.'
         ]);
     }
+
+    public function hardDestroy(Request $request): Response
+    {
+        $this->service->hardDelete((int) $request->param('id'));
+        return Response::json(['message' => 'Produto apagado definitivamente.']);
+    }
 }
