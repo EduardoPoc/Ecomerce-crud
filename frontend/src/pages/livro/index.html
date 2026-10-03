@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Além da Estante | Livro</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/pages/livro/livro.js"></script>
+  </head>
+  <body class="bg-paper text-ink font-sans min-h-screen flex flex-col">
+    <app-header></app-header>
+    <main class="max-w-5xl mx-auto w-full px-4 md:px-6 py-10 flex-1">
+      <a href="/catalogo/" class="text-sm text-sage hover:text-navy">← Voltar ao catálogo</a>
+      <p id="book-status" class="text-sm text-muted mt-5" role="status" aria-live="polite">Carregando livro…</p>
+      <section id="book-detail" class="hidden grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 bg-surface rounded-2xl border border-outline/50 p-5 sm:p-8 mt-4"></section>
+    </main>
+    <app-footer></app-footer>
+  </body>
+</html>

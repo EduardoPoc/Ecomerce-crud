@@ -16,8 +16,51 @@ class ProdutoRepository
         $this->db = Database::connection();
     }
 
-    public function getAll(): array
+    public function search(
+        int $page,
+        int $limit,
+        ?string $search = null,
+        ?int $categoryId = null,
+        string $sort = 'nome',
+        bool $includeInactive = false
+    ): array
     {
+        $where = $includeInactive ? [] : ['p.ativo = 1'];
+        $params = [];
+
+        if ($search !== null && $search !== '') {
+            $where[] = '(p.nome LIKE :search_title OR p.descricao LIKE :search_description)';
+            $params['search_title'] = "%{$search}%";
+            $params['search_description'] = "%{$search}%";
+        }
+        if ($categoryId !== null) {
+            $where[] = 'p.categoria_id = :categoria_id';
+            $params['categoria_id'] = $categoryId;
+        }
+
+        $whereSql = $where === [] ? '' : 'WHERE ' . implode(' AND ', $where);
+        $orderSql = match ($sort) {
+            'preco_asc' => 'p.preco ASC, p.id ASC',
+            'preco_desc' => 'p.preco DESC, p.id ASC',
+            'recentes' => 'p.criado_em DESC, p.id DESC',
+            'relevancia' => $search !== null && $search !== ''
+                ? 'CASE WHEN p.nome LIKE :exact_title THEN 0 WHEN p.nome LIKE :contains_title THEN 1 ELSE 2 END, CASE WHEN p.nome LIKE :prefix_title THEN 0 ELSE 1 END, p.nome ASC, p.id ASC'
+                : 'p.nome ASC, p.id ASC',
+            default => 'p.nome ASC, p.id ASC',
+        };
+
+        $countParams = $params;
+        if ($sort === 'relevancia' && $search !== null && $search !== '') {
+            $params['exact_title'] = $search;
+            $params['contains_title'] = "%{$search}%";
+            $params['prefix_title'] = "{$search}%";
+        }
+
+        $count = $this->db->prepare("SELECT COUNT(*) FROM produto p {$whereSql}");
+        $count->execute($countParams);
+        $total = (int) $count->fetchColumn();
+
+        $offset = ($page - 1) * $limit;
         $sql = "
             SELECT
                 p.id,
@@ -33,15 +76,23 @@ class ProdutoRepository
             FROM produto p
             INNER JOIN categoria c
                 ON c.id = p.categoria_id
-            ORDER BY p.id
+            {$whereSql}
+            ORDER BY {$orderSql}
+            LIMIT :limit OFFSET :offset
         ";
 
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
 
-        return $stmt->fetchAll();
+        return ['itens' => $stmt->fetchAll(), 'total' => $total];
     }
 
-    public function findById(int $id): ?array
+    public function findById(int $id, bool $onlyActive = false): ?array
     {
         $sql = "
             SELECT
@@ -59,6 +110,7 @@ class ProdutoRepository
             INNER JOIN categoria c
                 ON c.id = p.categoria_id
             WHERE p.id = :id
+            " . ($onlyActive ? 'AND p.ativo = 1' : '') . "
         ";
 
         $stmt = $this->db->prepare($sql);

@@ -46,6 +46,7 @@ return static function (Router $router): void {
 
         // Catálogo público de livros.
         $api->get('/produtos', [ProdutoController::class, 'index']);
+        $api->get('/produtos/admin', [ProdutoController::class, 'adminIndex'], [AuthMiddleware::class, AdminMiddleware::class]);
         $api->get('/produtos/{id:\\d+}', [ProdutoController::class, 'show']);
 
         // ---------- Usuários (somente ADMIN) ----------

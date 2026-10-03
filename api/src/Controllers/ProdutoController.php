@@ -20,7 +20,12 @@ class ProdutoController
 
     public function index(Request $request): Response
     {
-        return Response::json($this->service->getAll());
+        return Response::json($this->service->getAll((array) $request->query()));
+    }
+
+    public function adminIndex(Request $request): Response
+    {
+        return Response::json($this->service->getAll((array) $request->query(), true));
     }
 
     public function show(Request $request): Response
@@ -30,7 +35,7 @@ class ProdutoController
             throw new HttpException(400, 'ID do produto inválido.');
         }
 
-        return Response::json($this->service->getById($id));
+        return Response::json($this->service->getById($id, true));
     }
 
     public function store(Request $request): Response

@@ -8,7 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
  * tanto no servidor de desenvolvimento quanto no build de produção.
  */
 function cleanUrlsPlugin() {
-  const pages = ['catalogo', 'carrinho', 'pagamento', 'finalizado', 'login', 'cadastro', 'conta', 'admin'];
+  const pages = ['catalogo', 'carrinho', 'pagamento', 'finalizado', 'login', 'cadastro', 'conta', 'admin', 'livro'];
 
   return {
     name: 'clean-urls-plugin',
@@ -20,7 +20,9 @@ function cleanUrlsPlugin() {
 
         if (pages.includes(segment)) {
           const rest = match[2] || '';
-          if (rest === '' || rest === '/') {
+          if (segment === 'livro') {
+            req.url = `/src/pages/${segment}/index.html${search ? `?${search}` : ''}`;
+          } else if (rest === '' || rest === '/') {
             req.url = `/src/pages/${segment}/index.html${search ? `?${search}` : ''}`;
           } else if (!rest.startsWith('/src/')) {
             req.url = `/src/pages/${segment}${rest}${search ? `?${search}` : ''}`;
@@ -76,6 +78,7 @@ export default defineConfig(({ mode }) => {
           cadastro: resolve(import.meta.dirname, 'src/pages/cadastro/index.html'),
           conta: resolve(import.meta.dirname, 'src/pages/conta/index.html'),
           admin: resolve(import.meta.dirname, 'src/pages/admin/index.html'),
+          livro: resolve(import.meta.dirname, 'src/pages/livro/index.html'),
         },
       },
     },

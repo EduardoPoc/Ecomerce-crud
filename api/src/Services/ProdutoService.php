@@ -16,18 +16,40 @@ class ProdutoService
         $this->repository = new ProdutoRepository();
     }
 
-    public function getAll(): array
+    public function getAll(array $filters = [], bool $includeInactive = false): array
     {
-        return $this->repository->getAll();
+        $page = (int) ($filters['pagina'] ?? 1);
+        $limit = (int) ($filters['limite'] ?? 12);
+        $search = trim((string) ($filters['busca'] ?? ''));
+        $categoryId = $filters['categoria_id'] ?? null;
+        $categoryId = $categoryId === null || $categoryId === '' ? null : (int) $categoryId;
+        $sort = (string) ($filters['ordenar'] ?? ($search !== '' ? 'relevancia' : 'nome'));
+
+        if ($page < 1) throw new HttpException(422, 'Página deve ser maior que zero.');
+        if ($limit < 1 || $limit > 100) throw new HttpException(422, 'Limite deve estar entre 1 e 100.');
+        if ($categoryId !== null && $categoryId < 1) throw new HttpException(422, 'Categoria inválida.');
+        if (mb_strlen($search) > 100) throw new HttpException(422, 'Busca deve ter no máximo 100 caracteres.');
+        if (!in_array($sort, ['nome', 'preco_asc', 'preco_desc', 'recentes', 'relevancia'], true)) {
+            throw new HttpException(422, 'Ordenação inválida.');
+        }
+
+        $result = $this->repository->search($page, $limit, $search ?: null, $categoryId, $sort, $includeInactive);
+        return [
+            'itens' => $result['itens'],
+            'pagina' => $page,
+            'limite' => $limit,
+            'total' => $result['total'],
+            'paginas' => $result['total'] === 0 ? 0 : (int) ceil($result['total'] / $limit),
+        ];
     }
 
-    public function getById(int $id): array
+    public function getById(int $id, bool $onlyActive = false): array
     {
         if ($id <= 0) {
             throw new HttpException(400, 'ID inválido.');
         }
 
-        $produto = $this->repository->findById($id);
+        $produto = $this->repository->findById($id, $onlyActive);
 
         if ($produto === null) {
             throw new HttpException(404, 'Produto não encontrado.');

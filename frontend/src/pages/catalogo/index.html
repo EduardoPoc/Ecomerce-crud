@@ -17,13 +17,22 @@
         <p class="text-sm text-muted mt-2">Livros disponíveis conforme o catálogo da loja.</p>
       </header>
       <form id="catalog-filters" class="bg-surface rounded-2xl border border-outline/50 p-4 sm:p-5 mb-6" role="search">
-        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_240px_auto] gap-3 items-end">
+        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_220px_220px_auto] gap-3 items-end">
           <label class="block text-sm font-semibold text-ink">Buscar livro
             <input id="catalog-search" type="search" placeholder="Título ou descrição" autocomplete="off" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm" />
           </label>
           <label class="block text-sm font-semibold text-ink">Categoria
             <select id="catalog-category" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm">
               <option value="">Todas as categorias</option>
+            </select>
+          </label>
+          <label class="block text-sm font-semibold text-ink">Ordenar por
+            <select id="catalog-sort" class="mt-1.5 w-full rounded-lg border border-outline bg-surface-soft px-3 py-2.5 text-sm">
+              <option value="relevancia">Relevância</option>
+              <option value="nome">Nome</option>
+              <option value="preco_asc">Menor preço</option>
+              <option value="preco_desc">Maior preço</option>
+              <option value="recentes">Mais recentes</option>
             </select>
           </label>
           <button id="clear-filters" type="button" class="rounded-lg border border-outline px-4 py-2.5 text-sm font-semibold text-navy hover:bg-surface-soft">Limpar filtros</button>

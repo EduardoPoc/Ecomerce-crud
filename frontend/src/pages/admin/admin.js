@@ -106,8 +106,8 @@ function payload(source = null, active = fields.ativo.checked) {
 }
 
 async function loadProducts() {
-  const { data } = await api.get('/produtos');
-  products = Array.isArray(data) ? data : [];
+  const { data } = await api.get('/produtos/admin', { params: { limite: 100 } });
+  products = Array.isArray(data?.itens) ? data.itens : [];
   renderProducts();
 }
 

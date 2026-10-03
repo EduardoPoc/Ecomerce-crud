@@ -59,19 +59,31 @@ export function repairMojibake(value) {
   return repaired;
 }
 
-/** Retorna produtos no formato exposto por ProdutoRepository. */
-export async function getProducts() {
-  const { data } = await api.get('/produtos');
-  if (!Array.isArray(data)) {
+/** Retorna a página de produtos no formato exposto pela API. */
+export async function getProducts(params = {}) {
+  const { data } = await api.get('/produtos', { params });
+  if (!data || !Array.isArray(data.itens)) {
     throw new Error('A resposta de produtos da API está em um formato inesperado.');
   }
 
-  return data.map((product) => ({
+  return {
+    ...data,
+    itens: data.itens.map(normalizeProduct),
+  };
+}
+
+export async function getProduct(id) {
+  const { data } = await api.get(`/produtos/${id}`);
+  return normalizeProduct(data);
+}
+
+function normalizeProduct(product) {
+  return {
     ...product,
     nome: repairMojibake(product.nome),
     descricao: repairMojibake(product.descricao),
     categoria_nome: repairMojibake(product.categoria_nome),
-  }));
+  };
 }
 
 export function isProductActive(product) {
