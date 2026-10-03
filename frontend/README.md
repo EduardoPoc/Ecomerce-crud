@@ -87,7 +87,7 @@ Esse comando também inicia PHP e MySQL por causa das dependências declaradas n
 docker compose up --build
 ```
 
-Na primeira criação do volume `mysql_data`, o MySQL executa `api/database/schema.sql` e depois `api/database/seed.sql`. A seed cria usuários e dados de demonstração; a senha de todos os usuários seed é `senha123` (por exemplo, `carlos@email.com`). A seed não é executada novamente ao recriar apenas o container PHP ou MySQL, pois o volume do banco persiste.
+Na primeira criação do volume `mysql_data`, o MySQL executa `api/database/schema.sql` e depois `api/database/seed.sql`. A seed cria livros, categorias e um único usuário administrativo para desenvolvimento: `admin@livraria.com`, senha `senha123`. Essas credenciais são públicas e não devem ser usadas em produção. Clientes, endereços, carrinhos e pedidos são criados pelos fluxos da aplicação. A seed não é executada novamente ao recriar apenas o container PHP ou MySQL, pois o volume do banco persiste.
 
 Se o banco já estiver inicializado e ainda não tiver os dados da seed, importe-a uma vez, a partir da raiz:
 

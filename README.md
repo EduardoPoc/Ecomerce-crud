@@ -15,6 +15,8 @@ docker compose up --build
 - Frontend: <http://localhost:5173>
 - MySQL no host: `127.0.0.1:3306` (banco/usuário/senha: `loja`)
 
+Usuário administrador de desenvolvimento: `admin@livraria.com` / `senha123`. Essas credenciais são públicas neste projeto de exemplo e não devem ser usadas em produção.
+
 Os containers compartilham a rede `app`; a API conecta ao banco pelo hostname `mysql:3306`. O frontend usa a URL pública `http://localhost:8080/api`, acessada pelo navegador, e a API libera a origem `http://localhost:5173` via CORS. A configuração da aplicação em `docker/php/app.env` é montada como `/app/.env`, no caminho e formato que o backend já lê. `api/database/schema.sql` e `api/database/seed.sql` são executados na criação inicial do volume do MySQL.
 
 Para usar um cliente SQL no container:

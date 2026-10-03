@@ -4,22 +4,20 @@ USE loja;
 -- =====================================================
 -- SEED - E-commerce de livros
 -- Execute em tabelas vazias (os IDs são explícitos).
--- Senha de todos os usuários: senha123 (hash bcrypt)
+-- Usuário administrativo de desenvolvimento: admin@livraria.com / senha123
 -- =====================================================
 
 -- =========================
 -- USUARIO
 -- =========================
 INSERT INTO usuario (id, nome, email, senha_hash, papel, criado_em) VALUES
-(1, 'Administrador',    'admin@livraria.com',    '$2b$10$2tIJp.A1unjoR0gQAqh8FOEwxj/iWX1XJbfiIA16d9Ugk3gDgPAKi', 'ADMIN',   '2026-01-10 09:00:00'),
-(2, 'Mariana Souza',    'mariana@email.com',     '$2b$10$2tIJp.A1unjoR0gQAqh8FOEwxj/iWX1XJbfiIA16d9Ugk3gDgPAKi', 'CLIENTE', '2026-02-03 14:22:10'),
-(3, 'Carlos Oliveira',  'carlos@email.com',      '$2b$10$2tIJp.A1unjoR0gQAqh8FOEwxj/iWX1XJbfiIA16d9Ugk3gDgPAKi', 'CLIENTE', '2026-02-15 10:05:41'),
-(4, 'Fernanda Lima',    'fernanda@email.com',    '$2b$10$2tIJp.A1unjoR0gQAqh8FOEwxj/iWX1XJbfiIA16d9Ugk3gDgPAKi', 'CLIENTE', '2026-03-01 18:47:03'),
-(5, 'João Pereira',     'joao@email.com',        '$2b$10$2tIJp.A1unjoR0gQAqh8FOEwxj/iWX1XJbfiIA16d9Ugk3gDgPAKi', 'CLIENTE', '2026-03-20 08:31:55');
+(1, 'Administrador',    'admin@livraria.com',    '$2b$10$2tIJp.A1unjoR0gQAqh8FOEwxj/iWX1XJbfiIA16d9Ugk3gDgPAKi', 'ADMIN',   '2026-01-10 09:00:00')
+;
 
 -- =========================
 -- ENDERECO
 -- =========================
+/*
 INSERT INTO endereco (id, usuario_id, destinatario, cep, logradouro, numero, complemento, bairro, cidade, uf, padrao, ativo) VALUES
 (1, 2, 'Mariana Souza',   '01310100', 'Avenida Paulista',        '1578', 'Apto 42',  'Bela Vista',  'São Paulo',      'SP', TRUE,  TRUE),
 (2, 2, 'Mariana Souza',   '04538132', 'Avenida Brigadeiro Faria Lima', '3477', 'Sala 12', 'Itaim Bibi', 'São Paulo',   'SP', FALSE, TRUE),
@@ -27,6 +25,7 @@ INSERT INTO endereco (id, usuario_id, destinatario, cep, logradouro, numero, com
 (4, 4, 'Fernanda Lima',   '30140071', 'Avenida Afonso Pena',     '1200', 'Bloco B',  'Centro',      'Belo Horizonte', 'MG', TRUE,  TRUE),
 (5, 5, 'João Pereira',    '90010150', 'Rua dos Andradas',        '89',   'Casa',     'Centro Histórico', 'Porto Alegre', 'RS', TRUE, TRUE),
 (6, 4, 'Fernanda Lima',   '22041001', 'Rua Barata Ribeiro',      '210',  'Apto 803', 'Copacabana',  'Rio de Janeiro', 'RJ', FALSE, FALSE);
+*/
 
 -- =========================
 -- CATEGORIA
@@ -107,6 +106,7 @@ INSERT INTO produto (id, categoria_id, nome, descricao, preco, estoque, imagem_u
 -- PEDIDO
 -- (totais = soma de quantidade * preco_unitario dos itens)
 -- =========================
+/*
 INSERT INTO pedido (id, usuario_id, endereco_id, status, total, criado_em, pago_em) VALUES
 (1, 2, 1, 'ENTREGUE',             154.70, '2026-02-10 11:20:00', '2026-02-10 11:25:30'),
 (2, 3, 3, 'ENVIADO',              189.80, '2026-03-05 16:40:12', '2026-03-05 16:45:00'),
@@ -156,3 +156,4 @@ INSERT INTO item_carrinho (id, carrinho_id, produto_id, quantidade) VALUES
 (4, 2, 14, 2),
 (5, 3, 2,  1),
 (6, 3, 3,  1);
+*/

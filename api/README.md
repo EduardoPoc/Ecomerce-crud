@@ -23,6 +23,8 @@ O login retorna um token de usuário. As rotas de usuários exigem um token de u
 
 Usuário administrador incluído no seed local:
 
+> Credenciais públicas apenas para desenvolvimento local. Nunca use esta senha em produção.
+
 ```text
 e-mail: admin@livraria.com
 senha: senha123
