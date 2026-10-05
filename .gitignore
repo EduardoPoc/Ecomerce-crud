@@ -164,6 +164,8 @@ docker-compose.override.yml
 
 # Local development
 *.sql
+!api/database/migrations/
+!api/database/migrations/*.sql
 
 # Ferramentas de IA, Agentes e MCP
 .agents/
