@@ -1,15 +1,16 @@
-FROM node:22-bookworm-slim
+FROM node:22-bookworm-slim AS build
 
 WORKDIR /app
 
 COPY frontend/package.json frontend/package-lock.json frontend/.npmrc ./
-RUN npm ci \
-    && sha256sum package-lock.json | cut -d ' ' -f 1 > node_modules/.docker-lock-hash
+RUN npm ci
 
 COPY frontend/ ./
-COPY docker/frontend/entrypoint.sh /usr/local/bin/frontend-entrypoint
+RUN npm run build
 
-EXPOSE 5173
+FROM nginx:1.27-alpine
 
-ENTRYPOINT ["sh", "/usr/local/bin/frontend-entrypoint"]
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+COPY docker/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80

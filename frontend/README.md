@@ -56,7 +56,7 @@ Crie uma subpasta em `src/pages/<nome>/` contendo seu `index.html` e seu script 
 
 ## Comunicação com a API
 
-O Axios usa o caminho relativo `/api`. No Docker, o Vite encaminha `/api` para `http://php:80` pela rede interna do Compose; assim, o navegador conversa somente com `localhost:5173` e não faz preflight CORS para a porta PHP.
+O Axios usa o caminho relativo `/api`. No Docker, o Nginx encaminha `/api` para `http://php:80` pela rede interna do Compose; assim, o navegador conversa somente com o frontend e não faz preflight CORS para a porta PHP.
 
 - **Login:** `src/services/auth.js` chama `POST /auth/login` com `{ email, senha }`. A API procura `email` em `usuario.email` e compara a senha com `usuario.senha_hash`; o frontend nunca envia nem recebe o hash. A resposta inclui token Bearer e os campos públicos `id`, `nome`, `email`, `papel` e `criado_em`. O token fica em `sessionStorage` por padrão ou em `localStorage` quando “Lembrar de mim” está marcado; o Axios envia `Authorization: Bearer ...` nas chamadas seguintes.
 - **Catálogo:** `src/services/products.js` chama `GET /produtos`. A tela usa `id`, `categoria_nome`, `nome`, `descricao`, `preco`, `estoque`, `imagem_url` e `ativo`, conforme a resposta de `ProdutoRepository`. Produtos inativos não são exibidos e produtos sem estoque não podem ser adicionados.
@@ -65,7 +65,7 @@ O Axios usa o caminho relativo `/api`. No Docker, o Vite encaminha `/api` para `
 - **Checkout:** a página `/pagamento/` carrega os itens pela API, exige um endereço do usuário e cria o pedido com `POST /pedidos`. O frete é fixo em R$ 30,00 e é somado ao subtotal no backend.
 - **Pagamento simulado:** o botão de confirmação chama `POST /pedidos/{id}/pagar`. Não existe cobrança real; a API baixa o estoque, marca o pedido como `PAGO` e a tela `/finalizado/` confirma o pedido. Se alguma etapa falhar, o frontend tenta excluir o pedido pendente com `DELETE /pedidos/{id}`.
 
-Catálogo e login dependem de a API e o banco MySQL estarem ativos e configurados. Para executar o Vite fora do Docker, configure `VITE_API_PROXY_TARGET` com o endereço HTTP da API que não redirecione para HTTPS.
+Catálogo e login dependem de a API e o banco MySQL estarem ativos e configurados.
 
 ## Rodar com Docker
 
@@ -104,7 +104,7 @@ docker compose up -d --build
 
 `down -v` apaga permanentemente os dados locais do MySQL, incluindo pedidos e demais registros.
 
-Abra <http://localhost:5173>. No Docker, o Vite recebe `VITE_API_URL=/api` e encaminha as chamadas para `http://php:80` pela rede interna; não configure no navegador a URL direta da API para este fluxo. A API fica disponível em <http://localhost:8080/api/health> para diagnóstico.
+Abra <http://localhost:8081>. No Docker, o Nginx encaminha `/api` e `/uploads` para `http://php:80` pela rede interna; não configure no navegador a URL direta da API para este fluxo. A API fica disponível em <http://localhost:8080/api/health> para diagnóstico.
 
 Para acompanhar o frontend e encerrar os serviços:
 
@@ -156,7 +156,7 @@ npm ci
 npm run dev
 ```
 
-O Vite mostra o endereço local no terminal, normalmente `http://localhost:5173/`. Para gerar o build de todas as páginas, use `npm run build`; para visualizar o resultado, `npm run preview`.
+Para gerar o build de todas as páginas, use `npm run build`. O resultado em `dist/` deve ser servido por Nginx ou outro servidor HTTP de arquivos estáticos.
 
 ## Dependências e verificações
 
