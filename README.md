@@ -8,7 +8,8 @@ O Compose sobe o frontend compilado e servido por Nginx, o backend da branch `Ro
 
 ```sh
 cp docker/php/app.env.example docker/php/app.env
-docker compose up --build
+cp api/.env.example api/.env
+docker compose up -d --build
 ```
 
 - API: <http://localhost:8080/api/health>
